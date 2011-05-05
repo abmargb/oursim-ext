@@ -1,0 +1,14 @@
+package br.edu.ufcg.lsd.oursim.events.peer;
+
+import br.edu.ufcg.lsd.oursim.events.Event;
+import br.edu.ufcg.lsd.oursim.events.fd.ActiveEntityDownEvent;
+
+public class PeerDownEvent extends ActiveEntityDownEvent {
+
+	public static final String TYPE = "PEER_DOWN";
+	
+	public PeerDownEvent(Long time, String data) {
+		super(time, Event.DEF_PRIORITY, data);
+	}
+
+}
