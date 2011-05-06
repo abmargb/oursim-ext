@@ -1,11 +1,13 @@
 package br.edu.ufcg.lsd.oursim.events.broker;
 
+import java.util.Set;
+
 import br.edu.ufcg.lsd.oursim.OurSim;
 import br.edu.ufcg.lsd.oursim.entities.grid.Broker;
 import br.edu.ufcg.lsd.oursim.entities.job.Job;
+import br.edu.ufcg.lsd.oursim.entities.job.Task;
 import br.edu.ufcg.lsd.oursim.events.AbstractEvent;
 import br.edu.ufcg.lsd.oursim.events.Event;
-import br.edu.ufcg.lsd.oursim.events.peer.RequestWorkersEvent;
 
 public class BrokerScheduleEvent extends AbstractEvent {
 
@@ -18,20 +20,50 @@ public class BrokerScheduleEvent extends AbstractEvent {
 
 	@Override
 	public void process(OurSim ourSim) {
-		Broker broker = (Broker) ourSim.getGrid().getObject(brokerId);
-		
+		Broker broker = ourSim.getGrid().getObject(brokerId);
 		for (Job job : broker.getJobs()) {
-			int workersToRequest = needToRequest(job);
-			if (workersToRequest > 0) {
-				ourSim.addNetworkEvent(new RequestWorkersEvent(getTime(), 
-						brokerId, workersToRequest));
-			}
+			schedule(broker, job, ourSim);
+			execute(job);
+			clean(job);
 		}
 	}
 
-	private int needToRequest(Job job) {
-		return 0;
+	private void clean(Job job) {
+		// TODO Auto-generated method stub
+		
 	}
 
+	private void schedule(Broker broker, Job job, OurSim ourSim) {
+		boolean scheduling = true;
+
+		while (scheduling) {
+			scheduling = false;
+
+			for (Task task : job.getTasks()) {
+				if (SchedulerHelper.canSchedule(task, ourSim)) {
+					String chosenWorkerId = null; 
+
+					Set<String> availableWorkers = broker.getAvailableWorkers();
+
+					if (!availableWorkers.isEmpty()) {
+						chosenWorkerId = availableWorkers.iterator().next();
+						if (allocate(broker, task, chosenWorkerId)) {
+							scheduling = true;
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	private boolean allocate(Broker broker, Task task, String chosenWorkerId) {
+		broker.workerIsInUse(chosenWorkerId);
+		return true;
+	}
+
+	private void execute(Job job) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

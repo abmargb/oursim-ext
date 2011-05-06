@@ -1,12 +1,16 @@
 package br.edu.ufcg.lsd.oursim.entities.job;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import br.edu.ufcg.lsd.oursim.entities.Entity;
 
 public class Task extends Entity {
 
 	private long duration;
-	private State state = State.UNSTARTED;
+	private ExecutionState state = ExecutionState.UNSTARTED;
 	private Job job;
+	private List<Replica> replicas = new LinkedList<Replica>();
 	
 	public void setDuration(long duration) {
 		this.duration = duration;
@@ -16,11 +20,11 @@ public class Task extends Entity {
 		return duration;
 	}
 	
-	public void setState(State state) {
+	public void setState(ExecutionState state) {
 		this.state = state;
 	}
 	
-	public State getState() {
+	public ExecutionState getState() {
 		return state;
 	}
 
@@ -30,5 +34,9 @@ public class Task extends Entity {
 
 	public Job getJob() {
 		return job;
+	}
+
+	public List<Replica> getReplicas() {
+		return replicas;
 	}
 }

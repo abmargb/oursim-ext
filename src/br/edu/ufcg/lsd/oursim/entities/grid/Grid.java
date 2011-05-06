@@ -24,8 +24,9 @@ public class Grid extends Entity {
 		objectRepository.put(object.getId(), object);
 	}
 	
-	public ActiveEntity getObject(String id) {
-		return objectRepository.get(id);
+	@SuppressWarnings("unchecked")
+	public <T extends ActiveEntity> T getObject(String id) {
+		return (T) objectRepository.get(id);
 	}
 
 	public Collection<ActiveEntity> getAllObjects() {

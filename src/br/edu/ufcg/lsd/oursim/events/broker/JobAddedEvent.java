@@ -1,14 +1,19 @@
 package br.edu.ufcg.lsd.oursim.events.broker;
 
+import java.util.Random;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import br.edu.ufcg.lsd.oursim.OurSim;
 import br.edu.ufcg.lsd.oursim.entities.grid.Broker;
 import br.edu.ufcg.lsd.oursim.entities.job.Job;
+import br.edu.ufcg.lsd.oursim.entities.job.Request;
 import br.edu.ufcg.lsd.oursim.entities.job.Task;
 import br.edu.ufcg.lsd.oursim.events.AbstractEvent;
 import br.edu.ufcg.lsd.oursim.events.Event;
+import br.edu.ufcg.lsd.oursim.events.peer.RequestWorkersEvent;
+import br.edu.ufcg.lsd.oursim.util.Configuration;
 import br.edu.ufcg.lsd.oursim.util.JSONUtils;
 import br.edu.ufcg.lsd.oursim.util.LineParser;
 
@@ -26,10 +31,23 @@ public class JobAddedEvent extends AbstractEvent {
 		String brokerId = lineParser.next();
 		Job job = parseJob(lineParser.restOfLine());
 
-		Broker broker = (Broker) ourSim.getGrid().getObject(brokerId);
+		Broker broker = ourSim.getGrid().getObject(brokerId);
 		broker.addJob(job);
 
-		ourSim.addEvent(new BrokerScheduleEvent(getTime() + 1, brokerId));
+		if (!broker.getMonitor(broker.getPeerId()).isUp()) {
+			return;
+		}
+		
+		Request request = new Request();
+		request.setBrokerId(brokerId);
+		request.setId(new Random().nextLong());
+		request.setJobId(job.getJobId());
+		request.setRequiredWorkers(job.getTasks().size()
+				* ourSim.getIntProperty(Configuration.PROP_BROKER_MAX_REPLICAS));
+		job.setRequest(request);
+		
+		ourSim.addNetworkEvent(new RequestWorkersEvent(getTime(), 
+				broker.getPeerId(), request));
 	}
 
 	private static Job parseJob(String jobJsonStr) {

@@ -65,6 +65,11 @@ public class OurSim {
 		return property == null ? null : Long.valueOf(property);
 	}
 	
+	public Integer getIntProperty(String key) {
+		String property = properties.getProperty(key);
+		return property == null ? null : Integer.valueOf(property);
+	}
+	
 	public Boolean getBooleanProperty(String key) {
 		String property = properties.getProperty(key);
 		return property == null ? null : Boolean.valueOf(property);

@@ -8,7 +8,8 @@ import br.edu.ufcg.lsd.oursim.entities.Entity;
 public class Job extends Entity {
 
 	private int jobId;
-	private State state = State.UNSTARTED;
+	private ExecutionState state = ExecutionState.UNSTARTED;
+	private Request request;
 	private List<Task> tasks = new ArrayList<Task>();
 	
 	public void addTask(Task task) {
@@ -23,12 +24,24 @@ public class Job extends Entity {
 		return jobId;
 	}
 	
-	public State getState() {
+	public ExecutionState getState() {
 		return state;
 	}
 	
-	public void setState(State state) {
+	public void setState(ExecutionState state) {
 		this.state = state;
+	}
+
+	public List<Task> getTasks() {
+		return tasks;
+	}
+
+	public void setRequest(Request request) {
+		this.request = request;
+	}
+
+	public Request getRequest() {
+		return request;
 	}
 	
 }

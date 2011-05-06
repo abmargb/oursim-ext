@@ -15,10 +15,8 @@ public class PeerUpEvent extends ActiveEntityUpEvent {
 	}
 
 	@Override
-	public void process(OurSim ourSim) {
-		super.process(ourSim);
-		
-		Peer peer = (Peer) ourSim.getGrid().getObject(getData());
+	protected void entityUp(OurSim ourSim) {
+		Peer peer = ourSim.getGrid().getObject(getData());
 		
 		MonitorUtil.registerMonitored(ourSim, getTime(), 
 				peer.getId(), peer.getDiscoveryServiceId(), 
@@ -28,8 +26,8 @@ public class PeerUpEvent extends ActiveEntityUpEvent {
 		for (String workerId : peer.getWorkersIds()) {
 			MonitorUtil.registerMonitored(ourSim, getTime(), 
 					peer.getId(), workerId, 
-					new WorkerAvailableEvent(getTime(), workerId, peer.getId()),
-					new WorkerFailedEvent(getTime(), workerId, peer.getId()));
+					new WorkerIdleEvent(getTime(), workerId, peer.getId()),
+					new WorkerUnavailableEvent(getTime(), workerId, peer.getId()));
 		}
 	}
 

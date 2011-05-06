@@ -15,16 +15,13 @@ public class BrokerUpEvent extends ActiveEntityUpEvent {
 	}
 	
 	@Override
-	public void process(OurSim ourSim) {
-		super.process(ourSim);
-		
-		Broker broker = (Broker) ourSim.getGrid().getObject(getData());
+	protected void entityUp(OurSim ourSim) {
+		Broker broker = ourSim.getGrid().getObject(getData());
 		
 		MonitorUtil.registerMonitored(ourSim, getTime(), 
 				broker.getId(), broker.getPeerId(), 
 				new PeerAvailableEvent(getTime(), broker.getId()), 
 				new PeerFailedEvent(getTime()));
-		
 	}
 
 }

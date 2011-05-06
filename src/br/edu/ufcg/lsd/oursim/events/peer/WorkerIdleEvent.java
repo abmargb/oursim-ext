@@ -6,12 +6,12 @@ import br.edu.ufcg.lsd.oursim.entities.grid.Worker;
 import br.edu.ufcg.lsd.oursim.events.AbstractEvent;
 import br.edu.ufcg.lsd.oursim.events.Event;
 
-public class WorkerFailedEvent extends AbstractEvent {
+public class WorkerIdleEvent extends AbstractEvent {
 
 	private final String workerId;
 	private final String peerId;
 
-	public WorkerFailedEvent(Long time, String workerId, String peerId) {
+	public WorkerIdleEvent(Long time, String workerId, String peerId) {
 		super(time, Event.DEF_PRIORITY, null);
 		this.workerId = workerId;
 		this.peerId = peerId;
@@ -19,8 +19,8 @@ public class WorkerFailedEvent extends AbstractEvent {
 
 	@Override
 	public void process(OurSim ourSim) {
-		Peer peer = (Peer) ourSim.getGrid().getObject(peerId);
-		peer.setWorkerState(workerId, Worker.STATE_UNVAILABLE);
+		Peer peer = ourSim.getGrid().getObject(peerId);
+		peer.setWorkerState(workerId, WorkerState.IDLE);
 	}
 
 }

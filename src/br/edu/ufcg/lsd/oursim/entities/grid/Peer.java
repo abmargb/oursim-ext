@@ -6,16 +6,17 @@ import java.util.Map;
 import java.util.Set;
 
 import br.edu.ufcg.lsd.oursim.entities.ActiveEntity;
+import br.edu.ufcg.lsd.oursim.events.peer.WorkerState;
 
 public class Peer extends ActiveEntity {
 
-	private Map<String, String> workersStates = new HashMap<String, String>();
+	private Map<String, WorkerState> workersStates = new HashMap<String, WorkerState>();
 	private Set<String> brokersIds = new HashSet<String>();
 	
 	private String dsId;
 	
 	public void addWorker(String workerId) {
-		workersStates.put(workerId, Worker.STATE_UNVAILABLE);
+		workersStates.put(workerId, WorkerState.UNAVAILABLE);
 	}
 	
 	public Set<String> getWorkersIds() {
@@ -34,7 +35,11 @@ public class Peer extends ActiveEntity {
 		return dsId;
 	}
 
-	public void setWorkerState(String workerId, String state) {
+	public void setWorkerState(String workerId, WorkerState state) {
 		workersStates.put(workerId, state);
+	}
+
+	public WorkerState getWorkerState(String workerId) {
+		return workersStates.get(workerId);
 	}
 }
