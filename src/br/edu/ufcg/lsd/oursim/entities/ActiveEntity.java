@@ -61,4 +61,8 @@ public class ActiveEntity extends Entity {
 		return fd.isFailed(monitored, time);
 	}
 
+	public void release(String monitored) {
+		fd.releaseMonitored(monitored);
+		monitors.remove(monitored);
+	}
 }

@@ -39,4 +39,8 @@ public class Task extends Entity {
 	public List<Replica> getReplicas() {
 		return replicas;
 	}
+
+	public void addReplica(Replica replica) {
+		this.replicas.add(replica);
+	}
 }

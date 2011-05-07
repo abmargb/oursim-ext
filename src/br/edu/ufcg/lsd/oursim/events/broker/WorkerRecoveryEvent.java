@@ -5,7 +5,6 @@ import br.edu.ufcg.lsd.oursim.entities.grid.Broker;
 import br.edu.ufcg.lsd.oursim.entities.job.Request;
 import br.edu.ufcg.lsd.oursim.events.AbstractEvent;
 import br.edu.ufcg.lsd.oursim.events.Event;
-import br.edu.ufcg.lsd.oursim.util.Configuration;
 
 public class WorkerRecoveryEvent extends AbstractEvent {
 
@@ -21,15 +20,9 @@ public class WorkerRecoveryEvent extends AbstractEvent {
 	@Override
 	public void process(OurSim ourSim) {
 		Broker broker = ourSim.getGrid().getObject(request.getBrokerId());
-		broker.workerIsAvailable(workerId);
+		request.getJob().workerIsAvailable(workerId);
 		
-		if (!broker.isScheduled()) {
-			broker.setScheduled(true);
-			ourSim.addEvent(
-					new BrokerScheduleEvent(getTime() + ourSim.getLongProperty(Configuration.PROP_BROKER_SCHEDULER_INTERVAL), 
-							request.getBrokerId()));
-			
-		}
+		SchedulerHelper.updateScheduler(ourSim, broker, getTime());
 	}
 
 }

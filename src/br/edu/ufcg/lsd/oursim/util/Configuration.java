@@ -5,7 +5,7 @@ import java.util.Properties;
 public class Configuration {
 
 	public static final String PROP_LIVENESS_CHECK_INTERVAL = "LIVENESS_CHECK_INTERVAL";
-	public static final String DEF_LIVENESS_CHECK_INTERVAL = "100";
+	public static final String DEF_LIVENESS_CHECK_INTERVAL = "1000";
 	
 	public static final String PROP_USE_FAILURE_DETECTOR = "USE_FAILURE_DETECTOR";
 	public static final String DEF_USE_FAILURE_DETECTOR = Boolean.TRUE.toString();
@@ -17,7 +17,7 @@ public class Configuration {
 	public static final String DEF_BROKER_MAX_REPLICAS = "3";
 	
 	public static final String PROP_BROKER_SCHEDULER_INTERVAL = "BROKER_SCHEDULER_INTERVAL";
-	public static final String DEF_BROKER_SCHEDULER_INTERVAL = "1000";
+	public static final String DEF_BROKER_SCHEDULER_INTERVAL = "10000";
 	
 	public static Properties createDefault() {
 		Properties properties = new Properties();

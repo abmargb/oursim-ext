@@ -28,7 +28,7 @@ public class BrokerLoggedEvent extends AbstractEvent {
 				Request request = new Request();
 				request.setBrokerId(brokerId);
 				request.setId(new Random().nextLong());
-				request.setJobId(job.getJobId());
+				request.setJob(job);
 				request.setRequiredWorkers(job.getTasks().size()
 						* ourSim.getIntProperty(Configuration.PROP_BROKER_MAX_REPLICAS));
 				job.setRequest(request);

@@ -62,9 +62,13 @@ public class MonitorUtil {
 	public static void sendIsItAlive(OurSim ourSim, Long time,
 			String interested, String monitored, boolean first) {
 		
+		ActiveEntity interestedObj = ourSim.getGrid().getObject(interested);
+		if (interestedObj.getMonitor(monitored) == null) {
+			return;
+		}
+		
 		IsItAliveReceivedEvent isItAliveReceivedEvent = new IsItAliveReceivedEvent(
 				time, interested, monitored, first);
-		ActiveEntity interestedObj = ourSim.getGrid().getObject(interested);
 		interestedObj.isItAliveSent(monitored, time);
 		ourSim.addNetworkEvent(isItAliveReceivedEvent);
 

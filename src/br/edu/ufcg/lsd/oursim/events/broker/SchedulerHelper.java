@@ -1,10 +1,13 @@
 package br.edu.ufcg.lsd.oursim.events.broker;
 
 import br.edu.ufcg.lsd.oursim.OurSim;
+import br.edu.ufcg.lsd.oursim.entities.grid.Broker;
 import br.edu.ufcg.lsd.oursim.entities.job.ExecutionState;
 import br.edu.ufcg.lsd.oursim.entities.job.Job;
 import br.edu.ufcg.lsd.oursim.entities.job.Replica;
 import br.edu.ufcg.lsd.oursim.entities.job.Task;
+import br.edu.ufcg.lsd.oursim.events.peer.DisposeWorkerEvent;
+import br.edu.ufcg.lsd.oursim.events.peer.FinishRequestEvent;
 import br.edu.ufcg.lsd.oursim.util.Configuration;
 
 public class SchedulerHelper {
@@ -115,6 +118,31 @@ public class SchedulerHelper {
 		return running < maxReplicas
 			&& (ExecutionState.RUNNING.equals(task.getState()) || ExecutionState.UNSTARTED.equals(task.getState()));
 		
+	}
+
+	public static void disposeWorker(Job job, Broker broker, String worker, OurSim ourSim, long now) {
+		job.removeWorker(worker);
+		broker.release(worker);
+		
+		ourSim.addNetworkEvent(new DisposeWorkerEvent(now, 
+				worker, broker.getPeerId()));
+	}
+
+	public static void finishJob(Job job, Broker broker, OurSim ourSim, long time) {
+		for (String worker : job.getAvailableWorkers()) {
+			disposeWorker(job, broker, worker, ourSim, time);
+		}
+		ourSim.addNetworkEvent(new FinishRequestEvent(time, 
+				job.getRequest()));
+	}
+
+	public static void updateScheduler(OurSim ourSim, Broker broker, long now) {
+		if (!broker.isScheduled()) {
+			broker.setScheduled(true);
+			ourSim.addEvent(new BrokerScheduleEvent(
+					now + ourSim.getLongProperty(Configuration.PROP_BROKER_SCHEDULER_INTERVAL),
+					broker.getId()));
+		}
 	}
 	
 }
