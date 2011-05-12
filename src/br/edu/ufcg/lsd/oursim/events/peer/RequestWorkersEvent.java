@@ -40,7 +40,24 @@ public class RequestWorkersEvent extends AbstractEvent {
 			return;
 		}
 		
-		Set<String> allocableWorkers = getAllocableWorkers(peer, request);
+		Set<String> allocableWorkers = new HashSet<String>();
+		while (true) {
+			
+			if (request.getNeededWorkers() == 0) {
+				break;
+			}
+			
+			String anIdleWorker = getIdleWorker(peer, request);
+			String workerId = anIdleWorker == null ? getPreemptedWorker(peer,
+					request) : anIdleWorker;
+			
+			if (workerId != null) {
+				allocableWorkers.add(workerId);
+				request.addAllocatedWorker(workerId);
+			}
+		}
+		
+		
 		for (String workerId : allocableWorkers) {
 			peer.setWorkerState(workerId, WorkerState.IN_USE);
 			ourSim.addNetworkEvent(new HereIsWorkerEvent(getTime(), 
@@ -56,20 +73,18 @@ public class RequestWorkersEvent extends AbstractEvent {
 		}
 	}
 
-	private Set<String> getAllocableWorkers(Peer peer, PeerRequest request) {
-		Set<String> allocableWorkers = new HashSet<String>();
+	private String getPreemptedWorker(Peer peer, PeerRequest request) {
+		return null;
+	}
+
+	private String getIdleWorker(Peer peer, PeerRequest request) {
 		for (String workerId : peer.getWorkersIds()) {
 			if (peer.getWorkerState(workerId).equals(WorkerState.IDLE)) {
-				allocableWorkers.add(workerId);
-				request.addAllocatedWorker(workerId);
-			}
-			
-			if (allocableWorkers.size() >= requestSpec.getRequiredWorkers()) {
-				break;
+				return workerId;
 			}
 		}
 		
-		return allocableWorkers;
+		return null;
 	}
 
 }
