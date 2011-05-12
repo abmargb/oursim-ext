@@ -27,7 +27,7 @@ public class BrokerLoggedEvent extends AbstractEvent {
 			if (!SchedulerHelper.isJobSatisfied(job, ourSim)) {
 				Request request = new Request();
 				request.setBrokerId(brokerId);
-				request.setId(new Random().nextLong());
+				request.setId(Math.abs(new Random().nextLong()));
 				request.setJob(job);
 				request.setRequiredWorkers(job.getTasks().size()
 						* ourSim.getIntProperty(Configuration.PROP_BROKER_MAX_REPLICAS));
@@ -38,6 +38,5 @@ public class BrokerLoggedEvent extends AbstractEvent {
 			}
 		}
 	}
-
 
 }

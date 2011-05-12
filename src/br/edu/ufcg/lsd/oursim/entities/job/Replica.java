@@ -1,23 +1,14 @@
 package br.edu.ufcg.lsd.oursim.entities.job;
 
-import br.edu.ufcg.lsd.oursim.entities.Entity;
+import br.edu.ufcg.lsd.oursim.entities.ExecutableEntity;
 
-public class Replica extends Entity {
+public class Replica extends ExecutableEntity {
 
-	private ExecutionState state = ExecutionState.UNSTARTED;
 	private String workerId;
 	private Task task;
-	
-	public ExecutionState getState() {
-		return state;
-	}
 
 	public void setWorker(String workerId) {
 		this.workerId = workerId;
-	}
-
-	public void setState(ExecutionState state) {
-		this.state = state;
 	}
 
 	public String getWorker() {

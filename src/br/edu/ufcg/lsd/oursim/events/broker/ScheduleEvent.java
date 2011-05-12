@@ -14,11 +14,11 @@ import br.edu.ufcg.lsd.oursim.events.Event;
 import br.edu.ufcg.lsd.oursim.events.peer.PauseRequestEvent;
 import br.edu.ufcg.lsd.oursim.events.worker.StartWorkEvent;
 
-public class BrokerScheduleEvent extends AbstractEvent {
+public class ScheduleEvent extends AbstractEvent {
 
 	private String brokerId;
 
-	public BrokerScheduleEvent(Long time, String brokerId) {
+	public ScheduleEvent(Long time, String brokerId) {
 		super(time, Event.HIGHER_PRIORITY, null);
 		this.brokerId = brokerId;
 	}
@@ -94,7 +94,11 @@ public class BrokerScheduleEvent extends AbstractEvent {
 		Replica replica = new Replica();
 		replica.setWorker(chosenWorkerId);
 		replica.setTask(task);
+		replica.setCreationTime(getTime());
+		
 		task.addReplica(replica);
+		replica.setId(replica.getTask().getReplicas().size());
+		
 		task.setState(ExecutionState.RUNNING);
 		task.getJob().setState(ExecutionState.RUNNING);
 		
@@ -107,7 +111,7 @@ public class BrokerScheduleEvent extends AbstractEvent {
 				if (isReadyToRun(replica)) {
 					replica.setState(ExecutionState.RUNNING);
 					ourSim.addNetworkEvent(new StartWorkEvent(
-							getTime(), brokerId, replica));
+							getTime(), replica));
 				}
 			}
 		}

@@ -9,11 +9,9 @@ import br.edu.ufcg.lsd.oursim.events.broker.HereIsExecutionResultEvent;
 public class StartWorkEvent extends AbstractEvent {
 
 	private final Replica replica;
-	private final String brokerId;
 
-	public StartWorkEvent(Long time, String brokerId, Replica replica) {
+	public StartWorkEvent(Long time, Replica replica) {
 		super(time, Event.DEF_PRIORITY, null);
-		this.brokerId = brokerId;
 		this.replica = replica;
 	}
 
@@ -21,7 +19,7 @@ public class StartWorkEvent extends AbstractEvent {
 	public void process(OurSim ourSim) {
 		ourSim.addNetworkEvent(new HereIsExecutionResultEvent(
 				getTime() + replica.getTask().getDuration(), 
-				brokerId, replica));
+				replica));
 	}
 
 }

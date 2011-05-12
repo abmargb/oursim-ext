@@ -139,10 +139,33 @@ public class SchedulerHelper {
 	public static void updateScheduler(OurSim ourSim, Broker broker, long now) {
 		if (!broker.isScheduled()) {
 			broker.setScheduled(true);
-			ourSim.addEvent(new BrokerScheduleEvent(
+			ourSim.addEvent(new ScheduleEvent(
 					now + ourSim.getLongProperty(Configuration.PROP_BROKER_SCHEDULER_INTERVAL),
 					broker.getId()));
 		}
+	}
+
+	public static void executionEnded(Replica finishedReplica, OurSim ourSim, long time) {
+		
+		Job job = finishedReplica.getTask().getJob();
+		
+		String worker = finishedReplica.getWorker();
+		finishedReplica.setWorker(null);
+		job.workerIsAvailable(worker);
+		
+		String brokerId = finishedReplica.getTask().getJob().getRequest().getBrokerId();
+		Broker broker = ourSim.getGrid().getObject(brokerId);
+		
+		if (isJobSatisfied(job, ourSim)) {
+			disposeWorker(job, broker, worker, 
+					ourSim, time);
+		}
+		
+		if (ExecutionState.FINISHED.equals(job.getState())) {
+			finishJob(job, broker, ourSim, time);
+		}
+		
+		updateScheduler(ourSim, broker, time);
 	}
 	
 }

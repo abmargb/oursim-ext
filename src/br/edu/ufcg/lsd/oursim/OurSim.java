@@ -8,6 +8,7 @@ import br.edu.ufcg.lsd.oursim.factories.GridFactory;
 import br.edu.ufcg.lsd.oursim.network.Network;
 import br.edu.ufcg.lsd.oursim.queue.EventProxy;
 import br.edu.ufcg.lsd.oursim.queue.EventQueue;
+import br.edu.ufcg.lsd.oursim.trace.TraceCollector;
 import br.edu.ufcg.lsd.oursim.util.Configuration;
 
 /**
@@ -19,10 +20,13 @@ public class OurSim {
 	private final Grid grid;
 	private final Network network;
 	private final Properties properties;
+	private final TraceCollector traceCollector;
+	
 	private boolean running = true;
 	
 	public OurSim(EventProxy eventProxy, GridFactory gridFactory, 
-			Properties properties, Network network) {
+			Properties properties, Network network, TraceCollector traceCollector) {
+		this.traceCollector = traceCollector;
 		this.properties = createProperties(properties);
 		this.network = network;
 		this.queue = new EventQueue(eventProxy);
@@ -35,11 +39,6 @@ public class OurSim {
 		return defaults;
 	}
 
-	public OurSim(EventProxy eventProxy, GridFactory gridFactory, 
-			Properties properties) {
-		this(eventProxy, gridFactory, properties, null);
-	}
-	
 	public Grid getGrid() {
 		return grid;
 	}
@@ -79,6 +78,10 @@ public class OurSim {
 		return properties.getProperty(key);
 	}
 
+	public TraceCollector getTraceCollector() {
+		return traceCollector;
+	}
+	
 	public void halt() {
 		this.running = false;
 	}

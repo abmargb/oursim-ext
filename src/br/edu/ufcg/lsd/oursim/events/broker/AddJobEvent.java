@@ -17,11 +17,11 @@ import br.edu.ufcg.lsd.oursim.util.Configuration;
 import br.edu.ufcg.lsd.oursim.util.JSONUtils;
 import br.edu.ufcg.lsd.oursim.util.LineParser;
 
-public class JobAddedEvent extends AbstractEvent {
+public class AddJobEvent extends AbstractEvent {
 
 	public static final String TYPE = "ADD_JOB";
 	
-	public JobAddedEvent(Long time, String data) {
+	public AddJobEvent(Long time, String data) {
 		super(time, Event.DEF_PRIORITY, data);
 	}
 
@@ -30,7 +30,7 @@ public class JobAddedEvent extends AbstractEvent {
 		LineParser lineParser = new LineParser(getData());
 		String brokerId = lineParser.next();
 		Job job = parseJob(lineParser.restOfLine());
-
+		
 		Broker broker = ourSim.getGrid().getObject(brokerId);
 		broker.addJob(job);
 
@@ -40,7 +40,7 @@ public class JobAddedEvent extends AbstractEvent {
 		
 		Request request = new Request();
 		request.setBrokerId(brokerId);
-		request.setId(new Random().nextLong());
+		request.setId(Math.abs(new Random().nextLong()));
 		request.setJob(job);
 		request.setRequiredWorkers(job.getTasks().size()
 				* ourSim.getIntProperty(Configuration.PROP_BROKER_MAX_REPLICAS));
@@ -50,12 +50,13 @@ public class JobAddedEvent extends AbstractEvent {
 				broker.getPeerId(), request));
 	}
 
-	private static Job parseJob(String jobJsonStr) {
+	private Job parseJob(String jobJsonStr) {
 		Job job = new Job();
 		
 		JSONObject jobJson = JSONUtils.asJSON(jobJsonStr);
 		int jobId = JSONUtils.getJSONInteger(jobJson, "id");
 		job.setId(jobId);
+		job.setCreationTime(getTime());
 		
 		JSONArray taskArray = JSONUtils.getJSONArray(jobJson, "tasks");
 		
@@ -65,6 +66,8 @@ public class JobAddedEvent extends AbstractEvent {
 			long duration = JSONUtils.getJSONLong(taskJson, "duration");
 			task.setDuration(duration);
 			task.setJob(job);
+			task.setId(i+1);
+			task.setCreationTime(getTime());
 			
 			job.addTask(task);
 		}

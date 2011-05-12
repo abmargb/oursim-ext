@@ -5,12 +5,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import br.edu.ufcg.lsd.oursim.entities.Entity;
+import br.edu.ufcg.lsd.oursim.entities.ExecutableEntity;
 
-public class Job extends Entity {
+public class Job extends ExecutableEntity {
 
-	private int jobId;
-	private ExecutionState state = ExecutionState.UNSTARTED;
 	private Request request;
 	private Set<String> availableWorkers = new HashSet<String>();
 	private Set<String> inUseWorkers = new HashSet<String>();
@@ -20,22 +18,6 @@ public class Job extends Entity {
 		tasks.add(task);
 	}
 	
-	public void setId(int jobId) {
-		this.jobId = jobId;
-	}
-
-	public int getJobId() {
-		return jobId;
-	}
-	
-	public ExecutionState getState() {
-		return state;
-	}
-	
-	public void setState(ExecutionState state) {
-		this.state = state;
-	}
-
 	public List<Task> getTasks() {
 		return tasks;
 	}

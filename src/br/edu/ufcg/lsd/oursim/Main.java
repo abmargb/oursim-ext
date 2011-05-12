@@ -2,11 +2,13 @@ package br.edu.ufcg.lsd.oursim;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.Properties;
 
 import br.edu.ufcg.lsd.oursim.factories.DefaultGridFactory;
 import br.edu.ufcg.lsd.oursim.network.DefaultWANNetwork;
 import br.edu.ufcg.lsd.oursim.queue.DefaultEventProxy;
+import br.edu.ufcg.lsd.oursim.trace.DefaultTraceCollector;
 
 public class Main {
 
@@ -18,7 +20,8 @@ public class Main {
 				new DefaultEventProxy(new FileInputStream("resources/event-example.conf")), 
 				new DefaultGridFactory(new FileInputStream("resources/grid-example.conf")),
 				properties,
-				new DefaultWANNetwork());
+				new DefaultWANNetwork(),
+				new DefaultTraceCollector(new FileOutputStream("trace.out")));
 		
 		ourSim.run();
 	}

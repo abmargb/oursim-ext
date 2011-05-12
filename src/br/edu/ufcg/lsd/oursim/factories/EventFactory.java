@@ -7,7 +7,7 @@ import br.edu.ufcg.lsd.oursim.events.Event;
 import br.edu.ufcg.lsd.oursim.events.HaltEvent;
 import br.edu.ufcg.lsd.oursim.events.broker.BrokerDownEvent;
 import br.edu.ufcg.lsd.oursim.events.broker.BrokerUpEvent;
-import br.edu.ufcg.lsd.oursim.events.broker.JobAddedEvent;
+import br.edu.ufcg.lsd.oursim.events.broker.AddJobEvent;
 import br.edu.ufcg.lsd.oursim.events.ds.DiscoveryServiceDownEvent;
 import br.edu.ufcg.lsd.oursim.events.ds.DiscoveryServiceUpEvent;
 import br.edu.ufcg.lsd.oursim.events.peer.PeerDownEvent;
@@ -30,7 +30,7 @@ public class EventFactory {
 		eventClasses.put(BrokerUpEvent.TYPE, BrokerUpEvent.class);
 		eventClasses.put(BrokerDownEvent.TYPE, BrokerDownEvent.class);
 		eventClasses.put(HaltEvent.TYPE, HaltEvent.class);
-		eventClasses.put(JobAddedEvent.TYPE, JobAddedEvent.class);
+		eventClasses.put(AddJobEvent.TYPE, AddJobEvent.class);
 	}
 	
 	public Event parseEvent(String line) {
