@@ -34,6 +34,13 @@ public class ScheduleEvent extends AbstractEvent {
 	}
 
 	private void clean(Broker broker, Job job, OurSim ourSim) {
+		if (ExecutionState.FAILED.equals(job.getState()) || 
+				ExecutionState.FINISHED.equals(job.getState())) {
+			job.setRequest(null);
+			return;
+		}
+		
+		
 		if (SchedulerHelper.isJobSatisfied(job, ourSim)) {
 			BrokerRequest request = job.getRequest();
 			if (!request.isPaused()) {
