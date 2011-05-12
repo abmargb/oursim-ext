@@ -6,8 +6,6 @@ import br.edu.ufcg.lsd.oursim.events.fd.ActiveEntityDownEvent;
 
 public class BrokerDownEvent extends ActiveEntityDownEvent {
 
-	public static final String TYPE = "BROKER_DOWN";
-
 	public BrokerDownEvent(Long time, String data) {
 		super(time, Event.DEF_PRIORITY, data);
 	}

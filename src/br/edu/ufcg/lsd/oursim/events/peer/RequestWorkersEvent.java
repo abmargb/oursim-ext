@@ -9,17 +9,17 @@ import br.edu.ufcg.lsd.oursim.entities.request.PeerRequest;
 import br.edu.ufcg.lsd.oursim.entities.request.RequestSpec;
 import br.edu.ufcg.lsd.oursim.events.AbstractEvent;
 import br.edu.ufcg.lsd.oursim.events.Event;
-import br.edu.ufcg.lsd.oursim.events.broker.HereIsWorkerEvent;
+import br.edu.ufcg.lsd.oursim.events.broker.BrokerEvents;
 import br.edu.ufcg.lsd.oursim.util.Configuration;
 
 public class RequestWorkersEvent extends AbstractEvent {
 
 	private final String peerId;
 	private final RequestSpec requestSpec;
-	private final boolean repetition;
+	private final Boolean repetition;
 
 	public RequestWorkersEvent(Long time, String peerId, 
-			RequestSpec requestSpec, boolean repetition) {
+			RequestSpec requestSpec, Boolean repetition) {
 		super(time, Event.DEF_PRIORITY, null);
 		this.peerId = peerId;
 		this.requestSpec = requestSpec;
@@ -51,21 +51,23 @@ public class RequestWorkersEvent extends AbstractEvent {
 			String workerId = anIdleWorker == null ? getPreemptedWorker(peer,
 					request) : anIdleWorker;
 			
-			if (workerId != null) {
-				allocableWorkers.add(workerId);
-				request.addAllocatedWorker(workerId);
+			if (workerId == null) {
+				break;
 			}
+			
+			allocableWorkers.add(workerId);
+			request.addAllocatedWorker(workerId);
 		}
 		
 		
 		for (String workerId : allocableWorkers) {
 			peer.setWorkerState(workerId, WorkerState.IN_USE);
-			ourSim.addNetworkEvent(new HereIsWorkerEvent(getTime(), 
+			ourSim.addNetworkEvent(ourSim.createEvent(BrokerEvents.HERE_IS_WORKER, getTime(), 
 					workerId, requestSpec));
 		}
 		
 		if (request.getNeededWorkers() > 0) {
-			RequestWorkersEvent requestWorkersEvent = new RequestWorkersEvent(
+			Event requestWorkersEvent = ourSim.createEvent(PeerEvents.REQUEST_WORKERS, 
 					getTime() + ourSim.getLongProperty(
 							Configuration.PROP_REQUEST_REPETITION_INTERVAL), 
 					peerId, requestSpec, true);
@@ -79,7 +81,8 @@ public class RequestWorkersEvent extends AbstractEvent {
 
 	private String getIdleWorker(Peer peer, PeerRequest request) {
 		for (String workerId : peer.getWorkersIds()) {
-			if (peer.getWorkerState(workerId).equals(WorkerState.IDLE)) {
+			if (peer.getWorkerState(workerId).equals(WorkerState.IDLE)
+					&& !request.getAllocatedWorkers().contains(workerId)) {
 				return workerId;
 			}
 		}

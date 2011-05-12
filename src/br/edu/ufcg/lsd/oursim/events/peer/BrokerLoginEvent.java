@@ -5,6 +5,7 @@ import br.edu.ufcg.lsd.oursim.entities.grid.Broker;
 import br.edu.ufcg.lsd.oursim.entities.grid.Peer;
 import br.edu.ufcg.lsd.oursim.events.AbstractEvent;
 import br.edu.ufcg.lsd.oursim.events.Event;
+import br.edu.ufcg.lsd.oursim.events.broker.BrokerEvents;
 import br.edu.ufcg.lsd.oursim.events.broker.BrokerLoggedEvent;
 
 public class BrokerLoginEvent extends AbstractEvent {
@@ -23,7 +24,7 @@ public class BrokerLoginEvent extends AbstractEvent {
 		
 		peer.addBroker(brokerId);
 		
-		ourSim.addNetworkEvent(new BrokerLoggedEvent(getTime(), brokerId));
+		ourSim.addNetworkEvent(ourSim.createEvent(BrokerEvents.BROKER_LOGGED, getTime(), brokerId));
 	}
 
 

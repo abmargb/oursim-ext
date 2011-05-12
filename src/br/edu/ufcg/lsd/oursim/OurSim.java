@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import br.edu.ufcg.lsd.oursim.entities.grid.Grid;
 import br.edu.ufcg.lsd.oursim.events.Event;
+import br.edu.ufcg.lsd.oursim.factories.EventFactory;
 import br.edu.ufcg.lsd.oursim.factories.GridFactory;
 import br.edu.ufcg.lsd.oursim.network.Network;
 import br.edu.ufcg.lsd.oursim.queue.EventProxy;
@@ -23,13 +24,14 @@ public class OurSim {
 	private final TraceCollector traceCollector;
 	
 	private boolean running = true;
+	private final EventFactory eventFactory = new EventFactory();
 	
 	public OurSim(EventProxy eventProxy, GridFactory gridFactory, 
 			Properties properties, Network network, TraceCollector traceCollector) {
 		this.traceCollector = traceCollector;
 		this.properties = createProperties(properties);
 		this.network = network;
-		this.queue = new EventQueue(eventProxy);
+		this.queue = new EventQueue(eventProxy, eventFactory);
 		this.grid = gridFactory.createGrid();
 	}
 	
@@ -50,6 +52,10 @@ public class OurSim {
 	public void addNetworkEvent(Event event) {
 		event.setTime(event.getTime() + network.generateDelay());
 		queue.add(event);
+	}
+	
+	public Event createEvent(String type, long time, Object... params) {
+		return eventFactory.createEvent(type, time, params);
 	}
 	
 	public void run() {

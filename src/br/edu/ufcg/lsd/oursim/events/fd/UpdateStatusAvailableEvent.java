@@ -6,12 +6,12 @@ import br.edu.ufcg.lsd.oursim.entities.Monitor;
 import br.edu.ufcg.lsd.oursim.events.AbstractEvent;
 import br.edu.ufcg.lsd.oursim.events.Event;
 
-public class UpdateStatusAvailableReceivedEvent extends AbstractEvent {
+public class UpdateStatusAvailableEvent extends AbstractEvent {
 
 	private final String interested;
 	private final String monitored;
 
-	public UpdateStatusAvailableReceivedEvent(Long time, String interested,
+	public UpdateStatusAvailableEvent(Long time, String interested,
 			String monitored) {
 		super(time, Event.DEF_PRIORITY, null);
 		this.interested = interested;

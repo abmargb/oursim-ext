@@ -6,8 +6,8 @@ public class HaltEvent extends AbstractEvent {
 
 	public static final String TYPE = "HALT";
 	
-	public HaltEvent(Long time, String data) {
-		super(time, Event.HIGHER_PRIORITY, data);
+	public HaltEvent(Long time) {
+		super(time, Event.HIGHER_PRIORITY, null);
 	}
 
 	@Override

@@ -9,7 +9,7 @@ import br.edu.ufcg.lsd.oursim.entities.request.BrokerRequest;
 import br.edu.ufcg.lsd.oursim.entities.request.RequestSpec;
 import br.edu.ufcg.lsd.oursim.events.AbstractEvent;
 import br.edu.ufcg.lsd.oursim.events.Event;
-import br.edu.ufcg.lsd.oursim.events.peer.RequestWorkersEvent;
+import br.edu.ufcg.lsd.oursim.events.peer.PeerEvents;
 import br.edu.ufcg.lsd.oursim.util.Configuration;
 
 public class BrokerLoggedEvent extends AbstractEvent {
@@ -37,7 +37,7 @@ public class BrokerLoggedEvent extends AbstractEvent {
 				job.setRequest(request);
 				broker.addRequest(request);
 				
-				ourSim.addNetworkEvent(new RequestWorkersEvent(getTime(), 
+				ourSim.addNetworkEvent(ourSim.createEvent(PeerEvents.REQUEST_WORKERS, getTime(), 
 						broker.getPeerId(), request.getSpec(), false));
 			}
 		}

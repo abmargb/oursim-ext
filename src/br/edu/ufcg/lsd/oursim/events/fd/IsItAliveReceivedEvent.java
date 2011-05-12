@@ -10,9 +10,9 @@ public class IsItAliveReceivedEvent extends AbstractEvent {
 
 	private final String interested;
 	private final String monitored;
-	private final boolean first;
+	private final Boolean first;
 
-	public IsItAliveReceivedEvent(Long time, String interested, String monitored, boolean first) {
+	public IsItAliveReceivedEvent(Long time, String interested, String monitored, Boolean first) {
 		super(time, Event.DEF_PRIORITY, null);
 		this.interested = interested;
 		this.monitored = monitored;
@@ -31,7 +31,7 @@ public class IsItAliveReceivedEvent extends AbstractEvent {
 			} 
 				
 			if (reverseMonitor != null && reverseMonitor.isUp()){
-				ourSim.addNetworkEvent(new UpdateStatusAvailableReceivedEvent(
+				ourSim.addNetworkEvent(ourSim.createEvent(FailureDetectionEvents.UPDATE_STATUS_AVAILABLE, 
 						getTime(), interested, monitored));
 			}
 		}

@@ -8,8 +8,6 @@ import br.edu.ufcg.lsd.oursim.events.fd.MonitorUtil;
 
 public class BrokerUpEvent extends ActiveEntityUpEvent {
 
-	public static final String TYPE = "BROKER_UP";
-
 	public BrokerUpEvent(Long time, String data) {
 		super(time, Event.DEF_PRIORITY, data);
 	}
@@ -18,10 +16,13 @@ public class BrokerUpEvent extends ActiveEntityUpEvent {
 	protected void entityUp(OurSim ourSim) {
 		Broker broker = ourSim.getGrid().getObject(getData());
 		
+		ourSim.createEvent(BrokerEvents.PEER_AVAILABLE, 
+				getTime(), broker.getId());
+		
 		MonitorUtil.registerMonitored(ourSim, getTime(), 
 				broker.getId(), broker.getPeerId(), 
-				new PeerAvailableEvent(getTime(), broker.getId()), 
-				new PeerFailedEvent(getTime()));
+				ourSim.createEvent(BrokerEvents.PEER_AVAILABLE, getTime(), broker.getId()), 
+				ourSim.createEvent(BrokerEvents.PEER_FAILED, getTime()));
 	}
 
 }

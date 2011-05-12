@@ -4,7 +4,7 @@ import br.edu.ufcg.lsd.oursim.OurSim;
 import br.edu.ufcg.lsd.oursim.entities.job.Replica;
 import br.edu.ufcg.lsd.oursim.events.AbstractEvent;
 import br.edu.ufcg.lsd.oursim.events.Event;
-import br.edu.ufcg.lsd.oursim.events.broker.HereIsExecutionResultEvent;
+import br.edu.ufcg.lsd.oursim.events.broker.BrokerEvents;
 
 public class StartWorkEvent extends AbstractEvent {
 
@@ -17,7 +17,7 @@ public class StartWorkEvent extends AbstractEvent {
 
 	@Override
 	public void process(OurSim ourSim) {
-		ourSim.addNetworkEvent(new HereIsExecutionResultEvent(
+		ourSim.addNetworkEvent(ourSim.createEvent(BrokerEvents.HERE_IS_EXECUTION_RESULT, 
 				getTime() + replica.getTask().getDuration(), 
 				replica));
 	}

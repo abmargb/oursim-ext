@@ -53,8 +53,8 @@ public class MonitorUtil {
 			Long livenessCheck = ourSim.getLongProperty(
 					Configuration.PROP_LIVENESS_CHECK_INTERVAL);
 			
-			ourSim.addEvent(new LivenessCheckEvent(time + livenessCheck, interested, 
-					monitored));
+			ourSim.addEvent(ourSim.createEvent(FailureDetectionEvents.LIVENESS_CHECK, 
+					time + livenessCheck, interested, monitored));
 		}
 		
 	}
@@ -67,12 +67,12 @@ public class MonitorUtil {
 			return;
 		}
 		
-		IsItAliveReceivedEvent isItAliveReceivedEvent = new IsItAliveReceivedEvent(
+		Event isItAliveReceivedEvent = ourSim.createEvent(FailureDetectionEvents.IS_IT_ALIVE_RECEIVED, 
 				time, interested, monitored, first);
 		interestedObj.isItAliveSent(monitored, time);
 		ourSim.addNetworkEvent(isItAliveReceivedEvent);
 
-		IsItAliveSentEvent isItAliveSentEvent = new IsItAliveSentEvent(
+		Event isItAliveSentEvent = ourSim.createEvent(FailureDetectionEvents.IS_IT_ALIVE_SENT, 
 				time + interestedObj.getTimeToNextPing(monitored, time), 
 				interested, monitored);
 		

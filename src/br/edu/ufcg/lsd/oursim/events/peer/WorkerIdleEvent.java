@@ -2,7 +2,6 @@ package br.edu.ufcg.lsd.oursim.events.peer;
 
 import br.edu.ufcg.lsd.oursim.OurSim;
 import br.edu.ufcg.lsd.oursim.entities.grid.Peer;
-import br.edu.ufcg.lsd.oursim.entities.grid.Worker;
 import br.edu.ufcg.lsd.oursim.events.AbstractEvent;
 import br.edu.ufcg.lsd.oursim.events.Event;
 

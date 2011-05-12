@@ -3,16 +3,16 @@ package br.edu.ufcg.lsd.oursim.queue;
 import java.util.LinkedList;
 import java.util.List;
 
-import br.edu.ufcg.lsd.oursim.events.Event;
+import br.edu.ufcg.lsd.oursim.events.EventSpec;
 
 public class ListEventProxy implements EventProxy {
 
-	LinkedList<Event> events = new LinkedList<Event>();
+	LinkedList<EventSpec> events = new LinkedList<EventSpec>();
 	
 	@Override
-	public List<Event> nextEventPage(int pageSize) {
+	public List<EventSpec> nextEventPage(int pageSize) {
 		int size = Math.min(pageSize, events.size());
-		List<Event> removed = new LinkedList<Event>();
+		List<EventSpec> removed = new LinkedList<EventSpec>();
 		for (int i = 0; i < size; i++) {
 			removed.add(events.removeFirst());
 		}
@@ -27,7 +27,7 @@ public class ListEventProxy implements EventProxy {
 		return events.getFirst().getTime();
 	}
 
-	public void add(Event ev) {
+	public void add(EventSpec ev) {
 		events.add(ev);
 	}
 

@@ -9,7 +9,7 @@ import br.edu.ufcg.lsd.oursim.entities.job.Task;
 import br.edu.ufcg.lsd.oursim.entities.request.BrokerRequest;
 import br.edu.ufcg.lsd.oursim.events.AbstractEvent;
 import br.edu.ufcg.lsd.oursim.events.Event;
-import br.edu.ufcg.lsd.oursim.events.peer.ResumeRequestEvent;
+import br.edu.ufcg.lsd.oursim.events.peer.PeerEvents;
 import br.edu.ufcg.lsd.oursim.util.Configuration;
 
 public class WorkerFailedEvent extends AbstractEvent {
@@ -52,7 +52,7 @@ public class WorkerFailedEvent extends AbstractEvent {
 		if (jobEnded) {
 			SchedulerHelper.finishJob(job, broker, ourSim, getTime());
 		} else if (!SchedulerHelper.isJobSatisfied(job, ourSim)) {
-			ourSim.addNetworkEvent(new ResumeRequestEvent(
+			ourSim.addNetworkEvent(ourSim.createEvent(PeerEvents.RESUME_REQUEST, 
 					getTime(), request.getSpec(), broker.getPeerId()));
 		}
 		

@@ -8,8 +8,6 @@ import br.edu.ufcg.lsd.oursim.events.fd.MonitorUtil;
 
 public class PeerUpEvent extends ActiveEntityUpEvent {
 
-	public static final String TYPE = "PEER_UP";
-	
 	public PeerUpEvent(Long time, String data) {
 		super(time, Event.DEF_PRIORITY, data);
 	}
@@ -20,14 +18,14 @@ public class PeerUpEvent extends ActiveEntityUpEvent {
 		
 		MonitorUtil.registerMonitored(ourSim, getTime(), 
 				peer.getId(), peer.getDiscoveryServiceId(), 
-				new DiscoveryServiceAvailableEvent(getTime()), 
-				new DiscoveryServiceFailedEvent(getTime()));
+				ourSim.createEvent(PeerEvents.DISCOVERY_SERVICE_AVAILABLE, getTime()), 
+				ourSim.createEvent(PeerEvents.DISCOVERY_SERVICE_FAILED, getTime()));
 		
 		for (String workerId : peer.getWorkersIds()) {
 			MonitorUtil.registerMonitored(ourSim, getTime(), 
 					peer.getId(), workerId, 
-					new WorkerIdleEvent(getTime(), workerId, peer.getId()),
-					new WorkerUnavailableEvent(getTime(), workerId, peer.getId()));
+					ourSim.createEvent(PeerEvents.WORKER_IDLE, getTime(), workerId, peer.getId()),
+					ourSim.createEvent(PeerEvents.WORKER_UNAVAILABLE, getTime(), workerId, peer.getId()));
 		}
 	}
 

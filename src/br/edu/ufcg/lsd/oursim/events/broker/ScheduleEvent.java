@@ -11,8 +11,8 @@ import br.edu.ufcg.lsd.oursim.entities.job.Task;
 import br.edu.ufcg.lsd.oursim.entities.request.BrokerRequest;
 import br.edu.ufcg.lsd.oursim.events.AbstractEvent;
 import br.edu.ufcg.lsd.oursim.events.Event;
-import br.edu.ufcg.lsd.oursim.events.peer.PauseRequestEvent;
-import br.edu.ufcg.lsd.oursim.events.worker.StartWorkEvent;
+import br.edu.ufcg.lsd.oursim.events.peer.PeerEvents;
+import br.edu.ufcg.lsd.oursim.events.worker.WorkerEvents;
 
 public class ScheduleEvent extends AbstractEvent {
 
@@ -45,7 +45,7 @@ public class ScheduleEvent extends AbstractEvent {
 			BrokerRequest request = job.getRequest();
 			if (!request.isPaused()) {
 				request.setPaused(true);
-				ourSim.addNetworkEvent(new PauseRequestEvent(
+				ourSim.addNetworkEvent(ourSim.createEvent(PeerEvents.PAUSE_REQUEST, 
 						getTime(), request.getSpec(), broker.getPeerId()));
 			}
 			
@@ -117,8 +117,8 @@ public class ScheduleEvent extends AbstractEvent {
 			for (Replica replica : task.getReplicas()) {
 				if (isReadyToRun(replica)) {
 					replica.setState(ExecutionState.RUNNING);
-					ourSim.addNetworkEvent(new StartWorkEvent(
-							getTime(), replica));
+					ourSim.addNetworkEvent(ourSim.createEvent(
+							WorkerEvents.START_WORK, getTime(), replica));
 				}
 			}
 		}

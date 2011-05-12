@@ -27,8 +27,8 @@ public class HereIsWorkerEvent extends AbstractEvent {
 		
 		MonitorUtil.registerMonitored(ourSim, getTime(), 
 				broker.getId(), workerId, 
-				new WorkerRecoveryEvent(getTime(), request, workerId), 
-				new WorkerFailedEvent(getTime(), request, workerId));
+				ourSim.createEvent(BrokerEvents.WORKER_RECOVERY, getTime(), request, workerId), 
+				ourSim.createEvent(BrokerEvents.WORKER_FAILED, getTime(), request, workerId));
 	}
 
 
