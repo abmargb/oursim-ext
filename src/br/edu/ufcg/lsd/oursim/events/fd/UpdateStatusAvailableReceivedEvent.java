@@ -22,10 +22,15 @@ public class UpdateStatusAvailableReceivedEvent extends AbstractEvent {
 	public void process(OurSim ourSim) {
 		
 		ActiveEntity interestedObj = ourSim.getGrid().getObject(interested);
-		boolean wasUp = interestedObj.getMonitor(monitored).isUp();
+		Monitor monitor = interestedObj.getMonitor(monitored);
+		if (monitor == null) {
+			return;
+		}
+		
+		boolean wasUp = monitor.isUp();
 		interestedObj.updateStatusReceived(monitored, getTime());
 		
-		Monitor monitoredRef = interestedObj.getMonitor(monitored);
+		Monitor monitoredRef = monitor;
 		
 		if (!wasUp) {
 			Event callbackAliveEvent = monitoredRef.getCallbackAliveEvent();

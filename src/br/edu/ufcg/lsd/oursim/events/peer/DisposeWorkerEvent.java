@@ -19,7 +19,7 @@ public class DisposeWorkerEvent extends AbstractEvent {
 	@Override
 	public void process(OurSim ourSim) {
 		Peer peer = ourSim.getGrid().getObject(peerId);
-		peer.setWorkerState(workerId, WorkerState.IDLE);
+		WorkerDistributionHelper.redistributeWorker(peer, workerId);
 	}
 
 }

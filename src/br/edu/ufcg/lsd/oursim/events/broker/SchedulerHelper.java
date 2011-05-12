@@ -6,6 +6,7 @@ import br.edu.ufcg.lsd.oursim.entities.job.ExecutionState;
 import br.edu.ufcg.lsd.oursim.entities.job.Job;
 import br.edu.ufcg.lsd.oursim.entities.job.Replica;
 import br.edu.ufcg.lsd.oursim.entities.job.Task;
+import br.edu.ufcg.lsd.oursim.entities.request.BrokerRequest;
 import br.edu.ufcg.lsd.oursim.events.peer.DisposeWorkerEvent;
 import br.edu.ufcg.lsd.oursim.events.peer.FinishRequestEvent;
 import br.edu.ufcg.lsd.oursim.util.Configuration;
@@ -133,7 +134,7 @@ public class SchedulerHelper {
 			disposeWorker(job, broker, worker, ourSim, time);
 		}
 		ourSim.addNetworkEvent(new FinishRequestEvent(time, 
-				job.getRequest()));
+				broker.getPeerId(), job.getRequest().getSpec()));
 	}
 
 	public static void updateScheduler(OurSim ourSim, Broker broker, long now) {
@@ -153,7 +154,8 @@ public class SchedulerHelper {
 		finishedReplica.setWorker(null);
 		job.workerIsAvailable(worker);
 		
-		String brokerId = finishedReplica.getTask().getJob().getRequest().getBrokerId();
+		BrokerRequest request = finishedReplica.getTask().getJob().getRequest();
+		String brokerId = request.getSpec().getBrokerId();
 		Broker broker = ourSim.getGrid().getObject(brokerId);
 		
 		if (isJobSatisfied(job, ourSim)) {

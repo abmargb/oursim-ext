@@ -1,11 +1,16 @@
-package br.edu.ufcg.lsd.oursim.entities.job;
+package br.edu.ufcg.lsd.oursim.entities.request;
 
-public class Request {
+/**
+ * Request specification.
+ * Contains an id (not necessarily sequential for a task),
+ * the broker id and the number of required workers.
+ * When considering WQR algorithm, requiredWorkers = noTask * maxReplicas
+ * 
+ */
+public class RequestSpec {
 
 	private long id;
-	private Job job;
 	private int requiredWorkers;
-	private boolean paused;
 	private String brokerId;
 	
 	public long getId() {
@@ -32,20 +37,4 @@ public class Request {
 		this.brokerId = brokerId;
 	}
 
-	public void setJob(Job job) {
-		this.job = job;
-	}
-
-	public Job getJob() {
-		return job;
-	}
-
-	public void setPaused(boolean paused) {
-		this.paused = paused;
-	}
-
-	public boolean isPaused() {
-		return paused;
-	}
-	
 }

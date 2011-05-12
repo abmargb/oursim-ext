@@ -6,10 +6,11 @@ import java.util.List;
 import java.util.Set;
 
 import br.edu.ufcg.lsd.oursim.entities.ExecutableEntity;
+import br.edu.ufcg.lsd.oursim.entities.request.BrokerRequest;
 
 public class Job extends ExecutableEntity {
 
-	private Request request;
+	private BrokerRequest request;
 	private Set<String> availableWorkers = new HashSet<String>();
 	private Set<String> inUseWorkers = new HashSet<String>();
 	private List<Task> tasks = new ArrayList<Task>();
@@ -22,11 +23,11 @@ public class Job extends ExecutableEntity {
 		return tasks;
 	}
 
-	public void setRequest(Request request) {
+	public void setRequest(BrokerRequest request) {
 		this.request = request;
 	}
 
-	public Request getRequest() {
+	public BrokerRequest getRequest() {
 		return request;
 	}
 	

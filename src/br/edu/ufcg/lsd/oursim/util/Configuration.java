@@ -19,6 +19,9 @@ public class Configuration {
 	public static final String PROP_BROKER_SCHEDULER_INTERVAL = "BROKER_SCHEDULER_INTERVAL";
 	public static final String DEF_BROKER_SCHEDULER_INTERVAL = "10000";
 	
+	public static final String PROP_REQUEST_REPETITION_INTERVAL = "REQUEST_REPETITION_INTERVAL";
+	public static final String DEF_REQUEST_REPETITION_INTERVAL = "30000";
+	
 	public static Properties createDefault() {
 		Properties properties = new Properties();
 		properties.put(PROP_LIVENESS_CHECK_INTERVAL, DEF_LIVENESS_CHECK_INTERVAL);
@@ -26,6 +29,7 @@ public class Configuration {
 		properties.put(PROP_BROKER_MAX_FAILS, DEF_BROKER_MAX_FAILS);
 		properties.put(PROP_BROKER_MAX_REPLICAS, DEF_BROKER_MAX_REPLICAS);
 		properties.put(PROP_BROKER_SCHEDULER_INTERVAL, DEF_BROKER_SCHEDULER_INTERVAL);
+		properties.put(PROP_REQUEST_REPETITION_INTERVAL, DEF_REQUEST_REPETITION_INTERVAL);
 		return properties;
 	}
 	

@@ -5,7 +5,8 @@ import java.util.Random;
 import br.edu.ufcg.lsd.oursim.OurSim;
 import br.edu.ufcg.lsd.oursim.entities.grid.Broker;
 import br.edu.ufcg.lsd.oursim.entities.job.Job;
-import br.edu.ufcg.lsd.oursim.entities.job.Request;
+import br.edu.ufcg.lsd.oursim.entities.request.BrokerRequest;
+import br.edu.ufcg.lsd.oursim.entities.request.RequestSpec;
 import br.edu.ufcg.lsd.oursim.events.AbstractEvent;
 import br.edu.ufcg.lsd.oursim.events.Event;
 import br.edu.ufcg.lsd.oursim.events.peer.RequestWorkersEvent;
@@ -25,16 +26,19 @@ public class BrokerLoggedEvent extends AbstractEvent {
 		Broker broker = ourSim.getGrid().getObject(brokerId);
 		for (Job job : broker.getJobs()) {
 			if (!SchedulerHelper.isJobSatisfied(job, ourSim)) {
-				Request request = new Request();
-				request.setBrokerId(brokerId);
-				request.setId(Math.abs(new Random().nextLong()));
-				request.setJob(job);
-				request.setRequiredWorkers(job.getTasks().size()
+				RequestSpec requestSpec = new RequestSpec();
+				requestSpec.setBrokerId(brokerId);
+				requestSpec.setId(Math.abs(new Random().nextLong()));
+				requestSpec.setRequiredWorkers(job.getTasks().size()
 						* ourSim.getIntProperty(Configuration.PROP_BROKER_MAX_REPLICAS));
+				
+				BrokerRequest request = new BrokerRequest(requestSpec);
+				request.setJob(job);
 				job.setRequest(request);
+				broker.addRequest(request);
 				
 				ourSim.addNetworkEvent(new RequestWorkersEvent(getTime(), 
-						broker.getPeerId(), request));
+						broker.getPeerId(), request.getSpec(), false));
 			}
 		}
 	}

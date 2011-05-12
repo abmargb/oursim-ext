@@ -7,8 +7,8 @@ import br.edu.ufcg.lsd.oursim.entities.grid.Broker;
 import br.edu.ufcg.lsd.oursim.entities.job.ExecutionState;
 import br.edu.ufcg.lsd.oursim.entities.job.Job;
 import br.edu.ufcg.lsd.oursim.entities.job.Replica;
-import br.edu.ufcg.lsd.oursim.entities.job.Request;
 import br.edu.ufcg.lsd.oursim.entities.job.Task;
+import br.edu.ufcg.lsd.oursim.entities.request.BrokerRequest;
 import br.edu.ufcg.lsd.oursim.events.AbstractEvent;
 import br.edu.ufcg.lsd.oursim.events.Event;
 import br.edu.ufcg.lsd.oursim.events.peer.PauseRequestEvent;
@@ -35,11 +35,11 @@ public class ScheduleEvent extends AbstractEvent {
 
 	private void clean(Broker broker, Job job, OurSim ourSim) {
 		if (SchedulerHelper.isJobSatisfied(job, ourSim)) {
-			Request request = job.getRequest();
+			BrokerRequest request = job.getRequest();
 			if (!request.isPaused()) {
 				request.setPaused(true);
-				ourSim.addNetworkEvent(new PauseRequestEvent(getTime(), 
-						request));
+				ourSim.addNetworkEvent(new PauseRequestEvent(
+						getTime(), request.getSpec(), broker.getPeerId()));
 			}
 			
 			for (String worker : job.getAvailableWorkers()) {

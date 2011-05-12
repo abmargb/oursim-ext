@@ -5,8 +5,8 @@ import br.edu.ufcg.lsd.oursim.entities.grid.Broker;
 import br.edu.ufcg.lsd.oursim.entities.job.ExecutionState;
 import br.edu.ufcg.lsd.oursim.entities.job.Job;
 import br.edu.ufcg.lsd.oursim.entities.job.Replica;
-import br.edu.ufcg.lsd.oursim.entities.job.Request;
 import br.edu.ufcg.lsd.oursim.entities.job.Task;
+import br.edu.ufcg.lsd.oursim.entities.request.BrokerRequest;
 import br.edu.ufcg.lsd.oursim.events.AbstractEvent;
 import br.edu.ufcg.lsd.oursim.events.Event;
 import br.edu.ufcg.lsd.oursim.events.peer.ResumeRequestEvent;
@@ -14,10 +14,10 @@ import br.edu.ufcg.lsd.oursim.util.Configuration;
 
 public class WorkerFailedEvent extends AbstractEvent {
 
-	private final Request request;
+	private final BrokerRequest request;
 	private final String workerId;
 
-	public WorkerFailedEvent(Long time, Request request, String workerId) {
+	public WorkerFailedEvent(Long time, BrokerRequest request, String workerId) {
 		super(time, Event.DEF_PRIORITY, null);
 		this.request = request;
 		this.workerId = workerId;
@@ -26,7 +26,7 @@ public class WorkerFailedEvent extends AbstractEvent {
 	@Override
 	public void process(OurSim ourSim) {
 		Broker broker = ourSim.getGrid().getObject(
-				request.getBrokerId());
+				request.getSpec().getBrokerId());
 		
 		if (request.getJob().getInUseWorkers().contains(workerId)) {
 			replicaFailed(broker, getReplica(), ourSim);
@@ -52,8 +52,8 @@ public class WorkerFailedEvent extends AbstractEvent {
 		if (jobEnded) {
 			SchedulerHelper.finishJob(job, broker, ourSim, getTime());
 		} else if (!SchedulerHelper.isJobSatisfied(job, ourSim)) {
-			ourSim.addNetworkEvent(new ResumeRequestEvent(getTime(), 
-					request));
+			ourSim.addNetworkEvent(new ResumeRequestEvent(
+					getTime(), request.getSpec(), broker.getPeerId()));
 		}
 		
 		SchedulerHelper.updateScheduler(ourSim, broker, getTime());
