@@ -21,7 +21,7 @@ public class WorkerIdleEvent extends AbstractEvent {
 	public void process(OurSim ourSim) {
 		Peer peer = ourSim.getGrid().getObject(peerId);
 		peer.setWorkerState(workerId, WorkerState.IDLE);
-		peer.addAllocation(new Allocation(workerId));
+		peer.addAllocation(new Allocation(workerId, peerId));
 	}
 
 }

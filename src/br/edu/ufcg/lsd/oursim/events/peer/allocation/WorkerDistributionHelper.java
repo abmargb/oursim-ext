@@ -30,7 +30,7 @@ public class WorkerDistributionHelper {
 		if (workerAllocation.isWorkerLocal()) {
 			redistributeLocalWorker(time, peer, workerId, ourSim);
 		} else {
-			
+			redistributeRemoteWorker(time, peer, workerId, ourSim);
 		}
 		
 		if (request != null && !request.isPaused() && request.getNeededWorkers() > 0) {
@@ -63,6 +63,7 @@ public class WorkerDistributionHelper {
 		
 		allocation.setRequest(request);
 		allocation.setConsumer(request.getConsumer());
+		allocation.setConsumerLocal(true);
 		allocation.setLastAssign(time);
 		
 		peer.setWorkerState(allocation.getWorker(), WorkerState.IN_USE);
@@ -70,6 +71,36 @@ public class WorkerDistributionHelper {
 		
 		ourSim.addNetworkEvent(ourSim.createEvent(WorkerEvents.WORK_FOR_BROKER, 
 				time, request.getConsumer(), request.getSpec(), workerId));
+		
+		if (request.isPaused() || request.getNeededWorkers() <= 0) {
+			request.setPaused(true);
+		}
+	}
+
+	public static void redistributeRemoteWorker(Long time, Peer peer,
+			String worker, OurSim ourSim) {
+
+		Allocation allocation = peer.getAllocation(worker);
+		
+		if (allocation == null || AllocationHelper.getNeededRequests(peer).isEmpty()) {
+			peer.removeAllocation(worker);
+			ourSim.addNetworkEvent(ourSim.createEvent(PeerEvents.DISPOSE_REMOTE_WORKER, 
+					time, allocation.getProvider(), worker));
+			
+			return;
+		}
+		
+		PeerRequest request = AllocationHelper.getDownBalancedRequest(peer);
+		
+		allocation.setRequest(request);
+		allocation.setConsumer(request.getConsumer());
+		allocation.setConsumerLocal(true);
+		allocation.setLastAssign(time);
+		
+		request.addAllocatedWorker(allocation.getWorker());
+		
+		ourSim.addNetworkEvent(ourSim.createEvent(WorkerEvents.WORK_FOR_BROKER, 
+				time, request.getConsumer(), request.getSpec(), allocation.getWorker()));
 		
 		if (request.isPaused() || request.getNeededWorkers() <= 0) {
 			request.setPaused(true);

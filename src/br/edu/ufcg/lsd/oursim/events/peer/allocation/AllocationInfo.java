@@ -29,7 +29,7 @@ public class AllocationInfo implements Comparable<AllocationInfo>{
 	private final int deservedWorkers;
 	private final String consumer;
 	private final List<Allocation> temporaryAllocations;
-
+	
 	public AllocationInfo(int deservedWorkers, String consumer, 
 			List<Allocation> consumerAllocations) {
 		this.deservedWorkers = deservedWorkers;

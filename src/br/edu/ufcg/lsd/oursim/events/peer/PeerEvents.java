@@ -30,6 +30,12 @@ public class PeerEvents {
 	public static final String WORKER_IN_USE = "WORKER_IN_USE";
 	public static final String HERE_ARE_WORKER_PROVIDERS = "HERE_ARE_WORKER_PROVIDERS";
 	public static final String REPEAT_GET_WORKER_PROVIDERS = "REPEAT_GET_WORKER_PROVIDERS";
+	public static final String REMOTE_REQUEST_WORKERS = "REMOTE_REQUEST_WORKERS";
+	public static final String WORKER_DONATED = "WORKER_DONATED";
+	public static final String REMOTE_HERE_IS_WORKER = "REMOTE_HERE_IS_WORKER";
+	public static final String REMOTE_WORKER_RECOVERY = "REMOTE_WORKER_RECOVERY";
+	public static final String REMOTE_WORKER_FAILURE = "REMOTE_WORKER_FAILURE";
+	public static final String DISPOSE_REMOTE_WORKER = "DISPOSE_REMOTE_WORKER";
 	
 	public static Map<String, Class<? extends Event>> createEvents() {
 		Map<String, Class<? extends Event>> events = new HashMap<String, Class<? extends Event>>();
@@ -47,6 +53,12 @@ public class PeerEvents {
 		events.put(WORKER_IN_USE, WorkerInUseEvent.class);
 		events.put(HERE_ARE_WORKER_PROVIDERS, HereAreWorkerProvidersEvent.class);
 		events.put(REPEAT_GET_WORKER_PROVIDERS, RepeatGetWorkerProvidersEvent.class);
+		events.put(REMOTE_REQUEST_WORKERS, RemoteRequestWorkersEvent.class);
+		events.put(WORKER_DONATED, WorkerDonatedEvent.class);
+		events.put(REMOTE_HERE_IS_WORKER, RemoteHereIsWorkerEvent.class);
+		events.put(REMOTE_WORKER_RECOVERY, RemoteWorkerRecoveryEvent.class);
+		events.put(REMOTE_WORKER_FAILURE, RemoteWorkerFailureEvent.class);
+		events.put(DISPOSE_REMOTE_WORKER, DisposeRemoteWorkerEvent.class);
 		
 		return events;
 	}

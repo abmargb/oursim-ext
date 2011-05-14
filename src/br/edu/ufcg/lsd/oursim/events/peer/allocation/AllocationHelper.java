@@ -11,6 +11,7 @@ import java.util.Map;
 import br.edu.ufcg.lsd.oursim.entities.allocation.Allocation;
 import br.edu.ufcg.lsd.oursim.entities.grid.Peer;
 import br.edu.ufcg.lsd.oursim.entities.request.PeerRequest;
+import br.edu.ufcg.lsd.oursim.entities.request.RequestSpec;
 
 public class AllocationHelper {
 
@@ -303,14 +304,7 @@ public class AllocationHelper {
 
 	public static PeerRequest getDownBalancedRequest(Peer peer) {
 
-		List<PeerRequest> requests = peer.getRequests();
-		Iterator<PeerRequest> iterator = requests.iterator();
-		while (iterator.hasNext()) {
-			PeerRequest request = iterator.next();
-			if (request.isPaused() || request.getNeededWorkers() <= 0) {
-				iterator.remove();
-			}
-		}
+		List<PeerRequest> requests = getNeededRequests(peer);
 		
 		List<Allocation> allocationsRelatedToRequests = new LinkedList<Allocation>();
 		for (Allocation allocation : peer.getAllocations()) {
@@ -334,6 +328,18 @@ public class AllocationHelper {
 		}
 		
 		return null;
+	}
+
+	public static List<PeerRequest> getNeededRequests(Peer peer) {
+		List<PeerRequest> requests = peer.getRequests();
+		Iterator<PeerRequest> iterator = requests.iterator();
+		while (iterator.hasNext()) {
+			PeerRequest request = iterator.next();
+			if (request.isPaused() || request.getNeededWorkers() <= 0) {
+				iterator.remove();
+			}
+		}
+		return requests;
 	}
 
 	private static List<PeerRequest> getDownBalancedRequests(
@@ -430,6 +436,16 @@ public class AllocationHelper {
 		}
 		
 		return consumersMap;
+	}
+
+	public static List<Allocation> getAllocationsForRemoteRequest(Peer peer,
+			RequestSpec requestSpec, String consumer) {
+		
+		Map<String, Double> balances = peer.getBalances(consumer);
+		
+		return getRangeBasedPriorityAllocation(consumer, 
+				requestSpec.getRequiredWorkers(), peer.getAllocations(), 
+				balances, Priority.REMOTE);
 	}
 
 }

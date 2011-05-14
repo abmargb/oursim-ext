@@ -5,6 +5,7 @@ import br.edu.ufcg.lsd.oursim.entities.request.PeerRequest;
 public class Allocation {
 
 	private final String workerId;
+	private final String provider;
 	private long lastAssign;
 	private PeerRequest request;
 	private String consumer;
@@ -15,8 +16,9 @@ public class Allocation {
 	/**
 	 * @param workerId
 	 */
-	public Allocation(String workerId) {
+	public Allocation(String workerId, String provider) {
 		this.workerId = workerId;
+		this.provider = provider;
 	}
 
 	@Override
@@ -69,6 +71,10 @@ public class Allocation {
 
 	public String getConsumer() {
 		return consumer;
+	}
+
+	public String getProvider() {
+		return provider;
 	}
 	
 	

@@ -49,12 +49,27 @@ public class RequestWorkersEvent extends AbstractEvent {
 		}
 		
 		if (request.getNeededWorkers() > 0) {
+			forwardRequestToCommunity(peer, request, ourSim);
+			
 			Event requestWorkersEvent = ourSim.createEvent(PeerEvents.REQUEST_WORKERS, 
 					getTime() + ourSim.getLongProperty(
 							Configuration.PROP_REQUEST_REPETITION_INTERVAL), 
 					peerId, requestSpec, true);
 			ourSim.addEvent(requestWorkersEvent);
 		}
+	}
+
+	private void forwardRequestToCommunity(Peer peer, PeerRequest request, OurSim ourSim) {
+		
+		for (String workerProvider : peer.getWorkerProviders()) {
+			if (workerProvider.equals(peerId)) {
+				continue;
+			}
+			
+			ourSim.addNetworkEvent(ourSim.createEvent(PeerEvents.REMOTE_REQUEST_WORKERS, 
+					getTime(), peerId, workerProvider, request.getSpec()));
+		}
+		
 	}
 
 	private void dispatchAllocation(PeerRequest request, Peer peer, Allocation allocable, 
