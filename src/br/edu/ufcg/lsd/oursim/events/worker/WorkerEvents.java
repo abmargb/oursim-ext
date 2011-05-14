@@ -19,12 +19,16 @@ public class WorkerEvents {
 	 * Secondary Events
 	 */
 	public static final String START_WORK = "START_WORK";
+	public static final String WORK_FOR_BROKER = "WORK_FOR_BROKER";
+	public static final String STOP_WORK = "STOP_WORK";
 	
 	public static Map<String, Class<? extends Event>> createEvents() {
 		Map<String, Class<? extends Event>> events = new HashMap<String, Class<? extends Event>>();
 		events.put(WORKER_DOWN, WorkerDownEvent.class);
 		events.put(WORKER_UP, WorkerUpEvent.class);
 		events.put(START_WORK, StartWorkEvent.class);
+		events.put(WORK_FOR_BROKER, WorkForBrokerEvent.class);
+		events.put(STOP_WORK, StopWorkEvent.class);
 		
 		return events;
 	}

@@ -1,15 +1,16 @@
 package br.edu.ufcg.lsd.oursim.events.peer;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import br.edu.ufcg.lsd.oursim.OurSim;
+import br.edu.ufcg.lsd.oursim.entities.allocation.Allocation;
 import br.edu.ufcg.lsd.oursim.entities.grid.Peer;
 import br.edu.ufcg.lsd.oursim.entities.request.PeerRequest;
 import br.edu.ufcg.lsd.oursim.entities.request.RequestSpec;
 import br.edu.ufcg.lsd.oursim.events.AbstractEvent;
 import br.edu.ufcg.lsd.oursim.events.Event;
-import br.edu.ufcg.lsd.oursim.events.broker.BrokerEvents;
+import br.edu.ufcg.lsd.oursim.events.peer.allocation.AllocationHelper;
+import br.edu.ufcg.lsd.oursim.events.worker.WorkerEvents;
 import br.edu.ufcg.lsd.oursim.util.Configuration;
 
 public class RequestWorkersEvent extends AbstractEvent {
@@ -32,7 +33,8 @@ public class RequestWorkersEvent extends AbstractEvent {
 		PeerRequest request = peer.getRequest(requestSpec.getId());
 		
 		if (request == null && !repetition) {
-			request = new PeerRequest(requestSpec);
+			request = new PeerRequest(requestSpec, 
+					requestSpec.getBrokerId());
 			peer.addRequest(request);
 		}
 		
@@ -40,30 +42,10 @@ public class RequestWorkersEvent extends AbstractEvent {
 			return;
 		}
 		
-		Set<String> allocableWorkers = new HashSet<String>();
-		while (true) {
-			
-			if (request.getNeededWorkers() == 0) {
-				break;
-			}
-			
-			String anIdleWorker = getIdleWorker(peer, request);
-			String workerId = anIdleWorker == null ? getPreemptedWorker(peer,
-					request) : anIdleWorker;
-			
-			if (workerId == null) {
-				break;
-			}
-			
-			allocableWorkers.add(workerId);
-			request.addAllocatedWorker(workerId);
-		}
+		List<Allocation> allocables = AllocationHelper.getAllocationsForLocalRequest(peer, request);
 		
-		
-		for (String workerId : allocableWorkers) {
-			peer.setWorkerState(workerId, WorkerState.IN_USE);
-			ourSim.addNetworkEvent(ourSim.createEvent(BrokerEvents.HERE_IS_WORKER, getTime(), 
-					workerId, requestSpec));
+		for (Allocation allocable : allocables) {
+			dispatchAllocation(request, peer, allocable, requestSpec.getBrokerId(), ourSim);
 		}
 		
 		if (request.getNeededWorkers() > 0) {
@@ -75,19 +57,34 @@ public class RequestWorkersEvent extends AbstractEvent {
 		}
 	}
 
-	private String getPreemptedWorker(Peer peer, PeerRequest request) {
-		return null;
-	}
-
-	private String getIdleWorker(Peer peer, PeerRequest request) {
-		for (String workerId : peer.getWorkersIds()) {
-			if (peer.getWorkerState(workerId).equals(WorkerState.IDLE)
-					&& !request.getAllocatedWorkers().contains(workerId)) {
-				return workerId;
+	private void dispatchAllocation(PeerRequest request, Peer peer, Allocation allocable, 
+			String consumer, OurSim ourSim) {
+		
+		if (allocable.getConsumer() != null && allocable.isConsumerLocal()) {
+			PeerRequest loserRequest = allocable.getRequest();
+			loserRequest.removeAllocatedWorker(allocable.getWorker());
+			
+			if (!loserRequest.isPaused() && loserRequest.getNeededWorkers() > 0) {
+				Event requestWorkersEvent = ourSim.createEvent(PeerEvents.REQUEST_WORKERS, 
+						getTime() + ourSim.getLongProperty(
+								Configuration.PROP_REQUEST_REPETITION_INTERVAL), 
+						peerId, loserRequest.getSpec(), true);
+				ourSim.addEvent(requestWorkersEvent);
 			}
 		}
 		
-		return null;
+		allocable.setConsumer(consumer);
+		allocable.setRequest(request);
+		allocable.setWorkerLocal(true);
+		allocable.setConsumerLocal(true);
+		allocable.setLastAssign(getTime());
+		
+		peer.setWorkerState(allocable.getWorker(), WorkerState.IN_USE);
+		request.addAllocatedWorker(allocable.getWorker());
+		
+		ourSim.addNetworkEvent(ourSim.createEvent(WorkerEvents.WORK_FOR_BROKER, 
+				getTime(), consumer, request.getSpec(), allocable.getWorker()));
 	}
+
 
 }

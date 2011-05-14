@@ -14,11 +14,17 @@ public class PeerRequest {
 	private boolean paused;
 	private final RequestSpec spec;
 	private final Set<String> allocatedWorkers = new HashSet<String>();
-
-	public PeerRequest(RequestSpec spec) {
+	private final String consumer;
+	
+	public PeerRequest(RequestSpec spec, String consumer) {
 		this.spec = spec;
+		this.consumer = consumer;
 	}
 
+	public String getConsumer() {
+		return consumer;
+	}
+	
 	public RequestSpec getSpec() {
 		return spec;
 	}
@@ -50,5 +56,10 @@ public class PeerRequest {
 	public Set<String> getAllocatedWorkers() {
 		return allocatedWorkers;
 	}
+
+	public void removeAllocatedWorker(String workerId) {
+		this.allocatedWorkers.remove(workerId);
+	}
+
 
 }

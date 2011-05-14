@@ -6,6 +6,7 @@ import br.edu.ufcg.lsd.oursim.entities.request.PeerRequest;
 import br.edu.ufcg.lsd.oursim.entities.request.RequestSpec;
 import br.edu.ufcg.lsd.oursim.events.AbstractEvent;
 import br.edu.ufcg.lsd.oursim.events.Event;
+import br.edu.ufcg.lsd.oursim.events.peer.allocation.WorkerDistributionHelper;
 
 public class FinishRequestEvent extends AbstractEvent {
 
@@ -24,7 +25,7 @@ public class FinishRequestEvent extends AbstractEvent {
 		PeerRequest request = peer.removeRequest(requestSpec.getId());
 		
 		for (String workerId : request.getAllocatedWorkers()) {
-			WorkerDistributionHelper.redistributeWorker(peer, workerId);
+			WorkerDistributionHelper.redistributeWorker(getTime(), peer, workerId, ourSim);
 		}
 	}
 

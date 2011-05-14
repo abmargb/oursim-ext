@@ -9,6 +9,7 @@ public class Monitor {
 	private boolean isUp;
 	private final Event callbackAliveEvent;
 	private final Event callbackDownEvent;
+	private boolean creatingConnection = true;
 	
 	public Monitor(ActiveEntity monitoredObj, 
 			Event callbackAliveEvent, Event callbackDownEvent) {
@@ -39,6 +40,14 @@ public class Monitor {
 
 	public Event getCallbackDownEvent() {
 		return callbackDownEvent;
+	}
+
+	public void setCreatingConnection(boolean creatingConnection) {
+		this.creatingConnection = creatingConnection;
+	}
+
+	public boolean isCreatingConnection() {
+		return creatingConnection;
 	}
 	
 }

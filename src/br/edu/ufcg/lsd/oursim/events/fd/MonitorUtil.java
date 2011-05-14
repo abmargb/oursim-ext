@@ -17,7 +17,7 @@ public class MonitorUtil {
 				callbackAliveEvent, callbackDownEvent, false);
 	}
 	
-	public static void registerMonitored(OurSim ourSim, Long time, 
+	public static Monitor registerMonitored(OurSim ourSim, Long time, 
 			String interested, String monitored, Event callbackAliveEvent, 
 			Event callbackDownEvent, boolean isUp) {
 		
@@ -31,9 +31,10 @@ public class MonitorUtil {
 		
 		if (ourSim.getBooleanProperty(
 				Configuration.PROP_USE_FAILURE_DETECTOR)) {
-			sendIsItAlive(ourSim, time, interested, monitored, true);
+			sendIsItAlive(ourSim, time, interested, monitored);
 		}
 		
+		return monitor;
 	}
 
 	public static void checkLiveness(OurSim ourSim, Long time,
@@ -60,15 +61,16 @@ public class MonitorUtil {
 	}
 
 	public static void sendIsItAlive(OurSim ourSim, Long time,
-			String interested, String monitored, boolean first) {
+			String interested, String monitored) {
 		
 		ActiveEntity interestedObj = ourSim.getGrid().getObject(interested);
-		if (interestedObj.getMonitor(monitored) == null) {
+		Monitor monitor = interestedObj.getMonitor(monitored);
+		if (monitor == null) {
 			return;
 		}
 		
 		Event isItAliveReceivedEvent = ourSim.createEvent(FailureDetectionEvents.IS_IT_ALIVE_RECEIVED, 
-				time, interested, monitored, first);
+				time, interested, monitored, monitor.isCreatingConnection());
 		interestedObj.isItAliveSent(monitored, time);
 		ourSim.addNetworkEvent(isItAliveReceivedEvent);
 

@@ -4,6 +4,7 @@ import br.edu.ufcg.lsd.oursim.OurSim;
 import br.edu.ufcg.lsd.oursim.entities.grid.Peer;
 import br.edu.ufcg.lsd.oursim.events.AbstractEvent;
 import br.edu.ufcg.lsd.oursim.events.Event;
+import br.edu.ufcg.lsd.oursim.events.peer.allocation.WorkerDistributionHelper;
 
 public class DisposeWorkerEvent extends AbstractEvent {
 
@@ -19,7 +20,7 @@ public class DisposeWorkerEvent extends AbstractEvent {
 	@Override
 	public void process(OurSim ourSim) {
 		Peer peer = ourSim.getGrid().getObject(peerId);
-		WorkerDistributionHelper.redistributeWorker(peer, workerId);
+		WorkerDistributionHelper.redistributeWorker(getTime(), peer, workerId, ourSim);
 	}
 
 }

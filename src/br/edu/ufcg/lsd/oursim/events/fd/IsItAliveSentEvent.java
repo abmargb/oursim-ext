@@ -18,7 +18,7 @@ public class IsItAliveSentEvent extends AbstractEvent {
 	@Override
 	public void process(OurSim ourSim) {
 		MonitorUtil.sendIsItAlive(ourSim, getTime(), 
-				interested, monitored, false);
+				interested, monitored);
 	}
 
 }

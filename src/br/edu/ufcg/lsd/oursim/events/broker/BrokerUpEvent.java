@@ -16,9 +16,6 @@ public class BrokerUpEvent extends ActiveEntityUpEvent {
 	protected void entityUp(OurSim ourSim) {
 		Broker broker = ourSim.getGrid().getObject(getData());
 		
-		ourSim.createEvent(BrokerEvents.PEER_AVAILABLE, 
-				getTime(), broker.getId());
-		
 		MonitorUtil.registerMonitored(ourSim, getTime(), 
 				broker.getId(), broker.getPeerId(), 
 				ourSim.createEvent(BrokerEvents.PEER_AVAILABLE, getTime(), broker.getId()), 

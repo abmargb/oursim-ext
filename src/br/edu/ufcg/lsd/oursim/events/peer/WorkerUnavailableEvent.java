@@ -20,6 +20,7 @@ public class WorkerUnavailableEvent extends AbstractEvent {
 	public void process(OurSim ourSim) {
 		Peer peer = ourSim.getGrid().getObject(peerId);
 		peer.setWorkerState(workerId, WorkerState.UNAVAILABLE);
+		peer.removeAllocation(workerId);
 	}
 
 }

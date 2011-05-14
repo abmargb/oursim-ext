@@ -28,6 +28,7 @@ public class PeerEvents {
 	public static final String RESUME_REQUEST = "RESUME_REQUEST";
 	public static final String WORKER_IDLE = "WORKER_IDLE";
 	public static final String WORKER_UNAVAILABLE = "WORKER_UNAVAILABLE";
+	public static final String WORKER_ALLOCATED = "WORKER_ALLOCATED";
 	
 	public static Map<String, Class<? extends Event>> createEvents() {
 		Map<String, Class<? extends Event>> events = new HashMap<String, Class<? extends Event>>();
@@ -43,6 +44,7 @@ public class PeerEvents {
 		events.put(RESUME_REQUEST, ResumeRequestEvent.class);
 		events.put(WORKER_IDLE, WorkerIdleEvent.class);
 		events.put(WORKER_UNAVAILABLE, WorkerUnavailableEvent.class);
+		events.put(WORKER_ALLOCATED, WorkerAllocatedEvent.class);
 		
 		return events;
 	}

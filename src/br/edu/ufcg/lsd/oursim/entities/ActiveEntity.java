@@ -54,6 +54,7 @@ public class ActiveEntity extends Entity {
 
 	public void updateStatusReceived(String monitored, Long time) {
 		getMonitor(monitored).setUp(true);
+		getMonitor(monitored).setCreatingConnection(false);
 		fd.messageReceived(monitored, time, MessageType.PING);
 	}
 

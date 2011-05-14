@@ -10,13 +10,14 @@ public class IsItAliveReceivedEvent extends AbstractEvent {
 
 	private final String interested;
 	private final String monitored;
-	private final Boolean first;
+	private final Boolean isCreatingConnection;
 
-	public IsItAliveReceivedEvent(Long time, String interested, String monitored, Boolean first) {
+	public IsItAliveReceivedEvent(Long time, String interested, 
+			String monitored, Boolean isCreatingConnection) {
 		super(time, Event.DEF_PRIORITY, null);
 		this.interested = interested;
 		this.monitored = monitored;
-		this.first = first;
+		this.isCreatingConnection = isCreatingConnection;
 	}
 
 	@Override
@@ -25,8 +26,8 @@ public class IsItAliveReceivedEvent extends AbstractEvent {
 		if (monitoredObj != null && monitoredObj.isUp()) {
 			
 			Monitor reverseMonitor = monitoredObj.getMonitor(interested);
-			if (first && reverseMonitor == null) {
-				MonitorUtil.registerMonitored(ourSim, getTime(), monitored, 
+			if (isCreatingConnection && reverseMonitor == null) {
+				reverseMonitor = MonitorUtil.registerMonitored(ourSim, getTime(), monitored, 
 						interested, null, null, true);
 			} 
 				

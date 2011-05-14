@@ -6,7 +6,6 @@ import br.edu.ufcg.lsd.oursim.entities.grid.Peer;
 import br.edu.ufcg.lsd.oursim.events.AbstractEvent;
 import br.edu.ufcg.lsd.oursim.events.Event;
 import br.edu.ufcg.lsd.oursim.events.broker.BrokerEvents;
-import br.edu.ufcg.lsd.oursim.events.broker.BrokerLoggedEvent;
 
 public class BrokerLoginEvent extends AbstractEvent {
 
