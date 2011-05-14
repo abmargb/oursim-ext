@@ -43,7 +43,6 @@ public class DefaultGridFactory implements GridFactory {
 		DiscoveryService ds = new DiscoveryService();
 		ds.setId(JSONUtils.getJSONString(dsJson, "id"));
 		
-		grid.setDiscoveryService(ds);
 		grid.addObject(ds);
 		
 		JSONArray peersArray = JSONUtils.getJSONArray(gridJson, "peers");

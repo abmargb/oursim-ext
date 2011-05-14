@@ -30,7 +30,7 @@ public class WorkForBrokerEvent extends AbstractEvent {
 
 		worker.setConsumer(consumer);
 		
-		ourSim.addNetworkEvent(ourSim.createEvent(PeerEvents.WORKER_ALLOCATED, 
+		ourSim.addNetworkEvent(ourSim.createEvent(PeerEvents.WORKER_IN_USE, 
 				getTime(), consumer, requestSpec, workerId));
 	}
 

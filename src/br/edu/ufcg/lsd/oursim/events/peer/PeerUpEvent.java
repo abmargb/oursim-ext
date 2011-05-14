@@ -18,8 +18,8 @@ public class PeerUpEvent extends ActiveEntityUpEvent {
 		
 		MonitorUtil.registerMonitored(ourSim, getTime(), 
 				peer.getId(), peer.getDiscoveryServiceId(), 
-				ourSim.createEvent(PeerEvents.DISCOVERY_SERVICE_AVAILABLE, getTime()), 
-				ourSim.createEvent(PeerEvents.DISCOVERY_SERVICE_FAILED, getTime()));
+				ourSim.createEvent(PeerEvents.REPEAT_GET_WORKER_PROVIDERS, getTime(), peer.getId()), 
+				ourSim.createEvent(PeerEvents.DISCOVERY_SERVICE_FAILED, getTime(), peer.getId()));
 		
 		for (String workerId : peer.getWorkersIds()) {
 			MonitorUtil.registerMonitored(ourSim, getTime(), 

@@ -10,15 +10,6 @@ import br.edu.ufcg.lsd.oursim.entities.Entity;
 public class Grid extends Entity {
 
 	private Map<String, ActiveEntity> objectRepository = new HashMap<String, ActiveEntity>();
-	private DiscoveryService discoveryService;
-	
-	public DiscoveryService getDiscoveryService() {
-		return discoveryService;
-	}
-	
-	public void setDiscoveryService(DiscoveryService discoveryService) {
-		this.discoveryService = discoveryService;
-	}
 	
 	public void addObject(ActiveEntity object) {
 		objectRepository.put(object.getId(), object);

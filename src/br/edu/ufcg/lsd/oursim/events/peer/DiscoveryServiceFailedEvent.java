@@ -6,8 +6,11 @@ import br.edu.ufcg.lsd.oursim.events.Event;
 
 public class DiscoveryServiceFailedEvent extends AbstractEvent {
 
-	public DiscoveryServiceFailedEvent(Long time) {
+	private final String peerId;
+
+	public DiscoveryServiceFailedEvent(Long time, String peerId) {
 		super(time, Event.DEF_PRIORITY, null);
+		this.peerId = peerId;
 	}
 
 	@Override

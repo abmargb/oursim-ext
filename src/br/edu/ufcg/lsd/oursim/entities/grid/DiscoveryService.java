@@ -1,25 +1,20 @@
 package br.edu.ufcg.lsd.oursim.entities.grid;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 import br.edu.ufcg.lsd.oursim.entities.ActiveEntity;
 
 public class DiscoveryService extends ActiveEntity {
 
-	private Map<String, Peer> peers = new HashMap<String, Peer>();
+	private Set<String> peers = new HashSet<String>();
 	
-	public void addPeer(Peer peer) {
-		peers.put(peer.getId(), peer);
+	public boolean addPeer(String peer) {
+		return peers.add(peer);
 	}
 	
-	public Peer getPeer(String peerId) {
-		return peers.get(peerId);
-	}
-	
-	public Collection<Peer> getPeers() {
-		return peers.values();
+	public Set<String> getPeers() {
+		return peers;
 	}
 	
 }

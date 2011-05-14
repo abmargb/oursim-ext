@@ -23,6 +23,7 @@ public class Peer extends ActiveEntity {
 	private Map<String, Map<String, Double>> balances = new HashMap<String, Map<String,Double>>();
 	
 	private String dsId;
+	private Set<String> providers;
 	
 	public PeerRequest getRequest(long requestId) {
 		return requests.get(requestId);
@@ -89,5 +90,13 @@ public class Peer extends ActiveEntity {
 
 	public Allocation getAllocation(String workerId) {
 		return allocations.get(workerId);
+	}
+
+	public void setWorkerProviders(Set<String> providers) {
+		this.providers = providers;
+	}
+	
+	public Set<String> getWorkerProviders() {
+		return providers;
 	}
 }
