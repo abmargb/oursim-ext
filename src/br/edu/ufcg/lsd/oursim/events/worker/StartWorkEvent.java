@@ -28,7 +28,7 @@ public class StartWorkEvent extends AbstractEvent {
 		}
 		
 		ourSim.addEvent(ourSim.createEvent(WorkerEvents.SEND_HERE_IS_EXECUTION_RESULT, 
-				getTime() + replica.getTask().getDuration(), 
+				getTime() + (long)(replica.getTask().getDuration() / worker.getCpu()), 
 				replica, workerId));
 	}
 

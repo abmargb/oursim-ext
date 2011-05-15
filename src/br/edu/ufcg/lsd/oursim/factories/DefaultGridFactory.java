@@ -99,7 +99,7 @@ public class DefaultGridFactory implements GridFactory {
 	private static Worker createWorker(JSONObject workerJson) {
 		Worker worker = new Worker();
 		worker.setId(JSONUtils.getJSONString(workerJson, "id"));
-		
+		worker.setCpu(JSONUtils.getJSONDouble(workerJson, "cpu"));
 		return worker;
 	}
 }

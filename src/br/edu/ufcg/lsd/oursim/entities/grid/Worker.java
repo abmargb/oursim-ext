@@ -8,11 +8,12 @@ import br.edu.ufcg.lsd.oursim.entities.accounting.WorkAccounting;
 
 public class Worker extends ActiveEntity {
 
+	private double cpu;
+	private String peer;
 	private String consumer;
 	private String remotePeer;
 	private WorkAccounting currentWorkAccounting;
 	private List<WorkAccounting> workAccountings = new LinkedList<WorkAccounting>();
-	private String peer;
 	
 	public void setConsumer(String consumer) {
 		this.consumer = consumer;
@@ -56,5 +57,13 @@ public class Worker extends ActiveEntity {
 
 	public void clearWorkAccountings() {
 		workAccountings.clear();
+	}
+
+	public void setCpu(double cpu) {
+		this.cpu = cpu;
+	}
+
+	public double getCpu() {
+		return cpu;
 	}
 }

@@ -62,4 +62,12 @@ public class JSONUtils {
 		}
 	}
 
+	public static double getJSONDouble(JSONObject object, String key) {
+		try {
+			return object.getDouble(key);
+		} catch (JSONException e) {
+			throw new IllegalArgumentException(e);
+		}
+	}
+
 }
