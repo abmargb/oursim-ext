@@ -24,7 +24,7 @@ public class AccountingHelper {
 				
 				double balance = getOldBalance(peer, peer.getId(), providerId)
 						+ evaluator.getCPU(providerId);
-				peer.setBalance(peer.getId(), providerId, balance);
+				peer.setBalance(providerId, balance);
 			}
 		}
 
@@ -33,7 +33,7 @@ public class AccountingHelper {
 
 	private static double getOldBalance(Peer peer, String localPeer, String remotePeer) {
 		double oldBalance = 0;
-		Map<String, Double> myBalances = peer.getBalances(localPeer);
+		Map<String, Double> myBalances = peer.getBalances();
 		if (myBalances != null) {
 			Double providerBalances = myBalances.get(remotePeer);
 			if (providerBalances != null) {
@@ -73,8 +73,7 @@ public class AccountingHelper {
 				peer.getId(), consumerPeer);
 		double newBalance = Math.max(oldBalance - workAccounting.getCPUTime(), 0);
 		
-		peer.setBalance(peer.getId(), 
-				consumerPeer, newBalance);
+		peer.setBalance(consumerPeer, newBalance);
 	}
 	
 }

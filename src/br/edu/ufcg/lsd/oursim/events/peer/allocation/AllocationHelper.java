@@ -21,10 +21,17 @@ public class AllocationHelper {
 	public static List<Allocation> getAllocationsForLocalRequest(Peer peer,
 			PeerRequest request) {
 		
-		Map<String, Double> balances = peer.getBalances(peer.getId());
-		
 		return getRangeBasedPriorityAllocation(request.getSpec().getBrokerId(), 
-				request.getNeededWorkers(), peer.getAllocations(), balances, Priority.LOCAL);
+				request.getNeededWorkers(), peer.getAllocations(), 
+				peer.getBalances(), Priority.LOCAL);
+	}
+	
+	public static List<Allocation> getAllocationsForRemoteRequest(Peer peer,
+			RequestSpec requestSpec, String consumer) {
+		
+		return getRangeBasedPriorityAllocation(consumer, 
+				requestSpec.getRequiredWorkers(), peer.getAllocations(), 
+				peer.getBalances(), Priority.REMOTE);
 	}
 
 	private static List<Allocation> getRangeBasedPriorityAllocation(
@@ -437,16 +444,6 @@ public class AllocationHelper {
 		}
 		
 		return consumersMap;
-	}
-
-	public static List<Allocation> getAllocationsForRemoteRequest(Peer peer,
-			RequestSpec requestSpec, String consumer) {
-		
-		Map<String, Double> balances = peer.getBalances(peer.getId());
-		
-		return getRangeBasedPriorityAllocation(consumer, 
-				requestSpec.getRequiredWorkers(), peer.getAllocations(), 
-				balances, Priority.REMOTE);
 	}
 
 }

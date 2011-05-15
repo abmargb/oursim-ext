@@ -21,7 +21,7 @@ public class Peer extends ActiveEntity {
 	private Map<Long, PeerRequest> requests = new LinkedHashMap<Long, PeerRequest>();
 	
 	private Map<String, Allocation> allocations = new HashMap<String, Allocation>();
-	private Map<String, Map<String, Double>> balances = new HashMap<String, Map<String,Double>>();
+	private Map<String, Double> balances = new HashMap<String, Double>();
 	
 	private String dsId;
 	private Set<String> providers;
@@ -80,8 +80,8 @@ public class Peer extends ActiveEntity {
 		return new LinkedList<Allocation>(allocations.values());
 	}
 
-	public Map<String, Double> getBalances(String peerId) {
-		return balances.get(peerId);
+	public Map<String, Double> getBalances() {
+		return new HashMap<String, Double>(balances);
 	}
 
 	/**
@@ -119,13 +119,8 @@ public class Peer extends ActiveEntity {
 		return replicaAccountings.get(requestId);
 	}
 
-	public void setBalance(String localPeer, String remotePeer, double balance) {
-		Map<String, Double> consumerBalances = balances.get(localPeer);
-		if (consumerBalances == null) {
-			consumerBalances = new HashMap<String, Double>();
-			balances.put(localPeer, consumerBalances);
-		}
-		consumerBalances.put(remotePeer, balance);
+	public void setBalance(String remotePeer, double balance) {
+		balances.put(remotePeer, balance);
 	}
 
 	public void removeReplicaAccountings(long requestId) {
