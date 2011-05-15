@@ -1,6 +1,7 @@
 package br.edu.ufcg.lsd.oursim.events.worker;
 
 import br.edu.ufcg.lsd.oursim.OurSim;
+import br.edu.ufcg.lsd.oursim.entities.accounting.WorkAccounting;
 import br.edu.ufcg.lsd.oursim.entities.grid.Worker;
 import br.edu.ufcg.lsd.oursim.entities.request.RequestSpec;
 import br.edu.ufcg.lsd.oursim.events.AbstractEvent;
@@ -23,15 +24,18 @@ public class WorkForBrokerEvent extends AbstractEvent {
 	@Override
 	public void process(OurSim ourSim) {
 		Worker worker = ourSim.getGrid().getObject(workerId);
-		String oldConsumer = worker.getConsumer();
-		if (oldConsumer != null) {
-			worker.release(oldConsumer);
-		}
+		CleanWorkerHelper.cleanWorker(getTime(), worker, false);
 
 		worker.setConsumer(consumer);
 		
 		ourSim.addNetworkEvent(ourSim.createEvent(PeerEvents.WORKER_IN_USE, 
-				getTime(), consumer, requestSpec, workerId));
+				getTime(), requestSpec, workerId));	
+		
+		if (worker.getRemotePeer() != null) {
+			WorkAccounting accounting = new WorkAccounting(worker.getId(), 
+					worker.getRemotePeer());
+			worker.setCurrentWorkAccounting(accounting);
+		}
 	}
 
 }

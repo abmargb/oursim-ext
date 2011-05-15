@@ -1,6 +1,7 @@
 package br.edu.ufcg.lsd.oursim.events.broker;
 
 import br.edu.ufcg.lsd.oursim.OurSim;
+import br.edu.ufcg.lsd.oursim.entities.accounting.ReplicaAccounting;
 import br.edu.ufcg.lsd.oursim.entities.grid.Broker;
 import br.edu.ufcg.lsd.oursim.entities.job.ExecutionState;
 import br.edu.ufcg.lsd.oursim.entities.job.Job;
@@ -57,6 +58,11 @@ public class WorkerFailedEvent extends AbstractEvent {
 		}
 		
 		SchedulerHelper.updateScheduler(ourSim, broker, getTime());
+		
+		ourSim.addNetworkEvent(ourSim.createEvent(PeerEvents.REPORT_REPLICA_ACCOUNTING, 
+				getTime(), new ReplicaAccounting(request.getSpec().getId(), 
+						workerId, broker.getId(), getTime() - replica.getCreationTime(), 
+						replica.getState()), broker.getPeerId()));
 	}
 
 	private void updateJobState(Replica replica, OurSim ourSim) {

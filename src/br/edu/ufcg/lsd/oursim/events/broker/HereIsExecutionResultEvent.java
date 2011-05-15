@@ -1,12 +1,16 @@
 package br.edu.ufcg.lsd.oursim.events.broker;
 
 import br.edu.ufcg.lsd.oursim.OurSim;
+import br.edu.ufcg.lsd.oursim.entities.accounting.ReplicaAccounting;
+import br.edu.ufcg.lsd.oursim.entities.grid.Broker;
 import br.edu.ufcg.lsd.oursim.entities.job.ExecutionState;
 import br.edu.ufcg.lsd.oursim.entities.job.Job;
 import br.edu.ufcg.lsd.oursim.entities.job.Replica;
 import br.edu.ufcg.lsd.oursim.entities.job.Task;
+import br.edu.ufcg.lsd.oursim.entities.request.BrokerRequest;
 import br.edu.ufcg.lsd.oursim.events.AbstractEvent;
 import br.edu.ufcg.lsd.oursim.events.Event;
+import br.edu.ufcg.lsd.oursim.events.peer.PeerEvents;
 
 public class HereIsExecutionResultEvent extends AbstractEvent {
 
@@ -36,7 +40,7 @@ public class HereIsExecutionResultEvent extends AbstractEvent {
 		Job job = replica.getTask().getJob();
 		updateJobState(job, ourSim);
 		
-		SchedulerHelper.executionEnded(replica, ourSim, getTime());
+		executionEnded(replica, ourSim);
 	}
 
 	private void abortSiblingReplicas(OurSim ourSim) {
@@ -47,7 +51,7 @@ public class HereIsExecutionResultEvent extends AbstractEvent {
 				siblingReplica.setEndTime(getTime());
 				ourSim.getTraceCollector().replicaEnded(getTime(), siblingReplica);
 				
-				SchedulerHelper.executionEnded(siblingReplica, ourSim, getTime());
+				executionEnded(siblingReplica, ourSim);
 			}
 		}
 	}
@@ -65,6 +69,35 @@ public class HereIsExecutionResultEvent extends AbstractEvent {
 			job.setEndTime(getTime());
 			ourSim.getTraceCollector().jobEnded(getTime(), job);
 		}
+	}
+	
+	private void executionEnded(Replica finishedReplica, OurSim ourSim) {
+		
+		Job job = finishedReplica.getTask().getJob();
+		
+		String worker = finishedReplica.getWorker();
+		finishedReplica.setWorker(null);
+		job.workerIsAvailable(worker);
+		
+		BrokerRequest request = finishedReplica.getTask().getJob().getRequest();
+		String brokerId = request.getSpec().getBrokerId();
+		Broker broker = ourSim.getGrid().getObject(brokerId);
+		
+		if (SchedulerHelper.isJobSatisfied(job, ourSim)) {
+			SchedulerHelper.disposeWorker(job, broker, worker, 
+					ourSim, getTime());
+		}
+		
+		if (ExecutionState.FINISHED.equals(job.getState())) {
+			SchedulerHelper.finishJob(job, broker, ourSim, getTime());
+		}
+		
+		SchedulerHelper.updateScheduler(ourSim, broker, getTime());
+		
+		ourSim.addNetworkEvent(ourSim.createEvent(PeerEvents.REPORT_REPLICA_ACCOUNTING, 
+				getTime(), new ReplicaAccounting(request.getSpec().getId(), 
+						worker, brokerId, getTime() - finishedReplica.getCreationTime(), 
+						finishedReplica.getState()), broker.getPeerId()));
 	}
 
 }

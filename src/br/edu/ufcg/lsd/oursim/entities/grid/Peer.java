@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import br.edu.ufcg.lsd.oursim.entities.ActiveEntity;
+import br.edu.ufcg.lsd.oursim.entities.accounting.ReplicaAccounting;
 import br.edu.ufcg.lsd.oursim.entities.allocation.Allocation;
 import br.edu.ufcg.lsd.oursim.entities.request.PeerRequest;
 import br.edu.ufcg.lsd.oursim.events.peer.WorkerState;
@@ -24,6 +25,8 @@ public class Peer extends ActiveEntity {
 	
 	private String dsId;
 	private Set<String> providers;
+	
+	private Map<Long, List<ReplicaAccounting>> replicaAccountings = new HashMap<Long, List<ReplicaAccounting>>();
 	
 	public PeerRequest getRequest(long requestId) {
 		return requests.get(requestId);
@@ -69,8 +72,8 @@ public class Peer extends ActiveEntity {
 		allocations.put(allocation.getWorker(), allocation);
 	}
 
-	public void removeAllocation(String workerId) {
-		allocations.remove(workerId);
+	public Allocation removeAllocation(String workerId) {
+		return allocations.remove(workerId);
 	}
 
 	public List<Allocation> getAllocations() {
@@ -98,5 +101,34 @@ public class Peer extends ActiveEntity {
 	
 	public Set<String> getWorkerProviders() {
 		return providers;
+	}
+
+	public void addReplicaAccounting(ReplicaAccounting replicaAccounting) {
+		List<ReplicaAccounting> accountings = replicaAccountings.get(
+				replicaAccounting.getRequestId());
+		
+		if (accountings == null) {
+			accountings = new LinkedList<ReplicaAccounting>();
+			replicaAccountings.put(replicaAccounting.getRequestId(), accountings);
+		}
+		
+		accountings.add(replicaAccounting);
+	}
+	
+	public List<ReplicaAccounting> getReplicaAccountings(long requestId) {
+		return replicaAccountings.get(requestId);
+	}
+
+	public void setBalance(String localPeer, String remotePeer, double balance) {
+		Map<String, Double> consumerBalances = balances.get(localPeer);
+		if (consumerBalances == null) {
+			consumerBalances = new HashMap<String, Double>();
+			balances.put(localPeer, consumerBalances);
+		}
+		consumerBalances.put(remotePeer, balance);
+	}
+
+	public void removeReplicaAccountings(long requestId) {
+		replicaAccountings.remove(requestId);
 	}
 }

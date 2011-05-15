@@ -1,12 +1,14 @@
 package br.edu.ufcg.lsd.oursim.events.broker;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import br.edu.ufcg.lsd.oursim.OurSim;
 import br.edu.ufcg.lsd.oursim.entities.grid.Broker;
 import br.edu.ufcg.lsd.oursim.entities.job.ExecutionState;
 import br.edu.ufcg.lsd.oursim.entities.job.Job;
 import br.edu.ufcg.lsd.oursim.entities.job.Replica;
 import br.edu.ufcg.lsd.oursim.entities.job.Task;
-import br.edu.ufcg.lsd.oursim.entities.request.BrokerRequest;
 import br.edu.ufcg.lsd.oursim.events.peer.PeerEvents;
 import br.edu.ufcg.lsd.oursim.util.Configuration;
 
@@ -129,7 +131,10 @@ public class SchedulerHelper {
 	}
 
 	public static void finishJob(Job job, Broker broker, OurSim ourSim, long time) {
-		for (String worker : job.getAvailableWorkers()) {
+		Set<String> availableWorkers = new HashSet<String>(
+				job.getAvailableWorkers());
+		
+		for (String worker : availableWorkers) {
 			disposeWorker(job, broker, worker, ourSim, time);
 		}
 		ourSim.addNetworkEvent(ourSim.createEvent(PeerEvents.FINISH_REQUEST, time, 
@@ -145,28 +150,4 @@ public class SchedulerHelper {
 		}
 	}
 
-	public static void executionEnded(Replica finishedReplica, OurSim ourSim, long time) {
-		
-		Job job = finishedReplica.getTask().getJob();
-		
-		String worker = finishedReplica.getWorker();
-		finishedReplica.setWorker(null);
-		job.workerIsAvailable(worker);
-		
-		BrokerRequest request = finishedReplica.getTask().getJob().getRequest();
-		String brokerId = request.getSpec().getBrokerId();
-		Broker broker = ourSim.getGrid().getObject(brokerId);
-		
-		if (isJobSatisfied(job, ourSim)) {
-			disposeWorker(job, broker, worker, 
-					ourSim, time);
-		}
-		
-		if (ExecutionState.FINISHED.equals(job.getState())) {
-			finishJob(job, broker, ourSim, time);
-		}
-		
-		updateScheduler(ourSim, broker, time);
-	}
-	
 }

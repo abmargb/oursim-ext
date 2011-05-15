@@ -1,7 +1,9 @@
 package br.edu.ufcg.lsd.oursim.events.peer;
 
 import br.edu.ufcg.lsd.oursim.OurSim;
+import br.edu.ufcg.lsd.oursim.entities.allocation.Allocation;
 import br.edu.ufcg.lsd.oursim.entities.grid.Peer;
+import br.edu.ufcg.lsd.oursim.entities.request.PeerRequest;
 import br.edu.ufcg.lsd.oursim.events.AbstractEvent;
 import br.edu.ufcg.lsd.oursim.events.Event;
 
@@ -20,7 +22,15 @@ public class WorkerUnavailableEvent extends AbstractEvent {
 	public void process(OurSim ourSim) {
 		Peer peer = ourSim.getGrid().getObject(peerId);
 		peer.setWorkerState(workerId, WorkerState.UNAVAILABLE);
-		peer.removeAllocation(workerId);
+		
+		Allocation allocation = peer.removeAllocation(workerId);
+		if (allocation != null) {
+			PeerRequest request = allocation.getRequest();
+			
+			if (request != null) {
+				request.removeAllocatedWorker(workerId);
+			}
+		}
 	}
 
 }

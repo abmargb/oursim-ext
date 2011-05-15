@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import br.edu.ufcg.lsd.oursim.entities.allocation.Allocation;
+import br.edu.ufcg.lsd.oursim.entities.allocation.AllocationInfo;
 import br.edu.ufcg.lsd.oursim.entities.grid.Peer;
 import br.edu.ufcg.lsd.oursim.entities.request.PeerRequest;
 import br.edu.ufcg.lsd.oursim.entities.request.RequestSpec;
@@ -441,7 +442,7 @@ public class AllocationHelper {
 	public static List<Allocation> getAllocationsForRemoteRequest(Peer peer,
 			RequestSpec requestSpec, String consumer) {
 		
-		Map<String, Double> balances = peer.getBalances(consumer);
+		Map<String, Double> balances = peer.getBalances(peer.getId());
 		
 		return getRangeBasedPriorityAllocation(consumer, 
 				requestSpec.getRequiredWorkers(), peer.getAllocations(), 

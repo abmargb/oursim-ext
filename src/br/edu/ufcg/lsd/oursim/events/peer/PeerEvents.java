@@ -36,6 +36,8 @@ public class PeerEvents {
 	public static final String REMOTE_WORKER_RECOVERY = "REMOTE_WORKER_RECOVERY";
 	public static final String REMOTE_WORKER_FAILURE = "REMOTE_WORKER_FAILURE";
 	public static final String DISPOSE_REMOTE_WORKER = "DISPOSE_REMOTE_WORKER";
+	public static final String REPORT_REPLICA_ACCOUNTING = "REPORT_REPLICA_ACCOUNTING";
+	public static final String REPORT_WORK_ACCOUNTING = "REPORT_WORK_ACCOUNTING";
 	
 	public static Map<String, Class<? extends Event>> createEvents() {
 		Map<String, Class<? extends Event>> events = new HashMap<String, Class<? extends Event>>();
@@ -59,6 +61,8 @@ public class PeerEvents {
 		events.put(REMOTE_WORKER_RECOVERY, RemoteWorkerRecoveryEvent.class);
 		events.put(REMOTE_WORKER_FAILURE, RemoteWorkerFailureEvent.class);
 		events.put(DISPOSE_REMOTE_WORKER, DisposeRemoteWorkerEvent.class);
+		events.put(REPORT_REPLICA_ACCOUNTING, ReportReplicaAccountingEvent.class);
+		events.put(REPORT_WORK_ACCOUNTING, ReportWorkAccountingEvent.class);
 		
 		return events;
 	}

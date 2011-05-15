@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import br.edu.ufcg.lsd.oursim.entities.allocation.Allocation;
+import br.edu.ufcg.lsd.oursim.entities.allocation.AllocationInfo;
 
 public class LowerPriorityAllocationHelper {
 

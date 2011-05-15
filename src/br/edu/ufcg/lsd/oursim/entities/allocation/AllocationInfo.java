@@ -17,12 +17,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package br.edu.ufcg.lsd.oursim.events.peer.allocation;
+package br.edu.ufcg.lsd.oursim.entities.allocation;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import br.edu.ufcg.lsd.oursim.entities.allocation.Allocation;
 
 public class AllocationInfo implements Comparable<AllocationInfo>{
 		

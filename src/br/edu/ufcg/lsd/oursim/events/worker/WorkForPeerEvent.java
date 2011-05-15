@@ -9,15 +9,16 @@ import br.edu.ufcg.lsd.oursim.events.peer.PeerEvents;
 
 public class WorkForPeerEvent extends AbstractEvent {
 
-	private final String consumer;
+	private final String consumerPeer;
 	private final String workerId;
 	private final RequestSpec requestSpec;
-	private final String provider;
+	private final String providerPeer;
 
-	public WorkForPeerEvent(Long time, String consumer, String provider, RequestSpec requestSpec, String workerId) {
+	public WorkForPeerEvent(Long time, String consumerPeer, String providerPeer, 
+			RequestSpec requestSpec, String workerId) {
 		super(time, Event.DEF_PRIORITY, null);
-		this.consumer = consumer;
-		this.provider = provider;
+		this.consumerPeer = consumerPeer;
+		this.providerPeer = providerPeer;
 		this.requestSpec = requestSpec;
 		this.workerId = workerId;
 	}
@@ -25,15 +26,12 @@ public class WorkForPeerEvent extends AbstractEvent {
 	@Override
 	public void process(OurSim ourSim) {
 		Worker worker = ourSim.getGrid().getObject(workerId);
-		String oldConsumer = worker.getConsumer();
-		if (oldConsumer != null) {
-			worker.release(oldConsumer);
-		}
+		CleanWorkerHelper.cleanWorker(getTime(), worker, true);
 
-		worker.setConsumer(consumer);
+		worker.setRemotePeer(consumerPeer);
 		
 		ourSim.addNetworkEvent(ourSim.createEvent(PeerEvents.WORKER_DONATED, 
-				getTime(), consumer, provider, requestSpec, workerId));
+				getTime(), consumerPeer, providerPeer, requestSpec, workerId));
 	}
 
 }

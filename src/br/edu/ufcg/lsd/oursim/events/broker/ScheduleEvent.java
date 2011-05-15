@@ -118,7 +118,8 @@ public class ScheduleEvent extends AbstractEvent {
 				if (isReadyToRun(replica)) {
 					replica.setState(ExecutionState.RUNNING);
 					ourSim.addNetworkEvent(ourSim.createEvent(
-							WorkerEvents.START_WORK, getTime(), replica));
+							WorkerEvents.START_WORK, getTime(), replica, 
+							replica.getWorker()));
 				}
 			}
 		}

@@ -5,6 +5,7 @@ import br.edu.ufcg.lsd.oursim.entities.grid.Peer;
 import br.edu.ufcg.lsd.oursim.events.Event;
 import br.edu.ufcg.lsd.oursim.events.fd.ActiveEntityUpEvent;
 import br.edu.ufcg.lsd.oursim.events.fd.MonitorUtil;
+import br.edu.ufcg.lsd.oursim.events.worker.WorkerEvents;
 
 public class PeerUpEvent extends ActiveEntityUpEvent {
 
@@ -24,7 +25,7 @@ public class PeerUpEvent extends ActiveEntityUpEvent {
 		for (String workerId : peer.getWorkersIds()) {
 			MonitorUtil.registerMonitored(ourSim, getTime(), 
 					peer.getId(), workerId, 
-					ourSim.createEvent(PeerEvents.WORKER_IDLE, getTime(), workerId, peer.getId()),
+					ourSim.createEvent(WorkerEvents.SET_PEER, getTime(), workerId, peer.getId()),
 					ourSim.createEvent(PeerEvents.WORKER_UNAVAILABLE, getTime(), workerId, peer.getId()));
 		}
 	}
