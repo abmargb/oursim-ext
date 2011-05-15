@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.edu.ufcg.lsd.oursim.fd.FailureDetector;
-import br.edu.ufcg.lsd.oursim.fd.FixedPingFailureDetector;
 import br.edu.ufcg.lsd.oursim.fd.MessageType;
 
 public class ActiveEntity extends Entity {
@@ -13,7 +12,9 @@ public class ActiveEntity extends Entity {
 	private boolean up;
 	private final Map<String, Monitor> monitors = new HashMap<String, Monitor>();
 	
-	private FailureDetector fd = new FixedPingFailureDetector();
+	private FailureDetector fd;
+	private long pingInterval;
+	private long timeout;
 	
 	public String getId() {
 		return id;
@@ -36,7 +37,9 @@ public class ActiveEntity extends Entity {
 		monitors.put(monitoredId, monitor);
 		
 		if (fd != null) {
-			fd.registerMonitored(monitoredId, time, 30000, 10000);
+			
+			fd.registerMonitored(monitoredId, time, 
+					timeout, pingInterval);
 		}
 	}
 	
@@ -65,5 +68,17 @@ public class ActiveEntity extends Entity {
 	public void release(String monitored) {
 		fd.releaseMonitored(monitored);
 		monitors.remove(monitored);
+	}
+	
+	public void setFailureDetector(FailureDetector fd) {
+		this.fd = fd;
+	}
+	
+	public void setPingInterval(long pingInterval) {
+		this.pingInterval = pingInterval;
+	}
+	
+	public void setTimeout(long timeout) {
+		this.timeout = timeout;
 	}
 }

@@ -22,13 +22,22 @@ public class Configuration {
 	public static final String PROP_REQUEST_REPETITION_INTERVAL = "REQUEST_REPETITION_INTERVAL";
 	public static final String DEF_REQUEST_REPETITION_INTERVAL = "30000";
 	
-	public static final String PROP_GET_PROVIDERS_REPETITION_INTERVAL = "PROP_GET_PROVIDERS_REPETITION_INTERVAL";
+	public static final String PROP_GET_PROVIDERS_REPETITION_INTERVAL = "GET_PROVIDERS_REPETITION_INTERVAL";
 	public static final String DEF_GET_PROVIDERS_REPETITION_INTERVAL = "60000";
 	
-	public static final String PROP_REPORT_WORK_ACCOUNTING_REPETITION_INTERVAL = "PROP_REPORT_WORK_ACCOUNTING_REPETITION_INTERVAL";
+	public static final String PROP_REPORT_WORK_ACCOUNTING_REPETITION_INTERVAL = "REPORT_WORK_ACCOUNTING_REPETITION_INTERVAL";
 	public static final String DEF_REPORT_WORK_ACCOUNTING_REPETITION_INTERVAL = "120000";
 	
-	public static Properties createDefault() {
+	public static final String PROP_FAILURE_DETECTOR_NAME = "FD_NAME";
+	public static final String DEF_FAILURE_DETECTOR_NAME = "fixed";
+	
+	public static final String PROP_FAILURE_DETECTOR_TIMEOUT = "FD_TIMEOUT";
+	public static final String DEF_FAILURE_DETECTOR_TIMEOUT = "30000";
+	
+	public static final String PROP_FAILURE_DETECTOR_PING_INTERVAL = "FD_PING_INTERVAL";
+	public static final String DEF_FAILURE_DETECTOR_PING_INTERVAL = "10000";
+	
+	public static Properties createDefaults() {
 		Properties properties = new Properties();
 		properties.put(PROP_LIVENESS_CHECK_INTERVAL, DEF_LIVENESS_CHECK_INTERVAL);
 		properties.put(PROP_USE_FAILURE_DETECTOR, DEF_USE_FAILURE_DETECTOR);
@@ -38,8 +47,17 @@ public class Configuration {
 		properties.put(PROP_REQUEST_REPETITION_INTERVAL, DEF_REQUEST_REPETITION_INTERVAL);
 		properties.put(PROP_GET_PROVIDERS_REPETITION_INTERVAL, DEF_GET_PROVIDERS_REPETITION_INTERVAL);
 		properties.put(PROP_REPORT_WORK_ACCOUNTING_REPETITION_INTERVAL, DEF_REPORT_WORK_ACCOUNTING_REPETITION_INTERVAL);
+		properties.put(PROP_FAILURE_DETECTOR_NAME, DEF_FAILURE_DETECTOR_NAME);
+		properties.put(PROP_FAILURE_DETECTOR_TIMEOUT, DEF_FAILURE_DETECTOR_TIMEOUT);
+		properties.put(PROP_FAILURE_DETECTOR_PING_INTERVAL, DEF_FAILURE_DETECTOR_PING_INTERVAL);
 		
 		return properties;
+	}
+	
+	public static Properties createConfiguration(Properties properties) {
+		Properties defaults = new Properties(createDefaults());
+		defaults.putAll(properties);
+		return defaults;
 	}
 	
 }

@@ -29,14 +29,14 @@ public class OurSim {
 	public OurSim(EventProxy eventProxy, GridFactory gridFactory, 
 			Properties properties, Network network, TraceCollector traceCollector) {
 		this.traceCollector = traceCollector;
-		this.properties = createProperties(properties);
+		this.properties = properties;
 		this.network = network;
 		this.queue = new EventQueue(eventProxy, eventFactory);
 		this.grid = gridFactory.createGrid();
 	}
 	
 	private Properties createProperties(Properties properties) {
-		Properties defaults = new Properties(Configuration.createDefault());
+		Properties defaults = new Properties(Configuration.createDefaults());
 		defaults.putAll(properties);
 		return defaults;
 	}
