@@ -15,10 +15,12 @@ import br.edu.ufcg.lsd.oursim.events.peer.PeerEvents;
 public class HereIsExecutionResultEvent extends AbstractEvent {
 
 	private final Replica replica;
+	private final String brokerId;
 
-	public HereIsExecutionResultEvent(Long time, Replica replica) {
+	public HereIsExecutionResultEvent(Long time, Replica replica, String brokerId) {
 		super(time, Event.DEF_PRIORITY, null);
 		this.replica = replica;
+		this.brokerId = brokerId;
 	}
 
 	@Override
@@ -29,11 +31,11 @@ public class HereIsExecutionResultEvent extends AbstractEvent {
 		
 		replica.setState(ExecutionState.FINISHED);
 		replica.setEndTime(getTime());
-		ourSim.getTraceCollector().replicaEnded(getTime(), replica);
+		ourSim.getTraceCollector().replicaEnded(getTime(), replica, brokerId);
 		
 		replica.getTask().setState(ExecutionState.FINISHED);
 		replica.getTask().setEndTime(getTime());
-		ourSim.getTraceCollector().taskEnded(getTime(), replica.getTask());
+		ourSim.getTraceCollector().taskEnded(getTime(), replica.getTask(), brokerId);
 		
 		abortSiblingReplicas(ourSim);
 		
@@ -49,7 +51,7 @@ public class HereIsExecutionResultEvent extends AbstractEvent {
 					ExecutionState.RUNNING.equals(siblingReplica.getState())) {
 				siblingReplica.setState(ExecutionState.ABORTED);
 				siblingReplica.setEndTime(getTime());
-				ourSim.getTraceCollector().replicaEnded(getTime(), siblingReplica);
+				ourSim.getTraceCollector().replicaEnded(getTime(), siblingReplica, brokerId);
 				
 				executionEnded(siblingReplica, ourSim);
 			}
@@ -67,7 +69,7 @@ public class HereIsExecutionResultEvent extends AbstractEvent {
 		if (finished) {
 			job.setState(ExecutionState.FINISHED);
 			job.setEndTime(getTime());
-			ourSim.getTraceCollector().jobEnded(getTime(), job);
+			ourSim.getTraceCollector().jobEnded(getTime(), job, brokerId);
 		}
 	}
 	

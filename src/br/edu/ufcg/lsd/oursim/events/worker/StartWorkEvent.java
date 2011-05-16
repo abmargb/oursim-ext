@@ -11,11 +11,13 @@ public class StartWorkEvent extends AbstractEvent {
 
 	private final Replica replica;
 	private final String workerId;
+	private final String brokerId;
 
-	public StartWorkEvent(Long time, Replica replica, String workerId) {
+	public StartWorkEvent(Long time, Replica replica, String workerId, String brokerId) {
 		super(time, Event.DEF_PRIORITY, null);
 		this.replica = replica;
 		this.workerId = workerId;
+		this.brokerId = brokerId;
 	}
 
 	@Override
@@ -29,7 +31,7 @@ public class StartWorkEvent extends AbstractEvent {
 		
 		ourSim.addEvent(ourSim.createEvent(WorkerEvents.SEND_HERE_IS_EXECUTION_RESULT, 
 				getTime() + (long)(replica.getTask().getDuration() / worker.getCpu()), 
-				replica, workerId));
+				replica, workerId, brokerId));
 	}
 
 }

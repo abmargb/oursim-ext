@@ -23,6 +23,10 @@ public class ResumeRequestEvent extends AbstractEvent {
 	public void process(OurSim ourSim) {
 		Peer peer = ourSim.getGrid().getObject(peerId);
 		PeerRequest request = peer.getRequest(requestSpec.getId());
+		if (request == null) {
+			return;
+		}
+		
 		request.setPaused(false);
 		
 		if (request.getNeededWorkers() > 0) {

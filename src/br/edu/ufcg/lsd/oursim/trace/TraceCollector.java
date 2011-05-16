@@ -6,10 +6,10 @@ import br.edu.ufcg.lsd.oursim.entities.job.Task;
 
 public interface TraceCollector {
 
-	public void replicaEnded(long time, Replica replica);
+	public void replicaEnded(long time, Replica replica, String brokerId);
 
-	public void jobEnded(long time, Job job);
+	public void jobEnded(long time, Job job, String brokerId);
 
-	public void taskEnded(long time, Task task);
+	public void taskEnded(long time, Task task, String brokerId);
 	
 }

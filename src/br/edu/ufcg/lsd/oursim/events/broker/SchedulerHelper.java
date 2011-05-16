@@ -16,6 +16,11 @@ public class SchedulerHelper {
 
 	public static boolean isJobSatisfied(Job job, OurSim ourSim) {
 		
+		if (ExecutionState.FINISHED.equals(job.getState()) || 
+				ExecutionState.FAILED.equals(job.getState())) {
+			return true;
+		}
+		
 		if (job.getTasks() == null || job.getTasks().isEmpty()) {
 			return true;
 		}

@@ -1,7 +1,5 @@
 package br.edu.ufcg.lsd.oursim.events.broker;
 
-import java.util.Random;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -39,7 +37,7 @@ public class AddJobEvent extends AbstractEvent {
 		
 		RequestSpec requestSpec = new RequestSpec();
 		requestSpec.setBrokerId(brokerId);
-		requestSpec.setId(Math.abs(new Random().nextLong()));
+		requestSpec.setId(Math.abs(ourSim.getRandom().nextLong()));
 		requestSpec.setRequiredWorkers(job.getTasks().size()
 				* ourSim.getIntProperty(Configuration.PROP_BROKER_MAX_REPLICAS));
 		

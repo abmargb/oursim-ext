@@ -1,5 +1,6 @@
 package br.edu.ufcg.lsd.oursim.events.broker;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import br.edu.ufcg.lsd.oursim.OurSim;
@@ -49,7 +50,10 @@ public class ScheduleEvent extends AbstractEvent {
 						getTime(), request.getSpec(), broker.getPeerId()));
 			}
 			
-			for (String worker : job.getAvailableWorkers()) {
+			Set<String> availableWorkers = new HashSet<String>(
+					job.getAvailableWorkers());
+			
+			for (String worker : availableWorkers) {
 				SchedulerHelper.disposeWorker(job, broker, 
 						worker, ourSim, getTime());
 			}
@@ -119,7 +123,7 @@ public class ScheduleEvent extends AbstractEvent {
 					replica.setState(ExecutionState.RUNNING);
 					ourSim.addNetworkEvent(ourSim.createEvent(
 							WorkerEvents.START_WORK, getTime(), replica, 
-							replica.getWorker()));
+							replica.getWorker(), brokerId));
 				}
 			}
 		}

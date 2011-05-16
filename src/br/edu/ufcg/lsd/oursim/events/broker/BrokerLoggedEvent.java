@@ -1,7 +1,5 @@
 package br.edu.ufcg.lsd.oursim.events.broker;
 
-import java.util.Random;
-
 import br.edu.ufcg.lsd.oursim.OurSim;
 import br.edu.ufcg.lsd.oursim.entities.grid.Broker;
 import br.edu.ufcg.lsd.oursim.entities.job.Job;
@@ -28,7 +26,7 @@ public class BrokerLoggedEvent extends AbstractEvent {
 			if (!SchedulerHelper.isJobSatisfied(job, ourSim)) {
 				RequestSpec requestSpec = new RequestSpec();
 				requestSpec.setBrokerId(brokerId);
-				requestSpec.setId(Math.abs(new Random().nextLong()));
+				requestSpec.setId(Math.abs(ourSim.getRandom().nextLong()));
 				requestSpec.setRequiredWorkers(job.getTasks().size()
 						* ourSim.getIntProperty(Configuration.PROP_BROKER_MAX_REPLICAS));
 				

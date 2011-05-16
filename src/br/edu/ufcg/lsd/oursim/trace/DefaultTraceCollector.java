@@ -17,12 +17,12 @@ public class DefaultTraceCollector implements TraceCollector {
 	}
 	
 	@Override
-	public void replicaEnded(long time, Replica replica) {
+	public void replicaEnded(long time, Replica replica, String brokerId) {
 		BrokerRequest request = replica.getTask().getJob().getRequest();
 		String message = createTrace("REPLICA_ENDED", time,  
 				replica.getState(), 
 				replica.getEndTime() - replica.getCreationTime(),
-				request.getSpec().getBrokerId(), 
+				brokerId, 
 				replica.getWorker(), 
 				replica.getId(), 
 				replica.getTask().getId(),
@@ -32,22 +32,22 @@ public class DefaultTraceCollector implements TraceCollector {
 	}
 	
 	@Override
-	public void jobEnded(long time, Job job) {
+	public void jobEnded(long time, Job job, String brokerId) {
 		String message = createTrace("JOB_ENDED", time,  
 				job.getState(),
 				job.getEndTime() - job.getCreationTime(),
-				job.getRequest().getSpec().getBrokerId(),
+				brokerId,
 				job.getId());
 		
 		writeMessage(message);
 	}
 
 	@Override
-	public void taskEnded(long time, Task task) {
+	public void taskEnded(long time, Task task, String brokerId) {
 		String message = createTrace("TASK_ENDED", time,  
 				task.getState(), 
 				task.getEndTime() - task.getCreationTime(),
-				task.getJob().getRequest().getSpec().getBrokerId(),
+				brokerId,
 				task.getId(), task.getJob().getId());
 		
 		writeMessage(message);

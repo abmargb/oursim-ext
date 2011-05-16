@@ -38,26 +38,31 @@ public class WorkerFailedEvent extends AbstractEvent {
 
 	private void replicaFailed(Broker broker, Replica replica, OurSim ourSim) {
 		
+		Job job = replica.getTask().getJob();
+		
+		boolean wasJobEnded = ExecutionState.FAILED.equals(job.getState()) || 
+			ExecutionState.FINISHED.equals(job.getState());
+		
 		replica.setState(ExecutionState.FAILED);
 		replica.setEndTime(getTime());
-		ourSim.getTraceCollector().replicaEnded(getTime(), replica);
+		ourSim.getTraceCollector().replicaEnded(getTime(), replica, broker.getId());
 		
-		updateTaskState(replica.getTask(), ourSim);
-		updateJobState(replica, ourSim);
-		
-		Job job = replica.getTask().getJob();
+		updateTaskState(broker.getId(), replica.getTask(), ourSim);
+		updateJobState(broker.getId(), replica, ourSim);
 		
 		replica.setWorker(null);
 		
-		boolean jobEnded = ExecutionState.FAILED.equals(job.getState());
-		if (jobEnded) {
-			SchedulerHelper.finishJob(job, broker, ourSim, getTime());
-		} else if (!SchedulerHelper.isJobSatisfied(job, ourSim)) {
-			ourSim.addNetworkEvent(ourSim.createEvent(PeerEvents.RESUME_REQUEST, 
-					getTime(), request.getSpec(), broker.getPeerId()));
+		if (!wasJobEnded) {
+			boolean jobEnded = ExecutionState.FAILED.equals(job.getState());
+			if (jobEnded) {
+				SchedulerHelper.finishJob(job, broker, ourSim, getTime());
+			} else if (!SchedulerHelper.isJobSatisfied(job, ourSim)) {
+				ourSim.addNetworkEvent(ourSim.createEvent(PeerEvents.RESUME_REQUEST, 
+						getTime(), request.getSpec(), broker.getPeerId()));
+			}
+			
+			SchedulerHelper.updateScheduler(ourSim, broker, getTime());
 		}
-		
-		SchedulerHelper.updateScheduler(ourSim, broker, getTime());
 		
 		ourSim.addNetworkEvent(ourSim.createEvent(PeerEvents.REPORT_REPLICA_ACCOUNTING, 
 				getTime(), new ReplicaAccounting(request.getSpec().getId(), 
@@ -65,16 +70,25 @@ public class WorkerFailedEvent extends AbstractEvent {
 						replica.getState()), broker.getPeerId()));
 	}
 
-	private void updateJobState(Replica replica, OurSim ourSim) {
-		if (ExecutionState.FAILED.equals(replica.getTask())) {
+	private void updateJobState(String brokerId, Replica replica, OurSim ourSim) {
+		if (ExecutionState.FAILED.equals(replica.getTask().getJob().getState())) {
+			return;
+		}
+		
+		if (ExecutionState.FAILED.equals(replica.getTask().getState())) {
 			Job job = replica.getTask().getJob();
 			job.setEndTime(getTime());
 			job.setState(ExecutionState.FAILED);
-			ourSim.getTraceCollector().jobEnded(getTime(), job);
+			ourSim.getTraceCollector().jobEnded(getTime(), job, brokerId);
 		}
 	}
 
-	private void updateTaskState(Task task, OurSim ourSim) {
+	private void updateTaskState(String brokerId, Task task, OurSim ourSim) {
+		
+		if (ExecutionState.FAILED.equals(task.getState())) {
+			return;
+		}
+		
 		int fails = 0;
 		for (Replica replica : task.getReplicas()) {
 			if (ExecutionState.FAILED.equals(replica.getState())) {
@@ -84,7 +98,7 @@ public class WorkerFailedEvent extends AbstractEvent {
 		if (fails >= ourSim.getLongProperty(Configuration.PROP_BROKER_MAX_FAILS)) {
 			task.setState(ExecutionState.FAILED);
 			task.setEndTime(getTime());
-			ourSim.getTraceCollector().taskEnded(getTime(), task);
+			ourSim.getTraceCollector().taskEnded(getTime(), task, brokerId);
 		}
 	}
 

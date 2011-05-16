@@ -12,11 +12,13 @@ public class SendHereIsExecutionEvent extends AbstractEvent {
 
 	private final Replica replica;
 	private final String workerId;
+	private final String brokerId;
 
-	public SendHereIsExecutionEvent(Long time, Replica replica, String workerId) {
+	public SendHereIsExecutionEvent(Long time, Replica replica, String workerId, String brokerId) {
 		super(time, Event.DEF_PRIORITY, null);
 		this.replica = replica;
 		this.workerId = workerId;
+		this.brokerId = brokerId;
 	}
 
 	@Override
@@ -28,7 +30,7 @@ public class SendHereIsExecutionEvent extends AbstractEvent {
 		}
 		
 		ourSim.addNetworkEvent(ourSim.createEvent(BrokerEvents.HERE_IS_EXECUTION_RESULT, 
-				getTime(), replica));
+				getTime(), replica, brokerId));
 		
 		WorkAccounting workAccounting = worker.getCurrentWorkAccounting();
 		if (worker.getRemotePeer() != null && workAccounting != null) {

@@ -1,6 +1,7 @@
 package br.edu.ufcg.lsd.oursim;
 
 import java.util.Properties;
+import java.util.Random;
 
 import br.edu.ufcg.lsd.oursim.entities.grid.Grid;
 import br.edu.ufcg.lsd.oursim.events.Event;
@@ -10,18 +11,20 @@ import br.edu.ufcg.lsd.oursim.network.Network;
 import br.edu.ufcg.lsd.oursim.queue.EventProxy;
 import br.edu.ufcg.lsd.oursim.queue.EventQueue;
 import br.edu.ufcg.lsd.oursim.trace.TraceCollector;
-import br.edu.ufcg.lsd.oursim.util.Configuration;
 
 /**
  *
  */
 public class OurSim {
 
+	private static final int SEED = 123455677;
+	
 	private final EventQueue queue;
 	private final Grid grid;
 	private final Network network;
 	private final Properties properties;
 	private final TraceCollector traceCollector;
+	private final Random random = new Random(SEED);
 	
 	private boolean running = true;
 	private final EventFactory eventFactory = new EventFactory();
@@ -35,12 +38,10 @@ public class OurSim {
 		this.grid = gridFactory.createGrid();
 	}
 	
-	private Properties createProperties(Properties properties) {
-		Properties defaults = new Properties(Configuration.createDefaults());
-		defaults.putAll(properties);
-		return defaults;
+	public Random getRandom() {
+		return random;
 	}
-
+	
 	public Grid getGrid() {
 		return grid;
 	}
