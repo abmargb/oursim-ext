@@ -139,6 +139,7 @@ public class DefaultGridFactory implements GridFactory {
 		peer.setDiscoveryServiceId(JSONUtils.getJSONString(peerJson, "discoveryService"));
 		
 		JSONArray workersArray = JSONUtils.getJSONArray(peerJson, "workers");
+		
 		for (int i = 0; i < workersArray.length(); i++) {
 			try {
 				JSONObject workerJson = (JSONObject) workersArray.get(i);

@@ -116,7 +116,9 @@ public class Peer extends ActiveEntity {
 	}
 	
 	public List<ReplicaAccounting> getReplicaAccountings(long requestId) {
-		return replicaAccountings.get(requestId);
+		return replicaAccountings.containsKey(requestId) ? 
+				new LinkedList<ReplicaAccounting>(replicaAccountings.get(requestId)) 
+				: new LinkedList<ReplicaAccounting>();
 	}
 
 	public void setBalance(String remotePeer, double balance) {
