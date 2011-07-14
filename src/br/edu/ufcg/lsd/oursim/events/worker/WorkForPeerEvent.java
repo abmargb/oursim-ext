@@ -16,7 +16,7 @@ public class WorkForPeerEvent extends AbstractEvent {
 
 	public WorkForPeerEvent(Long time, String consumerPeer, String providerPeer, 
 			RequestSpec requestSpec, String workerId) {
-		super(time, Event.DEF_PRIORITY, null);
+		super(time, Event.DEF_PRIORITY);
 		this.consumerPeer = consumerPeer;
 		this.providerPeer = providerPeer;
 		this.requestSpec = requestSpec;

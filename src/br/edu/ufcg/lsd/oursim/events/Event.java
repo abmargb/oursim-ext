@@ -15,5 +15,4 @@ public interface Event extends Comparable<Event>{
 	
 	Integer getPriority();
 
-	String getData();
 }

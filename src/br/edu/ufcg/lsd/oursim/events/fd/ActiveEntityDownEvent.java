@@ -1,10 +1,9 @@
 package br.edu.ufcg.lsd.oursim.events.fd;
 
 import br.edu.ufcg.lsd.oursim.OurSim;
-import br.edu.ufcg.lsd.oursim.entities.ActiveEntity;
-import br.edu.ufcg.lsd.oursim.events.AbstractEvent;
+import br.edu.ufcg.lsd.oursim.events.PrimaryEvent;
 
-public abstract class ActiveEntityDownEvent extends AbstractEvent {
+public abstract class ActiveEntityDownEvent extends PrimaryEvent {
 
 	public ActiveEntityDownEvent(Long time, Integer priority, String data) {
 		super(time, priority, data);
@@ -12,9 +11,7 @@ public abstract class ActiveEntityDownEvent extends AbstractEvent {
 
 	@Override
 	public final void process(OurSim ourSim) {
-		ActiveEntity object = ourSim.getGrid().getObject(getData());
-		object.setUp(false);
-		MonitorUtil.objectIsDown(ourSim, object, getTime());
+		MonitorUtil.objectIsDown(ourSim, getData(), getTime());
 		entityDown(ourSim);
 	}
 

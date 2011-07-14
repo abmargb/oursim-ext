@@ -9,7 +9,7 @@ public class DiscoveryServiceFailedEvent extends AbstractEvent {
 	private final String peerId;
 
 	public DiscoveryServiceFailedEvent(Long time, String peerId) {
-		super(time, Event.DEF_PRIORITY, null);
+		super(time, Event.DEF_PRIORITY);
 		this.peerId = peerId;
 	}
 

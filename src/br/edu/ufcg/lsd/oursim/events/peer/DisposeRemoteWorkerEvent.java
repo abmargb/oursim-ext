@@ -13,7 +13,7 @@ public class DisposeRemoteWorkerEvent extends AbstractEvent {
 	private final String provider;
 
 	public DisposeRemoteWorkerEvent(Long time, String provider, String workerId) {
-		super(time, Event.DEF_PRIORITY, null);
+		super(time, Event.DEF_PRIORITY);
 		this.provider = provider;
 		this.workerId = workerId;
 	}

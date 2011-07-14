@@ -16,7 +16,7 @@ public class ReportWorkAccountingEvent extends AbstractEvent {
 
 	public ReportWorkAccountingEvent(Long time, String peerId, 
 			LinkedList<WorkAccounting> workAccountings) {
-		super(time, Event.DEF_PRIORITY, null);
+		super(time, Event.DEF_PRIORITY);
 		this.peerId = peerId;
 		this.workAccountings = workAccountings;
 	}

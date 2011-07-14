@@ -20,7 +20,7 @@ public class ScheduleEvent extends AbstractEvent {
 	private String brokerId;
 
 	public ScheduleEvent(Long time, String brokerId) {
-		super(time, Event.HIGHER_PRIORITY, null);
+		super(time, Event.HIGHER_PRIORITY);
 		this.brokerId = brokerId;
 	}
 

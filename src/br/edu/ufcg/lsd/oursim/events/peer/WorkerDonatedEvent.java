@@ -13,7 +13,7 @@ public class WorkerDonatedEvent extends AbstractEvent {
 	private final String provider;
 
 	public WorkerDonatedEvent(Long time, String consumerId, String provider, RequestSpec requestSpec, String workerId) {
-		super(time, Event.DEF_PRIORITY, null);
+		super(time, Event.DEF_PRIORITY);
 		this.consumerId = consumerId;
 		this.provider = provider;
 		this.requestSpec = requestSpec;

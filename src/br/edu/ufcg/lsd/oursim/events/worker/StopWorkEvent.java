@@ -10,7 +10,7 @@ public class StopWorkEvent extends AbstractEvent {
 	private final String workerId;
 
 	public StopWorkEvent(Long time, String workerId) {
-		super(time, Event.DEF_PRIORITY, null);
+		super(time, Event.DEF_PRIORITY);
 		this.workerId = workerId;
 	}
 

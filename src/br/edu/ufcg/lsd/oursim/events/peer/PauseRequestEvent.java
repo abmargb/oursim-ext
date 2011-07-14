@@ -12,7 +12,7 @@ public class PauseRequestEvent extends AbstractEvent {
 	private final RequestSpec requestSpec;
 
 	public PauseRequestEvent(Long time, RequestSpec requestSpec, String peerId) {
-		super(time, Event.DEF_PRIORITY, null);
+		super(time, Event.DEF_PRIORITY);
 		this.requestSpec = requestSpec;
 		this.peerId = peerId;
 	}

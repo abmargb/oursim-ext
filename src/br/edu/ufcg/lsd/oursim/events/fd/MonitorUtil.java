@@ -81,19 +81,31 @@ public class MonitorUtil {
 		ourSim.addEvent(isItAliveSentEvent);
 	}
 
-	public static void objectIsUp(OurSim ourSim, ActiveEntity object, Long time) {
+	public static void objectIsUp(OurSim ourSim, String entityId, Long time) {
+		
+		ActiveEntity object = ourSim.getGrid().getObject(entityId);
+		object.setUp(true);
+		
 		if (ourSim.getBooleanProperty(
 				Configuration.PROP_USE_FAILURE_DETECTOR)) {
 			return;
 		}
 		
 		Collection<ActiveEntity> allObjects = ourSim.getGrid().getAllObjects();
-		for (ActiveEntity activeEntity : allObjects) {
-			Monitor monitor = activeEntity.getMonitor(object.getId());
+		for (ActiveEntity interestedEntity : allObjects) {
+			Monitor monitor = interestedEntity.getMonitor(object.getId());
 			if (monitor == null) {
 				continue;
 			}
 			monitor.setUp(true);
+			
+			Monitor reverseMonitor = object.getMonitor(interestedEntity.getId());
+			if (reverseMonitor == null) {
+				reverseMonitor = new Monitor(interestedEntity, null, null);
+				object.addMonitor(reverseMonitor, time);
+			}
+			
+			reverseMonitor.setUp(true);
 			
 			Event callbackAliveEvent = monitor.getCallbackAliveEvent();
 			if (callbackAliveEvent != null) {
@@ -103,15 +115,19 @@ public class MonitorUtil {
 		}
 	}
 	
-	public static void objectIsDown(OurSim ourSim, ActiveEntity object, Long time) {
+	public static void objectIsDown(OurSim ourSim, String entityId, Long time) {
+		
+		ActiveEntity object = ourSim.getGrid().getObject(entityId);
+		object.setUp(false);
+		
 		if (ourSim.getBooleanProperty(
 				Configuration.PROP_USE_FAILURE_DETECTOR)) {
 			return;
 		}
 		
 		Collection<ActiveEntity> allObjects = ourSim.getGrid().getAllObjects();
-		for (ActiveEntity activeEntity : allObjects) {
-			Monitor monitor = activeEntity.getMonitor(object.getId());
+		for (ActiveEntity interestedEntity : allObjects) {
+			Monitor monitor = interestedEntity.getMonitor(object.getId());
 			if (monitor == null) {
 				continue;
 			}

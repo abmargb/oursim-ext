@@ -10,7 +10,7 @@ public class IsItAliveSentEvent extends AbstractEvent {
 	private final String monitored;
 
 	public IsItAliveSentEvent(Long time, String interested, String monitored) {
-		super(time, Event.DEF_PRIORITY, null);
+		super(time, Event.DEF_PRIORITY);
 		this.interested = interested;
 		this.monitored = monitored;
 	}

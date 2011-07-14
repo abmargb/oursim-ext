@@ -9,14 +9,14 @@ import br.edu.ufcg.lsd.oursim.entities.job.Job;
 import br.edu.ufcg.lsd.oursim.entities.job.Task;
 import br.edu.ufcg.lsd.oursim.entities.request.BrokerRequest;
 import br.edu.ufcg.lsd.oursim.entities.request.RequestSpec;
-import br.edu.ufcg.lsd.oursim.events.AbstractEvent;
 import br.edu.ufcg.lsd.oursim.events.Event;
+import br.edu.ufcg.lsd.oursim.events.PrimaryEvent;
 import br.edu.ufcg.lsd.oursim.events.peer.PeerEvents;
 import br.edu.ufcg.lsd.oursim.util.Configuration;
 import br.edu.ufcg.lsd.oursim.util.JSONUtils;
 import br.edu.ufcg.lsd.oursim.util.LineParser;
 
-public class AddJobEvent extends AbstractEvent {
+public class AddJobEvent extends PrimaryEvent {
 
 	public AddJobEvent(Long time, String data) {
 		super(time, Event.DEF_PRIORITY, data);

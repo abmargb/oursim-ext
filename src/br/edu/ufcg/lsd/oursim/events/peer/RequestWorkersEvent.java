@@ -21,7 +21,7 @@ public class RequestWorkersEvent extends AbstractEvent {
 
 	public RequestWorkersEvent(Long time, String peerId, 
 			RequestSpec requestSpec, Boolean repetition) {
-		super(time, Event.DEF_PRIORITY, null);
+		super(time, Event.DEF_PRIORITY);
 		this.peerId = peerId;
 		this.requestSpec = requestSpec;
 		this.repetition = repetition;

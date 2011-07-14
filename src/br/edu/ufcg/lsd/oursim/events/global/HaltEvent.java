@@ -1,8 +1,10 @@
-package br.edu.ufcg.lsd.oursim.events;
+package br.edu.ufcg.lsd.oursim.events.global;
 
 import br.edu.ufcg.lsd.oursim.OurSim;
+import br.edu.ufcg.lsd.oursim.events.Event;
+import br.edu.ufcg.lsd.oursim.events.PrimaryEvent;
 
-public class HaltEvent extends AbstractEvent {
+public class HaltEvent extends PrimaryEvent {
 
 	public static final String TYPE = "HALT";
 	

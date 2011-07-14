@@ -66,7 +66,9 @@ public class ActiveEntity extends Entity {
 	}
 
 	public void release(String monitored) {
-		fd.releaseMonitored(monitored);
+		if (fd != null) {
+			fd.releaseMonitored(monitored);
+		}
 		monitors.remove(monitored);
 	}
 	

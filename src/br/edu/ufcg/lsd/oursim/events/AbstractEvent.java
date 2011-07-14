@@ -4,22 +4,16 @@ public abstract class AbstractEvent implements Event {
 
 	private Long time;
 	private Integer priority;
-	private String data;
 	
 	/**
 	 * @param time
 	 * @param priority
 	 * @param type
 	 */
-	public AbstractEvent(Long time, Integer priority, String data) {
+	public AbstractEvent(Long time, Integer priority) {
 		this.time = time;
 		this.priority = priority;
-		this.data = data;
 	}
-	
-	public String getData() {
-		return data;
-	};
 	
 	@Override
 	public void setTime(Long time) {

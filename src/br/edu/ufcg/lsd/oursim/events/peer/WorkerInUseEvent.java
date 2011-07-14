@@ -12,7 +12,7 @@ public class WorkerInUseEvent extends AbstractEvent {
 	private final RequestSpec requestSpec;
 
 	public WorkerInUseEvent(Long time, RequestSpec requestSpec, String workerId) {
-		super(time, Event.DEF_PRIORITY, null);
+		super(time, Event.DEF_PRIORITY);
 		this.requestSpec = requestSpec;
 		this.workerId = workerId;
 	}

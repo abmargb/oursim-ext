@@ -15,7 +15,7 @@ public class SendHereIsExecutionEvent extends AbstractEvent {
 	private final String brokerId;
 
 	public SendHereIsExecutionEvent(Long time, Replica replica, String workerId, String brokerId) {
-		super(time, Event.DEF_PRIORITY, null);
+		super(time, Event.DEF_PRIORITY);
 		this.replica = replica;
 		this.workerId = workerId;
 		this.brokerId = brokerId;

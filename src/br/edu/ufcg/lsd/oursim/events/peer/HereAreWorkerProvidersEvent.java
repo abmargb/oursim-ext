@@ -14,7 +14,7 @@ public class HereAreWorkerProvidersEvent extends AbstractEvent {
 	private final Set<String> providers;
 
 	public HereAreWorkerProvidersEvent(Long time, String peerId, HashSet<String> providers) {
-		super(time, Event.DEF_PRIORITY, null);
+		super(time, Event.DEF_PRIORITY);
 		this.peerId = peerId;
 		this.providers = providers;
 	}

@@ -15,7 +15,7 @@ public class WorkForBrokerEvent extends AbstractEvent {
 	private final RequestSpec requestSpec;
 
 	public WorkForBrokerEvent(Long time, String consumer, RequestSpec requestSpec, String workerId) {
-		super(time, Event.DEF_PRIORITY, null);
+		super(time, Event.DEF_PRIORITY);
 		this.consumer = consumer;
 		this.requestSpec = requestSpec;
 		this.workerId = workerId;

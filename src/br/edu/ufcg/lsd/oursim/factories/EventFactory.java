@@ -6,10 +6,10 @@ import java.util.Map;
 
 import br.edu.ufcg.lsd.oursim.events.Event;
 import br.edu.ufcg.lsd.oursim.events.EventSpec;
-import br.edu.ufcg.lsd.oursim.events.HaltEvent;
 import br.edu.ufcg.lsd.oursim.events.broker.BrokerEvents;
 import br.edu.ufcg.lsd.oursim.events.ds.DiscoveryServiceEvents;
 import br.edu.ufcg.lsd.oursim.events.fd.FailureDetectionEvents;
+import br.edu.ufcg.lsd.oursim.events.global.HaltEvent;
 import br.edu.ufcg.lsd.oursim.events.peer.PeerEvents;
 import br.edu.ufcg.lsd.oursim.events.worker.WorkerEvents;
 

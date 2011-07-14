@@ -10,7 +10,7 @@ public class LivenessCheckEvent extends AbstractEvent {
 	private final String monitored;
 
 	public LivenessCheckEvent(Long time, String interested, String monitored) {
-		super(time, Event.DEF_PRIORITY, null);
+		super(time, Event.DEF_PRIORITY);
 		this.interested = interested;
 		this.monitored = monitored;
 	}
