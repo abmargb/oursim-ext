@@ -24,7 +24,7 @@ public class Peer extends ActiveEntity {
 	private Map<String, Double> balances = new HashMap<String, Double>();
 	
 	private String dsId;
-	private Set<String> providers;
+	private Set<String> providers = new HashSet<String>();
 	
 	private Map<Long, List<ReplicaAccounting>> replicaAccountings = new HashMap<Long, List<ReplicaAccounting>>();
 	
