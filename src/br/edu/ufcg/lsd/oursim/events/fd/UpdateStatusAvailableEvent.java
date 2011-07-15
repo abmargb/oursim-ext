@@ -5,6 +5,7 @@ import br.edu.ufcg.lsd.oursim.entities.ActiveEntity;
 import br.edu.ufcg.lsd.oursim.entities.Monitor;
 import br.edu.ufcg.lsd.oursim.events.AbstractEvent;
 import br.edu.ufcg.lsd.oursim.events.Event;
+import br.edu.ufcg.lsd.oursim.util.Configuration;
 
 public class UpdateStatusAvailableEvent extends AbstractEvent {
 
@@ -40,7 +41,11 @@ public class UpdateStatusAvailableEvent extends AbstractEvent {
 			}
 		}
 		
-		MonitorUtil.checkLiveness(ourSim, getTime(), interested, monitored);
+		
+		if (ourSim.getBooleanProperty(
+				Configuration.PROP_USE_FAILURE_DETECTOR)) {
+			MonitorUtil.checkLiveness(ourSim, getTime(), interested, monitored);
+		}
 	}
 
 }

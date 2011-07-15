@@ -29,10 +29,7 @@ public class MonitorUtil {
 		monitor.setUp(isUp);
 		interestedObj.addMonitor(monitor, time);
 		
-		if (ourSim.getBooleanProperty(
-				Configuration.PROP_USE_FAILURE_DETECTOR)) {
-			sendIsItAlive(ourSim, time, interested, monitored);
-		}
+		sendIsItAlive(ourSim, time, interested, monitored);
 		
 		return monitor;
 	}
@@ -74,11 +71,15 @@ public class MonitorUtil {
 		interestedObj.isItAliveSent(monitored, time);
 		ourSim.addNetworkEvent(isItAliveReceivedEvent);
 
-		Event isItAliveSentEvent = ourSim.createEvent(FailureDetectionEvents.IS_IT_ALIVE_SENT, 
-				time + interestedObj.getTimeToNextPing(monitored, time), 
-				interested, monitored);
+		if (ourSim.getBooleanProperty(
+				Configuration.PROP_USE_FAILURE_DETECTOR)) {
+			Event isItAliveSentEvent = ourSim.createEvent(FailureDetectionEvents.IS_IT_ALIVE_SENT, 
+					time + interestedObj.getTimeToNextPing(monitored, time), 
+					interested, monitored);
+			
+			ourSim.addEvent(isItAliveSentEvent);
+		}
 		
-		ourSim.addEvent(isItAliveSentEvent);
 	}
 
 	public static void objectIsUp(OurSim ourSim, String entityId, Long time) {

@@ -37,7 +37,6 @@ public class ActiveEntity extends Entity {
 		monitors.put(monitoredId, monitor);
 		
 		if (fd != null) {
-			
 			fd.registerMonitored(monitoredId, time, 
 					timeout, pingInterval);
 		}
@@ -48,7 +47,9 @@ public class ActiveEntity extends Entity {
 	}
 
 	public void isItAliveSent(String monitored, Long time) {
-		fd.messageSent(monitored, time, MessageType.PING);
+		if (fd != null) {
+			fd.messageSent(monitored, time, MessageType.PING);
+		}
 	}
 	
 	public long getTimeToNextPing(String monitored, Long time) {
@@ -58,7 +59,9 @@ public class ActiveEntity extends Entity {
 	public void updateStatusReceived(String monitored, Long time) {
 		getMonitor(monitored).setUp(true);
 		getMonitor(monitored).setCreatingConnection(false);
-		fd.messageReceived(monitored, time, MessageType.PING);
+		if (fd != null) {
+			fd.messageReceived(monitored, time, MessageType.PING);
+		}
 	}
 
 	public boolean isFailed(String monitored, Long time) {
