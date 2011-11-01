@@ -6,7 +6,7 @@ import java.io.FileOutputStream;
 import java.util.Properties;
 
 import br.edu.ufcg.lsd.oursim.factories.DefaultGridFactory;
-import br.edu.ufcg.lsd.oursim.network.DefaultWANNetwork;
+import br.edu.ufcg.lsd.oursim.network.BlankNetwork;
 import br.edu.ufcg.lsd.oursim.queue.DefaultEventProxy;
 import br.edu.ufcg.lsd.oursim.trace.DefaultTraceCollector;
 import br.edu.ufcg.lsd.oursim.util.Configuration;
@@ -18,13 +18,15 @@ public class Main {
 		long beginning = System.currentTimeMillis();
 		
 		Properties properties = Configuration.createConfiguration(new Properties());
-//		properties.put(Configuration.PROP_USE_FAILURE_DETECTOR, Boolean.FALSE.toString());
+		properties.put(Configuration.PROP_BROKER_MAX_REPLICAS, "1");
+		properties.put(Configuration.PROP_USE_FAILURE_DETECTOR, Boolean.FALSE.toString());
+		properties.put(Configuration.PROP_BROKER_SCHEDULER_INTERVAL, "0");
 		
 		OurSim ourSim = new OurSim(
-				new DefaultEventProxy(new FileInputStream("resources/event-stress.conf")), 
-				new DefaultGridFactory(properties, new FileInputStream("resources/grid-stress.conf")),
+				new DefaultEventProxy(new FileInputStream("resources/event-marcos.conf")), 
+				new DefaultGridFactory(properties, new FileInputStream("resources/grid-marcos.conf")).createGrid(),
 				properties,
-				new DefaultWANNetwork(),
+				new BlankNetwork(),
 				new DefaultTraceCollector(new FileOutputStream("trace.out")));
 		
 		ourSim.run();

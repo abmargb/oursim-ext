@@ -29,13 +29,13 @@ public class OurSim {
 	private boolean running = true;
 	private final EventFactory eventFactory = new EventFactory();
 	
-	public OurSim(EventProxy eventProxy, GridFactory gridFactory, 
+	public OurSim(EventProxy eventProxy, Grid grid, 
 			Properties properties, Network network, TraceCollector traceCollector) {
 		this.traceCollector = traceCollector;
 		this.properties = properties;
 		this.network = network;
 		this.queue = new EventQueue(eventProxy, eventFactory);
-		this.grid = gridFactory.createGrid();
+		this.grid = grid;
 	}
 	
 	public Random getRandom() {
