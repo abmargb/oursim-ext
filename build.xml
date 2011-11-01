@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="compile" name="OurSim">
+	<property name="target.dir" value="target" />
+	<property name="lib.dir" value="lib" />
+	<property name="classes.dir" value="${target.dir}/classes" />
+	<property name="test.classes.dir" value="${target.dir}/test/classes" />
+	<property name="clover.home" value="C:\Users\Abmar\clover" />
+	<property name="test.report.dir" value="${target.dir}/test/report" />
+	
+	<property name="junit.jar" value="C:\eclipse\plugins\org.junit_4.8.2.v4_8_2_v20110321-1705\junit.jar" />
+	<property name="hamcrest.jar" value="C:\eclipse\plugins\org.hamcrest.core_1.1.0.v20090501071000.jar" />
+	<property name="clover.jar" value="${clover.home}/lib/clover.jar" />
+
+	<path id="classpath.build">
+		<fileset dir="lib">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<path id="classpath.test">
+		<path refid="classpath.build" />
+		<pathelement path="${junit.jar}" />
+		<pathelement path="${classes.dir}" />
+	</path>
+	
+	<path id="classpath.runtest">
+		<path refid="classpath.test" />
+		<pathelement path="${test.classes.dir}" />
+		<pathelement path="${hamcrest.jar}" />
+		<pathelement path="${clover.jar}" />
+	</path>
+	
+	<taskdef resource="cloverlib.xml" classpath="${clover.jar}"/>
+
+	<target name="clean">
+		<delete dir="${target.dir}"/>
+	</target>
+
+	<target name="compile">
+		<mkdir dir="${classes.dir}" />
+		<javac srcdir="src" destdir="${classes.dir}" debug="on">
+			<classpath refid="classpath.build"/>
+		</javac>
+	</target>
+
+	<target name="compile-test">
+		<mkdir dir="${test.classes.dir}" />
+		<javac srcdir="test" destdir="${test.classes.dir}" debug="on">
+			<classpath refid="classpath.test"/>
+		</javac>
+	</target>
+
+	<target name="test" depends="compile, compile-test">
+		<junit dir="./" printSummary="true" 
+			fork="true" haltonerror="false">
+
+			<classpath refid="classpath.runtest"/>
+			<batchtest>
+				<fileset dir="test">
+					<include name="**/*Test.java" />
+					<exclude name="**/*AcceptanceTest.java"/>
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+
+	<target name="clover-setup">
+		<delete dir=".clover"/>
+	    <clover-setup/>
+	</target>
+	
+	<target name="clover-report" depends="clean, clover-setup, test">
+	    <mkdir dir="${test.report.dir}" />
+	    <clover-html-report outdir="${test.report.dir}" />
+	</target>
+
+</project>

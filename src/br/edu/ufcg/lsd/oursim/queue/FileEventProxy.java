@@ -8,7 +8,7 @@ import java.util.Scanner;
 import br.edu.ufcg.lsd.oursim.events.EventSpec;
 import br.edu.ufcg.lsd.oursim.util.LineParser;
 
-public class DefaultEventProxy implements EventProxy {
+public class FileEventProxy implements EventProxy {
 
 	private Scanner scanner;
 	private EventSpec nextEvent;
@@ -16,8 +16,9 @@ public class DefaultEventProxy implements EventProxy {
 	/**
 	 * @param inputStream
 	 */
-	public DefaultEventProxy(InputStream inputStream) {
+	public FileEventProxy(InputStream inputStream) {
 		this.scanner = new Scanner(inputStream);
+		this.nextEvent = parseEvent(scanner.nextLine());
 	}
 
 	@Override
@@ -26,11 +27,10 @@ public class DefaultEventProxy implements EventProxy {
 		List<EventSpec> eventPage = new LinkedList<EventSpec>();
 		
 		if (!scanner.hasNextLine()) {
+			if (nextEvent != null) {
+				eventPage.add(nextEvent);
+			}
 			return eventPage;
-		}
-		
-		if (nextEvent == null) {
-			nextEvent = parseEvent(scanner.nextLine());
 		}
 		
 		for (int i = 0; i < pageSize; i++) {
@@ -53,7 +53,7 @@ public class DefaultEventProxy implements EventProxy {
 		}
 		return nextEvent.getTime();
 	}
-
+	
 	private static EventSpec parseEvent(String line) {
 		String[] split = line.split("\\s+");
 		
@@ -71,5 +71,10 @@ public class DefaultEventProxy implements EventProxy {
 		
 		return data == null ? new EventSpec(type, time)
 				: new EventSpec(type, time, data);
+	}
+
+	@Override
+	public boolean hasNextEvent() {
+		return nextEvent != null;
 	}
 }

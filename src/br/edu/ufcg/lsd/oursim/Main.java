@@ -7,7 +7,7 @@ import java.util.Properties;
 
 import br.edu.ufcg.lsd.oursim.factories.DefaultGridFactory;
 import br.edu.ufcg.lsd.oursim.network.BlankNetwork;
-import br.edu.ufcg.lsd.oursim.queue.DefaultEventProxy;
+import br.edu.ufcg.lsd.oursim.queue.FileEventProxy;
 import br.edu.ufcg.lsd.oursim.trace.DefaultTraceCollector;
 import br.edu.ufcg.lsd.oursim.util.Configuration;
 
@@ -23,8 +23,8 @@ public class Main {
 		properties.put(Configuration.PROP_BROKER_SCHEDULER_INTERVAL, "0");
 		
 		OurSim ourSim = new OurSim(
-				new DefaultEventProxy(new FileInputStream("resources/event-marcos.conf")), 
-				new DefaultGridFactory(properties, new FileInputStream("resources/grid-marcos.conf")).createGrid(),
+				new FileEventProxy(new FileInputStream("resources/event-example.conf")), 
+				new DefaultGridFactory(properties, new FileInputStream("resources/grid-example.conf")).createGrid(),
 				properties,
 				new BlankNetwork(),
 				new DefaultTraceCollector(new FileOutputStream("trace.out")));

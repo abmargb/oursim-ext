@@ -10,4 +10,6 @@ public interface EventProxy {
 	
 	public Long nextEventTime();
 	
+	public boolean hasNextEvent();
+	
 }

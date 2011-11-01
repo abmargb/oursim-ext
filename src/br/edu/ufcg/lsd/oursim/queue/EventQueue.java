@@ -21,7 +21,6 @@ public class EventQueue extends PriorityQueue<Event>{
 	public EventQueue(EventProxy eventProxy, EventFactory eventFactory) {
 		this.eventProxy = eventProxy;
 		this.eventFactory = eventFactory;
-		addPage();
 	}
 
 	@Override
@@ -31,6 +30,10 @@ public class EventQueue extends PriorityQueue<Event>{
 			addPage();
 		}
 		return super.poll();
+	}
+	
+	public boolean hasNext() {
+		return !this.isEmpty() || eventProxy.hasNextEvent();
 	}
 	
 	private void addPage() {

@@ -6,7 +6,6 @@ import java.util.Random;
 import br.edu.ufcg.lsd.oursim.entities.grid.Grid;
 import br.edu.ufcg.lsd.oursim.events.Event;
 import br.edu.ufcg.lsd.oursim.factories.EventFactory;
-import br.edu.ufcg.lsd.oursim.factories.GridFactory;
 import br.edu.ufcg.lsd.oursim.network.Network;
 import br.edu.ufcg.lsd.oursim.queue.EventProxy;
 import br.edu.ufcg.lsd.oursim.queue.EventQueue;
@@ -60,7 +59,7 @@ public class OurSim {
 	}
 	
 	public void run() {
-		while (!queue.isEmpty() && running) {
+		while (queue.hasNext() && running) {
 			Event ev = queue.poll();
 			ev.process(this);
 		}

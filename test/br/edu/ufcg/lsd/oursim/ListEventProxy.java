@@ -1,9 +1,10 @@
-package br.edu.ufcg.lsd.oursim.queue;
+package br.edu.ufcg.lsd.oursim;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import br.edu.ufcg.lsd.oursim.events.EventSpec;
+import br.edu.ufcg.lsd.oursim.queue.EventProxy;
 
 public class ListEventProxy implements EventProxy {
 
@@ -29,6 +30,11 @@ public class ListEventProxy implements EventProxy {
 
 	public void add(EventSpec ev) {
 		events.add(ev);
+	}
+
+	@Override
+	public boolean hasNextEvent() {
+		return !events.isEmpty();
 	}
 
 }
