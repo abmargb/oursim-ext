@@ -52,6 +52,10 @@ public class Peer extends ActiveEntity {
 		brokersIds.add(brokerId);
 	}
 	
+	public Set<String> getBrokersIds() {
+		return new HashSet<String>(brokersIds);
+	}
+	
 	public void setDiscoveryServiceId(String dsId) {
 		this.dsId = dsId;
 	}

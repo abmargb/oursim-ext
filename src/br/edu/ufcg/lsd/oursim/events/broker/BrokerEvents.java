@@ -12,6 +12,7 @@ public class BrokerEvents {
 	 * Primary Events
 	 */
 	public static final String ADD_JOB = "ADD_JOB";
+	public static final String CANCEL_JOB = "CANCEL_JOB";
 	public static final String SET_GRID = "SET_GRID";
 	public static final String BROKER_DOWN = "BROKER_DOWN";
 	public static final String BROKER_UP = "BROKER_UP";
@@ -32,6 +33,7 @@ public class BrokerEvents {
 	public static Map<String, Class<? extends Event>> createEvents() {
 		Map<String, Class<? extends Event>> events = new HashMap<String, Class<? extends Event>>();
 		events.put(ADD_JOB, AddJobEvent.class);
+		events.put(CANCEL_JOB, AddJobEvent.class);
 		events.put(SET_GRID, SetGridEvent.class);
 		events.put(BROKER_DOWN, BrokerDownEvent.class);
 		events.put(BROKER_UP, BrokerUpEvent.class);

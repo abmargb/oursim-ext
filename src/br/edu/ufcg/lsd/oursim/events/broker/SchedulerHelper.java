@@ -16,8 +16,7 @@ public class SchedulerHelper {
 
 	public static boolean isJobSatisfied(Job job, OurSim ourSim) {
 		
-		if (ExecutionState.FINISHED.equals(job.getState()) || 
-				ExecutionState.FAILED.equals(job.getState())) {
+		if (isJobEnded(job)) {
 			return true;
 		}
 		
@@ -32,6 +31,12 @@ public class SchedulerHelper {
 		}
 		
 		return true;
+	}
+
+	public static boolean isJobEnded(Job job) {
+		return ExecutionState.FINISHED.equals(job.getState()) || 
+				ExecutionState.FAILED.equals(job.getState()) || 
+				ExecutionState.ABORTED.equals(job.getState());
 	}
 	
 	public static boolean canSchedule(Task task, OurSim ourSim) {

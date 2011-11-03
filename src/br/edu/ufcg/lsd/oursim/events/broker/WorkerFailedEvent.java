@@ -40,8 +40,7 @@ public class WorkerFailedEvent extends AbstractEvent {
 		
 		Job job = replica.getTask().getJob();
 		
-		boolean wasJobEnded = ExecutionState.FAILED.equals(job.getState()) || 
-			ExecutionState.FINISHED.equals(job.getState());
+		boolean wasJobEnded = SchedulerHelper.isJobEnded(job);
 		
 		replica.setState(ExecutionState.FAILED);
 		replica.setEndTime(getTime());

@@ -32,6 +32,15 @@ public class Broker extends ActiveEntity {
 		return jobs;
 	}
 
+	public Job getJob(int id) {
+		for (Job job : jobs) {
+			if (job.getId() == id) {
+				return job;
+			}
+		}
+		return null;
+	}
+	
 	public boolean isScheduled() {
 		return scheduled;
 	}
@@ -50,6 +59,10 @@ public class Broker extends ActiveEntity {
 	
 	public BrokerRequest removeRequest(long requestId) {
 		return requests.remove(requestId);
+	}
+	
+	public List<BrokerRequest> getRequests() {
+		return new LinkedList<BrokerRequest>(requests.values());
 	}
 
 }

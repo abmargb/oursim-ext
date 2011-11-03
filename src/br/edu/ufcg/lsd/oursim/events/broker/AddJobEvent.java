@@ -29,9 +29,14 @@ public class AddJobEvent extends PrimaryEvent {
 		Job job = parseJob(lineParser.restOfLine());
 		
 		Broker broker = ourSim.getGrid().getObject(brokerId);
+		if (!broker.isUp()) {
+			return;
+		}
+		
 		broker.addJob(job);
 
-		if (!broker.getMonitor(broker.getPeerId()).isUp()) {
+		if (broker.getPeerId() == null || 
+				!broker.getMonitor(broker.getPeerId()).isUp()) {
 			return;
 		}
 		

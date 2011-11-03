@@ -11,6 +11,7 @@ import br.edu.ufcg.lsd.oursim.entities.grid.Grid;
 import br.edu.ufcg.lsd.oursim.entities.grid.Peer;
 import br.edu.ufcg.lsd.oursim.entities.grid.Worker;
 import br.edu.ufcg.lsd.oursim.events.EventSpec;
+import br.edu.ufcg.lsd.oursim.events.global.HaltEvent;
 import br.edu.ufcg.lsd.oursim.network.BlankNetwork;
 import br.edu.ufcg.lsd.oursim.util.Configuration;
 
@@ -18,7 +19,7 @@ public class AcceptanceTest {
 
 	private ListEventProxy eventProxy = new ListEventProxy();
 	private Grid grid = new Grid();
-	private Properties properties = new Properties();
+	private Properties properties = Configuration.createConfiguration(new Properties());
 	private OurSim ourSim;
 	
 	public AcceptanceTest() {
@@ -33,6 +34,17 @@ public class AcceptanceTest {
 	
 	protected void addEvent(EventSpec evSpec) {
 		eventProxy.add(evSpec);
+		step();
+	}
+	
+	/**
+	 * Intended for events that generate secondary ones.
+	 * @param evSpec
+	 */
+	protected void addEventAndHalt(EventSpec evSpec) {
+		eventProxy.add(evSpec);
+		eventProxy.add(new EventSpec(HaltEvent.TYPE, 
+				evSpec.getTime() + 1));
 		step();
 	}
 	
