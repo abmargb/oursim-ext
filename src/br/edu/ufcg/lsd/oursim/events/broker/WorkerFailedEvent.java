@@ -1,5 +1,7 @@
 package br.edu.ufcg.lsd.oursim.events.broker;
 
+import java.util.List;
+
 import br.edu.ufcg.lsd.oursim.OurSim;
 import br.edu.ufcg.lsd.oursim.entities.accounting.ReplicaAccounting;
 import br.edu.ufcg.lsd.oursim.entities.grid.Broker;
@@ -15,22 +17,26 @@ import br.edu.ufcg.lsd.oursim.util.Configuration;
 
 public class WorkerFailedEvent extends AbstractEvent {
 
-	private final BrokerRequest request;
 	private final String workerId;
+	private final String brokerId;
 
-	public WorkerFailedEvent(BrokerRequest request, String workerId) {
+	public WorkerFailedEvent(String brokerId, String workerId) {
 		super(Event.DEF_PRIORITY);
-		this.request = request;
+		this.brokerId = brokerId;
 		this.workerId = workerId;
 	}
 
 	@Override
 	public void process(OurSim ourSim) {
-		Broker broker = ourSim.getGrid().getObject(
-				request.getSpec().getBrokerId());
+		Broker broker = ourSim.getGrid().getObject(brokerId);
+		
+		BrokerRequest request = getRequest(broker, workerId);
+		if (request == null) {
+			return;
+		}
 		
 		if (request.getJob().getInUseWorkers().contains(workerId)) {
-			replicaFailed(broker, getReplica(), ourSim);
+			replicaFailed(broker, getReplica(request), ourSim);
 		}
 		SchedulerHelper.disposeWorker(request.getJob(), broker, 
 				workerId, ourSim, getTime());
@@ -50,6 +56,8 @@ public class WorkerFailedEvent extends AbstractEvent {
 		updateJobState(broker.getId(), replica, ourSim);
 		
 		replica.setWorker(null);
+		
+		BrokerRequest request = replica.getTask().getJob().getRequest();
 		
 		if (!wasJobEnded) {
 			boolean jobEnded = ExecutionState.FAILED.equals(job.getState());
@@ -101,7 +109,7 @@ public class WorkerFailedEvent extends AbstractEvent {
 		}
 	}
 
-	private Replica getReplica() {
+	private Replica getReplica(BrokerRequest request) {
 		for (Task task : request.getJob().getTasks()) {
 			for (Replica replica : task.getReplicas()) {
 				if (workerId.equals(replica.getWorker())) {
@@ -109,6 +117,17 @@ public class WorkerFailedEvent extends AbstractEvent {
 				}
 			}
 		}
+		return null;
+	}
+	
+	private BrokerRequest getRequest(Broker broker, String workerId) {
+		List<Job> jobs = broker.getJobs();
+		for (Job job : jobs) {
+			if (job.hasWorker(workerId)) {
+				return job.getRequest();
+			}
+		}
+		
 		return null;
 	}
 

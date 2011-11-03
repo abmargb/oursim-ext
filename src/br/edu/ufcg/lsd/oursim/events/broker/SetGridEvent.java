@@ -4,6 +4,7 @@ import br.edu.ufcg.lsd.oursim.OurSim;
 import br.edu.ufcg.lsd.oursim.entities.grid.Broker;
 import br.edu.ufcg.lsd.oursim.events.Event;
 import br.edu.ufcg.lsd.oursim.events.PrimaryEvent;
+import br.edu.ufcg.lsd.oursim.events.fd.FailureDetectionEvents;
 import br.edu.ufcg.lsd.oursim.events.fd.MonitorUtil;
 import br.edu.ufcg.lsd.oursim.util.LineParser;
 
@@ -20,12 +21,21 @@ public class SetGridEvent extends PrimaryEvent {
 		String peerId = lineParser.next();
 		
 		Broker broker = ourSim.getGrid().getObject(brokerId);
+		String oldPeerId = broker.getPeerId();
+		
+		if (oldPeerId != null) {
+			if (oldPeerId.equals(peerId)) {
+				return;
+			} else {
+				ourSim.addEvent(ourSim.createEvent(FailureDetectionEvents.RELEASE, getTime(), 
+						broker.getId(), oldPeerId));
+			}
+		}
+		
 		broker.setPeerId(peerId);
 		
 		MonitorUtil.registerMonitored(ourSim, getTime(), 
-				brokerId, peerId, 
-				ourSim.createEvent(BrokerEvents.PEER_AVAILABLE, getTime(), brokerId), 
-				ourSim.createEvent(BrokerEvents.PEER_FAILED, getTime()));
+				brokerId, peerId);
 	}
 
 }

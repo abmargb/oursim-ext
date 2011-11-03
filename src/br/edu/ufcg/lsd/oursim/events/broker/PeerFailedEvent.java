@@ -6,7 +6,7 @@ import br.edu.ufcg.lsd.oursim.events.Event;
 
 public class PeerFailedEvent extends AbstractEvent {
 
-	public PeerFailedEvent() {
+	public PeerFailedEvent(String brokerId, String peerId) {
 		super(Event.DEF_PRIORITY);
 	}
 

@@ -24,7 +24,7 @@ public class WorkForBrokerEvent extends AbstractEvent {
 	@Override
 	public void process(OurSim ourSim) {
 		Worker worker = ourSim.getGrid().getObject(workerId);
-		CleanWorkerHelper.cleanWorker(getTime(), worker, false);
+		CleanWorkerHelper.cleanWorker(getTime(), worker, false, ourSim);
 
 		worker.setConsumer(consumer);
 		

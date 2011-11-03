@@ -16,8 +16,32 @@ public class ActiveEntity extends Entity {
 	private long pingInterval;
 	private long timeout;
 	
+	private final Map<Class<? extends ActiveEntity>, String> onRecoveryEvents = 
+			new HashMap<Class<? extends ActiveEntity>, String>();
+	
+	private final Map<Class<? extends ActiveEntity>, String> onFailureEvents = 
+			new HashMap<Class<? extends ActiveEntity>, String>();
+	
 	public String getId() {
 		return id;
+	}
+	
+	public void addOnRecoveryEvent(Class<? extends ActiveEntity> entityType,
+			String eventType) {
+		onRecoveryEvents.put(entityType, eventType);
+	}
+	
+	public void addOnFailureEvent(Class<? extends ActiveEntity> entityType,
+			String eventType) {
+		onFailureEvents.put(entityType, eventType);
+	}
+	
+	public String getOnRecoveryEvent(Class<? extends ActiveEntity> entityType) {
+		return onRecoveryEvents.get(entityType);
+	}
+	
+	public String getOnFailureEvent(Class<? extends ActiveEntity> entityType) {
+		return onFailureEvents.get(entityType);
 	}
 	
 	public void setId(String id) {
@@ -45,7 +69,7 @@ public class ActiveEntity extends Entity {
 	public Monitor getMonitor(String id) {
 		return monitors.get(id);
 	}
-
+	
 	public void isItAliveSent(String monitored, Long time) {
 		if (fd != null) {
 			fd.messageSent(monitored, time, MessageType.PING);

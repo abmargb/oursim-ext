@@ -27,8 +27,8 @@ public class BrokerEvents {
 	public static final String PEER_AVAILABLE = "PEER_AVAILABLE";
 	public static final String PEER_FAILED = "PEER_FAILED";
 	public static final String SCHEDULE = "SCHEDULE";
-	public static final String WORKER_FAILED = "WORKER_FAILED";
-	public static final String WORKER_RECOVERY = "WORKER_RECOVERY";
+	public static final String WORKER_FAILED = "WORKER_FAILED_FOR_BROKER";
+	public static final String WORKER_AVAILABLE = "WORKER_AVAILABLE_FOR_BROKER";
 	
 	public static Map<String, Class<? extends Event>> createEvents() {
 		Map<String, Class<? extends Event>> events = new HashMap<String, Class<? extends Event>>();
@@ -44,7 +44,7 @@ public class BrokerEvents {
 		events.put(PEER_FAILED, PeerFailedEvent.class);
 		events.put(SCHEDULE, ScheduleEvent.class);
 		events.put(WORKER_FAILED, WorkerFailedEvent.class);
-		events.put(WORKER_RECOVERY, WorkerRecoveryEvent.class);
+		events.put(WORKER_AVAILABLE, WorkerAvailableEvent.class);
 		
 		return events;
 	}

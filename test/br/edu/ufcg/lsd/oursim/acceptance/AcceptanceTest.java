@@ -1,5 +1,6 @@
 package br.edu.ufcg.lsd.oursim.acceptance;
 
+import java.util.List;
 import java.util.Properties;
 
 import br.edu.ufcg.lsd.oursim.ListEventProxy;
@@ -10,6 +11,7 @@ import br.edu.ufcg.lsd.oursim.entities.grid.DiscoveryService;
 import br.edu.ufcg.lsd.oursim.entities.grid.Grid;
 import br.edu.ufcg.lsd.oursim.entities.grid.Peer;
 import br.edu.ufcg.lsd.oursim.entities.grid.Worker;
+import br.edu.ufcg.lsd.oursim.events.Event;
 import br.edu.ufcg.lsd.oursim.events.EventSpec;
 import br.edu.ufcg.lsd.oursim.events.global.HaltEvent;
 import br.edu.ufcg.lsd.oursim.network.BlankNetwork;
@@ -21,6 +23,7 @@ public class AcceptanceTest {
 	private Grid grid = new Grid();
 	private Properties properties = Configuration.createConfiguration(new Properties());
 	private OurSim ourSim;
+	private EventRecorder recorder = new EventRecorder();
 	
 	public AcceptanceTest() {
 		initProperties();
@@ -32,21 +35,32 @@ public class AcceptanceTest {
 		properties.put(Configuration.PROP_BROKER_SCHEDULER_INTERVAL, "0");
 	}
 	
-	protected void addEvent(EventSpec evSpec) {
+	private List<Event> addEvent(EventSpec evSpec, boolean halt) {
+		recorder.startRecording();
 		eventProxy.add(evSpec);
+
+		if (halt) {
+			eventProxy.add(new EventSpec(HaltEvent.TYPE, evSpec.getTime() + 1));
+		}
+
 		step();
+		List<Event> secondary = recorder.stopRecording();
+		return secondary.subList(1, secondary.size() - (halt ? 1 : 0));
+	}
+	
+	protected List<Event> addEvent(EventSpec evSpec) {
+		return addEvent(evSpec, false);
 	}
 	
 	/**
-	 * Intended for events that generate secondary ones.
+	 * Intended for events that generate infinite secondary events.
 	 * @param evSpec
+	 * @return 
 	 */
-	protected void addEventAndHalt(EventSpec evSpec) {
-		eventProxy.add(evSpec);
-		eventProxy.add(new EventSpec(HaltEvent.TYPE, 
-				evSpec.getTime() + 1));
-		step();
+	protected List<Event> addEventAndHalt(EventSpec evSpec) {
+		return addEvent(evSpec, true);
 	}
+	
 	
 	protected Broker createBroker(String brokerId) {
 		return (Broker) addActiveEntity(
@@ -54,8 +68,10 @@ public class AcceptanceTest {
 	}
 	
 	protected Worker createWorker(String workerId) {
-		return (Worker) addActiveEntity(
+		Worker worker = (Worker) addActiveEntity(
 				workerId, new Worker());
+		worker.setCpu(1.);
+		return worker;
 	}
 	
 	protected DiscoveryService createDiscoveryService(String dsId) {
@@ -82,9 +98,11 @@ public class AcceptanceTest {
 					grid,
 					properties,
 					new BlankNetwork(),
-					null);
+					new TestTraceCollector());
+			this.ourSim.addEventListener(recorder);
 		}
 		
 		ourSim.run();
 	}
+	
 }

@@ -17,7 +17,7 @@ public class StopWorkEvent extends AbstractEvent {
 	@Override
 	public void process(OurSim ourSim) {
 		Worker worker = ourSim.getGrid().getObject(workerId);
-		CleanWorkerHelper.cleanWorker(getTime(), worker, true);
+		CleanWorkerHelper.cleanWorker(getTime(), worker, true, ourSim);
 	}
 
 }

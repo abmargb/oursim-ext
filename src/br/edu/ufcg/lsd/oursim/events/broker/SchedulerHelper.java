@@ -9,6 +9,7 @@ import br.edu.ufcg.lsd.oursim.entities.job.ExecutionState;
 import br.edu.ufcg.lsd.oursim.entities.job.Job;
 import br.edu.ufcg.lsd.oursim.entities.job.Replica;
 import br.edu.ufcg.lsd.oursim.entities.job.Task;
+import br.edu.ufcg.lsd.oursim.events.fd.FailureDetectionEvents;
 import br.edu.ufcg.lsd.oursim.events.peer.PeerEvents;
 import br.edu.ufcg.lsd.oursim.util.Configuration;
 
@@ -134,7 +135,9 @@ public class SchedulerHelper {
 
 	public static void disposeWorker(Job job, Broker broker, String worker, OurSim ourSim, long now) {
 		job.removeWorker(worker);
-		broker.release(worker);
+		
+		ourSim.addEvent(ourSim.createEvent(FailureDetectionEvents.RELEASE, now, 
+				broker.getId(), worker));
 		
 		ourSim.addNetworkEvent(ourSim.createEvent(PeerEvents.DISPOSE_WORKER, now, 
 				worker, broker.getPeerId()));

@@ -1,12 +1,16 @@
 package br.edu.ufcg.lsd.oursim.acceptance.broker;
 
+import java.util.List;
+
 import junit.framework.Assert;
 
 import org.junit.Test;
 
 import br.edu.ufcg.lsd.oursim.acceptance.AcceptanceTest;
+import br.edu.ufcg.lsd.oursim.acceptance.EventRecorderUtils;
 import br.edu.ufcg.lsd.oursim.entities.grid.Broker;
 import br.edu.ufcg.lsd.oursim.entities.grid.Peer;
+import br.edu.ufcg.lsd.oursim.events.Event;
 import br.edu.ufcg.lsd.oursim.events.EventSpec;
 import br.edu.ufcg.lsd.oursim.events.broker.BrokerEvents;
 import br.edu.ufcg.lsd.oursim.events.peer.PeerEvents;
@@ -83,8 +87,10 @@ public class StartBrokerTest extends AcceptanceTest {
 		broker.setPeerId(peerId);
 		
 		addEvent(new EventSpec(BrokerEvents.BROKER_UP, 0, brokerId));
-		addEvent(new EventSpec(PeerEvents.PEER_UP, 1, peerId));
+		List<Event> secondary = addEvent(new EventSpec(PeerEvents.PEER_UP, 1, peerId));
 		
+		Assert.assertTrue(EventRecorderUtils.hasEventSequence(secondary,
+				BrokerEvents.PEER_AVAILABLE, PeerEvents.BROKER_LOGIN, BrokerEvents.BROKER_LOGGED));
 		Assert.assertNotNull(broker.getMonitor(peerId));
 		Assert.assertTrue(peer.getBrokersIds().contains(brokerId));
 		Assert.assertTrue(broker.getMonitor(peerId).isUp());

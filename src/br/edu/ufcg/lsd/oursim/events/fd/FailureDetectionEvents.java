@@ -16,6 +16,7 @@ public class FailureDetectionEvents {
 	public static final String IS_IT_ALIVE_SENT = "IS_IT_ALIVE_SENT";
 	public static final String LIVENESS_CHECK = "LIVENESS_CHECK";
 	public static final String UPDATE_STATUS_AVAILABLE = "UPDATE_STATUS_AVAILABLE";
+	public static final String RELEASE = "RELEASE";
 	
 	public static Map<String, Class<? extends Event>> createEvents() {
 		Map<String, Class<? extends Event>> events = new HashMap<String, Class<? extends Event>>();
@@ -25,6 +26,7 @@ public class FailureDetectionEvents {
 		events.put(IS_IT_ALIVE_SENT, IsItAliveSentEvent.class);
 		events.put(LIVENESS_CHECK, LivenessCheckEvent.class);
 		events.put(UPDATE_STATUS_AVAILABLE, UpdateStatusAvailableEvent.class);
+		events.put(RELEASE, ReleaseMonitoredEvent.class);
 		
 		return events;
 	}

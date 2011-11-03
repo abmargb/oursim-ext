@@ -11,6 +11,7 @@ import br.edu.ufcg.lsd.oursim.entities.request.BrokerRequest;
 public class Job extends ExecutableEntity {
 
 	private BrokerRequest request;
+	private Set<String> notRecoveredWorkers = new HashSet<String>();
 	private Set<String> availableWorkers = new HashSet<String>();
 	private Set<String> inUseWorkers = new HashSet<String>();
 	private List<Task> tasks = new ArrayList<Task>();
@@ -34,16 +35,31 @@ public class Job extends ExecutableEntity {
 	public void workerIsAvailable(String workerId) {
 		availableWorkers.add(workerId);
 		inUseWorkers.remove(workerId);
+		notRecoveredWorkers.remove(workerId);
+	}
+	
+	public void workerIsNotRecovered(String workerId) {
+		availableWorkers.remove(workerId);
+		inUseWorkers.remove(workerId);
+		notRecoveredWorkers.add(workerId);
 	}
 	
 	public void workerIsInUse(String workerId) {
 		availableWorkers.remove(workerId);
 		inUseWorkers.add(workerId);
+		notRecoveredWorkers.remove(workerId);
 	}
 	
 	public void removeWorker(String workerId){
 		availableWorkers.remove(workerId);
 		inUseWorkers.remove(workerId);
+		notRecoveredWorkers.remove(workerId);
+	}
+	
+	public boolean hasWorker(String workerId) {
+		return availableWorkers.contains(workerId)
+				|| inUseWorkers.contains(workerId)
+				|| notRecoveredWorkers.contains(workerId);
 	}
 
 	public Set<String> getAvailableWorkers() {
@@ -52,6 +68,10 @@ public class Job extends ExecutableEntity {
 
 	public Set<String> getInUseWorkers() {
 		return inUseWorkers;
+	}
+	
+	public Set<String> getNotRecoveredWorkers() {
+		return notRecoveredWorkers;
 	}
 	
 }

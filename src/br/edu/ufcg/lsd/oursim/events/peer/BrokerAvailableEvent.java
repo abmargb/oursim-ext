@@ -4,15 +4,19 @@ import br.edu.ufcg.lsd.oursim.OurSim;
 import br.edu.ufcg.lsd.oursim.events.AbstractEvent;
 import br.edu.ufcg.lsd.oursim.events.Event;
 
-public class DiscoveryServiceFailedEvent extends AbstractEvent {
+public class BrokerAvailableEvent extends AbstractEvent {
 
-	public DiscoveryServiceFailedEvent(String peerId, String dsId) {
+	private final String peerId;
+	private final String brokerId;
+
+	public BrokerAvailableEvent(String peerId, String brokerId) {
 		super(Event.DEF_PRIORITY);
+		this.peerId = peerId;
+		this.brokerId = brokerId;
 	}
 
 	@Override
 	public void process(OurSim ourSim) {
-		System.out.println("DS failed at " + getTime());
 	}
 
 }

@@ -1,11 +1,15 @@
 package br.edu.ufcg.lsd.oursim.acceptance.broker;
 
+import java.util.List;
+
 import junit.framework.Assert;
 
 import org.junit.Test;
 
 import br.edu.ufcg.lsd.oursim.acceptance.AcceptanceTest;
+import br.edu.ufcg.lsd.oursim.acceptance.EventRecorderUtils;
 import br.edu.ufcg.lsd.oursim.entities.grid.Broker;
+import br.edu.ufcg.lsd.oursim.events.Event;
 import br.edu.ufcg.lsd.oursim.events.EventSpec;
 import br.edu.ufcg.lsd.oursim.events.broker.BrokerEvents;
 import br.edu.ufcg.lsd.oursim.events.peer.PeerEvents;
@@ -84,8 +88,34 @@ public class AddJobTest extends AcceptanceTest {
 		
 		addEvent(new EventSpec(BrokerEvents.BROKER_UP, 0, brokerId));
 		addEvent(new EventSpec(PeerEvents.PEER_UP, 1, peerId));
-		addEventAndHalt(new EventSpec(BrokerEvents.ADD_JOB, 2, brokerId + " " + jsonJob1));
 		
+		List<Event> secondary = addEventAndHalt(new EventSpec(
+				BrokerEvents.ADD_JOB, 2, brokerId + " " + jsonJob1));
+		
+		Assert.assertTrue(EventRecorderUtils.hasEventOfType(secondary,
+				PeerEvents.REQUEST_WORKERS));
+		Assert.assertEquals(1, broker.getJobs().size());
+		Assert.assertEquals(1, broker.getRequests().size());
+		
+	}
+	
+	@Test
+	public void testAddJobThenStartPeer() {
+		String brokerId = "broker1";
+		String peerId = "peer1";
+		
+		Broker broker = createBroker(brokerId);
+		createPeer(peerId);
+		broker.setPeerId(peerId);
+		
+		String jsonJob1 = "{id:1 , tasks:[{duration:10000}]}";
+		
+		addEvent(new EventSpec(BrokerEvents.BROKER_UP, 0, brokerId));
+		addEvent(new EventSpec(BrokerEvents.ADD_JOB, 1, brokerId + " " + jsonJob1));
+		List<Event> secondary = addEventAndHalt(new EventSpec(PeerEvents.PEER_UP, 2, peerId));
+		
+		Assert.assertTrue(EventRecorderUtils.hasEventOfType(secondary,
+				PeerEvents.REQUEST_WORKERS));
 		Assert.assertEquals(1, broker.getJobs().size());
 		Assert.assertEquals(1, broker.getRequests().size());
 		

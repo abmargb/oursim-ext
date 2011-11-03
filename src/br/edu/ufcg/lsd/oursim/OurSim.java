@@ -1,10 +1,13 @@
 package br.edu.ufcg.lsd.oursim;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 
 import br.edu.ufcg.lsd.oursim.entities.grid.Grid;
 import br.edu.ufcg.lsd.oursim.events.Event;
+import br.edu.ufcg.lsd.oursim.events.EventListener;
 import br.edu.ufcg.lsd.oursim.factories.EventFactory;
 import br.edu.ufcg.lsd.oursim.network.Network;
 import br.edu.ufcg.lsd.oursim.queue.EventProxy;
@@ -24,6 +27,7 @@ public class OurSim {
 	private final Properties properties;
 	private final TraceCollector traceCollector;
 	private final Random random = new Random(SEED);
+	private final List<EventListener> eventListeners = new LinkedList<EventListener>();
 	
 	private boolean running = true;
 	private final EventFactory eventFactory = new EventFactory();
@@ -35,6 +39,10 @@ public class OurSim {
 		this.network = network;
 		this.queue = new EventQueue(eventProxy, eventFactory);
 		this.grid = grid;
+	}
+	
+	public void addEventListener(EventListener evListener) {
+		eventListeners.add(evListener);
 	}
 	
 	public Random getRandom() {
@@ -62,9 +70,16 @@ public class OurSim {
 		while (queue.hasNext() && running) {
 			Event ev = queue.poll();
 			ev.process(this);
+			notifyEventListeners(ev);
 		}
 	}
 	
+	private void notifyEventListeners(Event ev) {
+		for (EventListener eventListener : eventListeners) {
+			eventListener.eventProcessed(ev);
+		}
+	}
+
 	public Long getLongProperty(String key) {
 		String property = properties.getProperty(key);
 		return property == null ? null : Long.valueOf(property);

@@ -10,10 +10,12 @@ import br.edu.ufcg.lsd.oursim.util.Configuration;
 public class RepeatGetWorkerProvidersEvent extends AbstractEvent {
 
 	private final String peerId;
+	private final String dsId;
 
-	public RepeatGetWorkerProvidersEvent(String peerId) {
+	public RepeatGetWorkerProvidersEvent(String peerId, String dsId) {
 		super(Event.DEF_PRIORITY);
 		this.peerId = peerId;
+		this.dsId = dsId;
 	}
 
 	@Override
@@ -28,7 +30,7 @@ public class RepeatGetWorkerProvidersEvent extends AbstractEvent {
 		ourSim.addEvent(ourSim.createEvent(
 				PeerEvents.REPEAT_GET_WORKER_PROVIDERS, 
 				getTime() + ourSim.getLongProperty(Configuration.PROP_GET_PROVIDERS_REPETITION_INTERVAL), 
-				peerId));
+				peerId, dsId));
 	}
 
 }

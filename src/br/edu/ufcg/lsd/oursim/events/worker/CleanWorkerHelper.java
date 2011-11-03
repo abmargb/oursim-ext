@@ -1,15 +1,18 @@
 package br.edu.ufcg.lsd.oursim.events.worker;
 
+import br.edu.ufcg.lsd.oursim.OurSim;
 import br.edu.ufcg.lsd.oursim.entities.accounting.WorkAccounting;
 import br.edu.ufcg.lsd.oursim.entities.grid.Worker;
+import br.edu.ufcg.lsd.oursim.events.fd.FailureDetectionEvents;
 
 public class CleanWorkerHelper {
 
-	public static void cleanWorker(long time, Worker worker, boolean releaseRemotePeer) {
+	public static void cleanWorker(long time, Worker worker, boolean releaseRemotePeer, OurSim ourSim) {
 		
 		String oldConsumer = worker.getConsumer();
 		if (oldConsumer != null ) {
-			worker.release(oldConsumer);
+			ourSim.addEvent(ourSim.createEvent(FailureDetectionEvents.RELEASE, time, 
+					worker.getId(), oldConsumer));
 			worker.setConsumer(null);
 		}
 		
@@ -21,7 +24,8 @@ public class CleanWorkerHelper {
 		}
 		
 		if (releaseRemotePeer && worker.getRemotePeer() != null) {
-			worker.release(worker.getRemotePeer());
+			ourSim.addEvent(ourSim.createEvent(FailureDetectionEvents.RELEASE, time, 
+					worker.getId(), worker.getRemotePeer()));
 			worker.setRemotePeer(null);
 		}
 	}

@@ -7,12 +7,12 @@ import br.edu.ufcg.lsd.oursim.entities.request.PeerRequest;
 import br.edu.ufcg.lsd.oursim.events.AbstractEvent;
 import br.edu.ufcg.lsd.oursim.events.Event;
 
-public class WorkerUnavailableEvent extends AbstractEvent {
+public class LocalWorkerFailedEvent extends AbstractEvent {
 
 	private final String workerId;
 	private final String peerId;
 
-	public WorkerUnavailableEvent(String workerId, String peerId) {
+	public LocalWorkerFailedEvent(String peerId, String workerId) {
 		super(Event.DEF_PRIORITY);
 		this.workerId = workerId;
 		this.peerId = peerId;

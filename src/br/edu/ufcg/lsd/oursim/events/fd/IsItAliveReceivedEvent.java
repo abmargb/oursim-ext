@@ -27,8 +27,9 @@ public class IsItAliveReceivedEvent extends AbstractEvent {
 			
 			Monitor reverseMonitor = monitoredObj.getMonitor(interested);
 			if (isCreatingConnection && reverseMonitor == null) {
-				reverseMonitor = MonitorUtil.registerMonitored(ourSim, getTime(), monitored, 
-						interested, null, null, true);
+				reverseMonitor = MonitorUtil.registerMonitored(
+						ourSim, getTime(), monitored, 
+						interested, true);
 			} 
 				
 			if (reverseMonitor != null && reverseMonitor.isUp()){

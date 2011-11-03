@@ -4,23 +4,18 @@ import br.edu.ufcg.lsd.oursim.OurSim;
 import br.edu.ufcg.lsd.oursim.entities.allocation.Allocation;
 import br.edu.ufcg.lsd.oursim.entities.grid.Peer;
 import br.edu.ufcg.lsd.oursim.entities.request.PeerRequest;
-import br.edu.ufcg.lsd.oursim.entities.request.RequestSpec;
 import br.edu.ufcg.lsd.oursim.events.AbstractEvent;
 import br.edu.ufcg.lsd.oursim.events.Event;
+import br.edu.ufcg.lsd.oursim.events.fd.FailureDetectionEvents;
 
-public class RemoteWorkerFailureEvent extends AbstractEvent {
+public class RemoteWorkerFailedEvent extends AbstractEvent {
 
 	private final String consumer;
-	private final String provider;
-	private final RequestSpec requestSpec;
 	private final String worker;
 
-	public RemoteWorkerFailureEvent(String consumer, 
-			String provider, RequestSpec requestSpec, String worker) {
+	public RemoteWorkerFailedEvent(String consumer, String worker) {
 		super(Event.DEF_PRIORITY);
 		this.consumer = consumer;
-		this.provider = provider;
-		this.requestSpec = requestSpec;
 		this.worker = worker;
 	}
 
@@ -43,7 +38,8 @@ public class RemoteWorkerFailureEvent extends AbstractEvent {
 		ourSim.addNetworkEvent(ourSim.createEvent(PeerEvents.DISPOSE_REMOTE_WORKER, 
 				getTime(), allocation.getProvider(), worker));
 		
-		peer.release(worker);
+		ourSim.addEvent(ourSim.createEvent(FailureDetectionEvents.RELEASE, getTime(), 
+				peer.getId(), worker));
 	}
 
 }

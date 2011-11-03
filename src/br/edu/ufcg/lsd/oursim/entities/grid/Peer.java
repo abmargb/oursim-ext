@@ -25,11 +25,24 @@ public class Peer extends ActiveEntity {
 	
 	private String dsId;
 	private Set<String> providers = new HashSet<String>();
+	private Map<String, String> notRecoveredRemoteWorkers = new HashMap<String, String>();
 	
 	private Map<Long, List<ReplicaAccounting>> replicaAccountings = new HashMap<Long, List<ReplicaAccounting>>();
 	
 	public PeerRequest getRequest(long requestId) {
 		return requests.get(requestId);
+	}
+	
+	public void addNotRecoveredRemoteWorker(String worker, String provider) {
+		notRecoveredRemoteWorkers.put(worker, provider);
+	}
+	
+	/**
+	 * @param worker
+	 * @return Its provider
+	 */
+	public String removeNotRecoveredRemoteWorker(String worker) {
+		return notRecoveredRemoteWorkers.remove(worker);
 	}
 	
 	public void addRequest(PeerRequest request) {
@@ -50,6 +63,10 @@ public class Peer extends ActiveEntity {
 	
 	public void addBroker(String brokerId) {
 		brokersIds.add(brokerId);
+	}
+	
+	public void removeBroker(String brokerId) {
+		brokersIds.remove(brokerId);
 	}
 	
 	public Set<String> getBrokersIds() {

@@ -11,21 +11,18 @@ import br.edu.ufcg.lsd.oursim.util.Configuration;
 public class MonitorUtil {
 
 	public static void registerMonitored(OurSim ourSim, Long time, 
-			String interested, String monitored, Event callbackAliveEvent, 
-			Event callbackDownEvent) {
-		registerMonitored(ourSim, time, interested, monitored, 
-				callbackAliveEvent, callbackDownEvent, false);
+			String interested, String monitored) {
+		registerMonitored(ourSim, time, interested, monitored, false);
 	}
 	
 	public static Monitor registerMonitored(OurSim ourSim, Long time, 
-			String interested, String monitored, Event callbackAliveEvent, 
-			Event callbackDownEvent, boolean isUp) {
+			String interested, String monitored, boolean isUp) {
 		
 		ActiveEntity interestedObj = ourSim.getGrid().getObject(interested);
 		ActiveEntity monitoredObj = ourSim.getGrid().getObject(monitored);
 		
 		Monitor monitor = new Monitor(
-				monitoredObj, callbackAliveEvent, callbackDownEvent);
+				monitoredObj);
 		monitor.setUp(isUp);
 		interestedObj.addMonitor(monitor, time);
 		
@@ -38,13 +35,17 @@ public class MonitorUtil {
 			String interested, String monitored) {
 
 		ActiveEntity interestedObj = ourSim.getGrid().getObject(interested);
+		ActiveEntity monitoredObj = ourSim.getGrid().getObject(monitored);
 		Monitor monitor = interestedObj.getMonitor(monitored);
 		
 		if (interestedObj.isFailed(monitored, time) && monitor.isUp()) {
 			monitor.setUp(false);
-			Event callbackDownEvent = monitor.getCallbackDownEvent();
-			if (callbackDownEvent != null) {
-				callbackDownEvent.setTime(time);
+			String failureEventType = interestedObj.getOnFailureEvent(
+					monitoredObj.getClass());
+			
+			if (failureEventType != null) {
+				Event callbackDownEvent = ourSim.createEvent(
+						failureEventType, time, interested, monitored);
 				ourSim.addEvent(callbackDownEvent);
 			}
 		} else {
@@ -102,15 +103,19 @@ public class MonitorUtil {
 			
 			Monitor reverseMonitor = object.getMonitor(interestedEntity.getId());
 			if (reverseMonitor == null) {
-				reverseMonitor = new Monitor(interestedEntity, null, null);
+				reverseMonitor = new Monitor(interestedEntity);
 				object.addMonitor(reverseMonitor, time);
 			}
 			
 			reverseMonitor.setUp(true);
 			
-			Event callbackAliveEvent = monitor.getCallbackAliveEvent();
-			if (callbackAliveEvent != null) {
-				callbackAliveEvent.setTime(time);
+			String recoveryEventType = interestedEntity.getOnRecoveryEvent(
+					object.getClass());
+			
+			if (recoveryEventType != null) {
+				Event callbackAliveEvent = ourSim.createEvent(
+						recoveryEventType, time, 
+						interestedEntity.getId(), entityId);
 				ourSim.addEvent(callbackAliveEvent);
 			}
 		}
@@ -134,11 +139,40 @@ public class MonitorUtil {
 			}
 			monitor.setUp(false);
 			
-			Event callbackDownEvent = monitor.getCallbackDownEvent();
-			if (callbackDownEvent != null) {
-				callbackDownEvent.setTime(time);
+			String failureEventType = interestedEntity.getOnFailureEvent(
+					object.getClass());
+			
+			if (failureEventType != null) {
+				Event callbackDownEvent = ourSim.createEvent(
+						failureEventType, time, 
+						interestedEntity.getId(), entityId);
 				ourSim.addEvent(callbackDownEvent);
 			}
+		}
+	}
+	
+	public static void releaseMonitored(OurSim ourSim, String interested, String monitored, Long time) {
+		
+		ActiveEntity interestedObj = ourSim.getGrid().getObject(interested);
+		interestedObj.release(monitored);
+		
+		if (ourSim.getBooleanProperty(
+				Configuration.PROP_USE_FAILURE_DETECTOR)) {
+			return;
+		}
+		
+		ActiveEntity monitoredObj = ourSim.getGrid().getObject(monitored);
+		Monitor monitor = monitoredObj.getMonitor(interested);
+		
+		String failureEventType = monitoredObj.getOnFailureEvent(
+				interestedObj.getClass());
+		
+		if (monitor != null && failureEventType != null) {
+			Event callbackDownEvent = ourSim.createEvent(failureEventType,
+					time, monitored, interested);
+
+			callbackDownEvent.setTime(time);
+			ourSim.addEvent(callbackDownEvent);
 		}
 	}
 }

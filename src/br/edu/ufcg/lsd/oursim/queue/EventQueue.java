@@ -1,39 +1,47 @@
 package br.edu.ufcg.lsd.oursim.queue;
 
+import java.util.LinkedList;
 import java.util.List;
-import java.util.PriorityQueue;
+import java.util.ListIterator;
 
 import br.edu.ufcg.lsd.oursim.events.Event;
 import br.edu.ufcg.lsd.oursim.events.EventSpec;
 import br.edu.ufcg.lsd.oursim.factories.EventFactory;
 
-public class EventQueue extends PriorityQueue<Event>{
+public class EventQueue {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 6795297555525744590L;
 	private static final int PAGE_SIZE = 100;
 	
 	private final EventProxy eventProxy;
 	private final EventFactory eventFactory;
+	private final LinkedList<Event> queue = new LinkedList<Event>();
 	
 	public EventQueue(EventProxy eventProxy, EventFactory eventFactory) {
 		this.eventProxy = eventProxy;
 		this.eventFactory = eventFactory;
 	}
 
-	@Override
 	public Event poll() {
 		Long nextEventTime = eventProxy.nextEventTime();
-		if (this.isEmpty() || (nextEventTime != null && nextEventTime <= this.peek().getTime())) {
+		if (queue.isEmpty() || (nextEventTime != null && nextEventTime <= head().getTime())) {
 			addPage();
 		}
-		return super.poll();
+		return removeHead();
+	}
+	
+	private Event removeHead() {
+		return queue.removeFirst();
+	}
+	
+	private Event head() {
+		return queue.getFirst();
 	}
 	
 	public boolean hasNext() {
-		return !this.isEmpty() || eventProxy.hasNextEvent();
+		return !queue.isEmpty() || eventProxy.hasNextEvent();
 	}
 	
 	private void addPage() {
@@ -41,6 +49,20 @@ public class EventQueue extends PriorityQueue<Event>{
 		for (EventSpec eventSpec : nextEventPage) {
 			this.add(eventFactory.createEvent(eventSpec));
 		}
+	}
+
+	public void add(Event event) {
+		
+		ListIterator<Event> iterator = queue.listIterator();
+		while (iterator.hasNext()) {
+			Event itEvent = iterator.next();
+			if (event.compareTo(itEvent) < 0) {
+				iterator.previous();
+				break;
+			}
+		}
+		
+		iterator.add(event);
 	}
 	
 }

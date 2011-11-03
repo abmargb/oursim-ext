@@ -22,6 +22,8 @@ public class UpdateStatusAvailableEvent extends AbstractEvent {
 	public void process(OurSim ourSim) {
 		
 		ActiveEntity interestedObj = ourSim.getGrid().getObject(interested);
+		ActiveEntity monitoredObj = ourSim.getGrid().getObject(monitored);
+		
 		Monitor monitor = interestedObj.getMonitor(monitored);
 		if (monitor == null) {
 			return;
@@ -30,12 +32,13 @@ public class UpdateStatusAvailableEvent extends AbstractEvent {
 		boolean wasUp = monitor.isUp();
 		interestedObj.updateStatusReceived(monitored, getTime());
 		
-		Monitor monitoredRef = monitor;
-		
 		if (!wasUp) {
-			Event callbackAliveEvent = monitoredRef.getCallbackAliveEvent();
-			if (callbackAliveEvent != null) {
-				callbackAliveEvent.setTime(getTime());
+			String onRecoveryEventType = interestedObj.getOnRecoveryEvent(
+					monitoredObj.getClass());
+			
+			if (onRecoveryEventType != null) {
+				Event callbackAliveEvent = ourSim.createEvent(
+						onRecoveryEventType, getTime(), interested, monitored);
 				ourSim.addEvent(callbackAliveEvent);
 			}
 		}
