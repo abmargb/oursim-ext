@@ -15,8 +15,8 @@ public class SendReportWorkAccountingEvent extends AbstractEvent {
 
 	private final String workerId;
 
-	public SendReportWorkAccountingEvent(Long time, String workerId) {
-		super(time, Event.DEF_PRIORITY);
+	public SendReportWorkAccountingEvent(String workerId) {
+		super(Event.DEF_PRIORITY);
 		this.workerId = workerId;
 	}
 

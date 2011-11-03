@@ -12,8 +12,8 @@ public class WorkerDonatedEvent extends AbstractEvent {
 	private final RequestSpec requestSpec;
 	private final String provider;
 
-	public WorkerDonatedEvent(Long time, String consumerId, String provider, RequestSpec requestSpec, String workerId) {
-		super(time, Event.DEF_PRIORITY);
+	public WorkerDonatedEvent(String consumerId, String provider, RequestSpec requestSpec, String workerId) {
+		super(Event.DEF_PRIORITY);
 		this.consumerId = consumerId;
 		this.provider = provider;
 		this.requestSpec = requestSpec;

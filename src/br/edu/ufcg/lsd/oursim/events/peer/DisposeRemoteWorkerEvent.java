@@ -12,8 +12,8 @@ public class DisposeRemoteWorkerEvent extends AbstractEvent {
 	private final String workerId;
 	private final String provider;
 
-	public DisposeRemoteWorkerEvent(Long time, String provider, String workerId) {
-		super(time, Event.DEF_PRIORITY);
+	public DisposeRemoteWorkerEvent(String provider, String workerId) {
+		super(Event.DEF_PRIORITY);
 		this.provider = provider;
 		this.workerId = workerId;
 	}

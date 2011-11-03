@@ -12,8 +12,8 @@ public class ReportReplicaAccountingEvent extends AbstractEvent {
 	private final ReplicaAccounting replicaAccounting;
 	private final String peerId;
 
-	public ReportReplicaAccountingEvent(Long time, ReplicaAccounting replicaAccounting, String peerId) {
-		super(time, Event.DEF_PRIORITY);
+	public ReportReplicaAccountingEvent(ReplicaAccounting replicaAccounting, String peerId) {
+		super(Event.DEF_PRIORITY);
 		this.replicaAccounting = replicaAccounting;
 		this.peerId = peerId;
 	}

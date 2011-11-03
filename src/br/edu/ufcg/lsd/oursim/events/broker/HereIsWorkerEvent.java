@@ -13,8 +13,8 @@ public class HereIsWorkerEvent extends AbstractEvent {
 	private final RequestSpec requestSpec;
 	private final String workerId;
 
-	public HereIsWorkerEvent(Long time, String workerId, RequestSpec requestSpec) {
-		super(time, Event.DEF_PRIORITY);
+	public HereIsWorkerEvent(String workerId, RequestSpec requestSpec) {
+		super(Event.DEF_PRIORITY);
 		this.workerId = workerId;
 		this.requestSpec = requestSpec;
 	}

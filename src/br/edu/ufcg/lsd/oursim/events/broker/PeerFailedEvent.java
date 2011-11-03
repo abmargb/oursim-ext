@@ -6,8 +6,8 @@ import br.edu.ufcg.lsd.oursim.events.Event;
 
 public class PeerFailedEvent extends AbstractEvent {
 
-	public PeerFailedEvent(Long time) {
-		super(time, Event.DEF_PRIORITY);
+	public PeerFailedEvent() {
+		super(Event.DEF_PRIORITY);
 	}
 
 	@Override

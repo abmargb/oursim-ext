@@ -12,9 +12,8 @@ public class UpdateStatusAvailableEvent extends AbstractEvent {
 	private final String interested;
 	private final String monitored;
 
-	public UpdateStatusAvailableEvent(Long time, String interested,
-			String monitored) {
-		super(time, Event.DEF_PRIORITY);
+	public UpdateStatusAvailableEvent(String interested, String monitored) {
+		super(Event.DEF_PRIORITY);
 		this.interested = interested;
 		this.monitored = monitored;
 	}

@@ -13,6 +13,10 @@ public interface Event extends Comparable<Event>{
 	
 	void setTime(Long time);
 	
+	String getType();
+	
+	void setType(String type);
+	
 	Integer getPriority();
 
 }

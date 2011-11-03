@@ -5,8 +5,8 @@ import br.edu.ufcg.lsd.oursim.events.PrimaryEvent;
 
 public abstract class ActiveEntityDownEvent extends PrimaryEvent {
 
-	public ActiveEntityDownEvent(Long time, Integer priority, String data) {
-		super(time, priority, data);
+	public ActiveEntityDownEvent(Integer priority, String data) {
+		super(priority, data);
 	}
 
 	@Override

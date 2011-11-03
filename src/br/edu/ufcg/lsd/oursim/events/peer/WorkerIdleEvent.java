@@ -11,8 +11,8 @@ public class WorkerIdleEvent extends AbstractEvent {
 	private final String workerId;
 	private final String peerId;
 
-	public WorkerIdleEvent(Long time, String workerId, String peerId) {
-		super(time, Event.DEF_PRIORITY);
+	public WorkerIdleEvent(String workerId, String peerId) {
+		super(Event.DEF_PRIORITY);
 		this.workerId = workerId;
 		this.peerId = peerId;
 	}

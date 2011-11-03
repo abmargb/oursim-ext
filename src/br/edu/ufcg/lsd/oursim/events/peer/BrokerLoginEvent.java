@@ -11,8 +11,8 @@ public class BrokerLoginEvent extends AbstractEvent {
 
 	private String brokerId;
 
-	public BrokerLoginEvent(Long time, String brokerId) {
-		super(time, Event.DEF_PRIORITY);
+	public BrokerLoginEvent(String brokerId) {
+		super(Event.DEF_PRIORITY);
 		this.brokerId = brokerId;
 	}
 

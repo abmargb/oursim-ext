@@ -8,8 +8,8 @@ public class HaltEvent extends PrimaryEvent {
 
 	public static final String TYPE = "HALT";
 	
-	public HaltEvent(Long time) {
-		super(time, Event.HIGHER_PRIORITY, null);
+	public HaltEvent() {
+		super(Event.HIGHER_PRIORITY, null);
 	}
 
 	@Override

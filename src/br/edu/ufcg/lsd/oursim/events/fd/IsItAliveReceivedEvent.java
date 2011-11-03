@@ -12,9 +12,9 @@ public class IsItAliveReceivedEvent extends AbstractEvent {
 	private final String monitored;
 	private final Boolean isCreatingConnection;
 
-	public IsItAliveReceivedEvent(Long time, String interested, 
+	public IsItAliveReceivedEvent(String interested, 
 			String monitored, Boolean isCreatingConnection) {
-		super(time, Event.DEF_PRIORITY);
+		super(Event.DEF_PRIORITY);
 		this.interested = interested;
 		this.monitored = monitored;
 		this.isCreatingConnection = isCreatingConnection;

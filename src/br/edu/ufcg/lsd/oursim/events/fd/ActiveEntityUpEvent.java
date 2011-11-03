@@ -5,8 +5,8 @@ import br.edu.ufcg.lsd.oursim.events.PrimaryEvent;
 
 public abstract class ActiveEntityUpEvent extends PrimaryEvent {
 
-	public ActiveEntityUpEvent(Long time, Integer priority, String data) {
-		super(time, priority, data);
+	public ActiveEntityUpEvent(Integer priority, String data) {
+		super(priority, data);
 	}
 
 	@Override

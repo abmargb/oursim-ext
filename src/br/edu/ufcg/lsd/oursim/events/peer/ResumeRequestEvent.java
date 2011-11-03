@@ -13,8 +13,8 @@ public class ResumeRequestEvent extends AbstractEvent {
 	private final String peerId;
 	private final RequestSpec requestSpec;
 
-	public ResumeRequestEvent(Long time, RequestSpec requestSpec, String peerId) {
-		super(time, Event.DEF_PRIORITY);
+	public ResumeRequestEvent(RequestSpec requestSpec, String peerId) {
+		super(Event.DEF_PRIORITY);
 		this.requestSpec = requestSpec;
 		this.peerId = peerId;
 	}

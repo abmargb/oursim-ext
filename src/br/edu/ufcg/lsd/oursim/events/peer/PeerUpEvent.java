@@ -9,8 +9,8 @@ import br.edu.ufcg.lsd.oursim.events.worker.WorkerEvents;
 
 public class PeerUpEvent extends ActiveEntityUpEvent {
 
-	public PeerUpEvent(Long time, String data) {
-		super(time, Event.DEF_PRIORITY, data);
+	public PeerUpEvent(String data) {
+		super(Event.DEF_PRIORITY, data);
 	}
 
 	@Override

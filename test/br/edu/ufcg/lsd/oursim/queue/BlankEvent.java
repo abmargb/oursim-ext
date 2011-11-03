@@ -7,11 +7,13 @@ import br.edu.ufcg.lsd.oursim.events.Event;
 public class BlankEvent extends AbstractEvent {
 
 	public BlankEvent(Long time, Integer priority) {
-		super(time, priority);
+		super(priority);
+		setTime(time);
 	}
 	
 	public BlankEvent(Long time) {
-		super(time, Event.DEF_PRIORITY);
+		super(Event.DEF_PRIORITY);
+		setTime(time);
 	}
 
 	@Override

@@ -11,8 +11,8 @@ public class WorkerRecoveryEvent extends AbstractEvent {
 	private final BrokerRequest request;
 	private final String workerId;
 
-	public WorkerRecoveryEvent(Long time, BrokerRequest request, String workerId) {
-		super(time, Event.DEF_PRIORITY);
+	public WorkerRecoveryEvent(BrokerRequest request, String workerId) {
+		super(Event.DEF_PRIORITY);
 		this.request = request;
 		this.workerId = workerId;
 	}

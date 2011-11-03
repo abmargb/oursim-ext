@@ -12,8 +12,8 @@ import br.edu.ufcg.lsd.oursim.util.LineParser;
 
 public class CancelJobEvent extends PrimaryEvent {
 
-	public CancelJobEvent(Long time, String data) {
-		super(time, Event.DEF_PRIORITY, data);
+	public CancelJobEvent(String data) {
+		super(Event.DEF_PRIORITY, data);
 	}
 
 	@Override

@@ -6,8 +6,8 @@ import br.edu.ufcg.lsd.oursim.events.fd.ActiveEntityDownEvent;
 
 public class WorkerDownEvent extends ActiveEntityDownEvent {
 
-	public WorkerDownEvent(Long time, String data) {
-		super(time, Event.DEF_PRIORITY, data);
+	public WorkerDownEvent(String data) {
+		super(Event.DEF_PRIORITY, data);
 	}
 
 	@Override

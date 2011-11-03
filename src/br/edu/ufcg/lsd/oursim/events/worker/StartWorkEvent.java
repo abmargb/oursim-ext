@@ -13,8 +13,8 @@ public class StartWorkEvent extends AbstractEvent {
 	private final String workerId;
 	private final String brokerId;
 
-	public StartWorkEvent(Long time, Replica replica, String workerId, String brokerId) {
-		super(time, Event.DEF_PRIORITY);
+	public StartWorkEvent(Replica replica, String workerId, String brokerId) {
+		super(Event.DEF_PRIORITY);
 		this.replica = replica;
 		this.workerId = workerId;
 		this.brokerId = brokerId;

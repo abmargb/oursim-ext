@@ -13,8 +13,8 @@ public class GetWorkerProvidersEvent extends AbstractEvent {
 	private final String peerId;
 	private final String dsId;
 
-	public GetWorkerProvidersEvent(Long time, String peerId, String dsId) {
-		super(time, Event.DEF_PRIORITY);
+	public GetWorkerProvidersEvent(String peerId, String dsId) {
+		super(Event.DEF_PRIORITY);
 		this.peerId = peerId;
 		this.dsId = dsId;
 	}

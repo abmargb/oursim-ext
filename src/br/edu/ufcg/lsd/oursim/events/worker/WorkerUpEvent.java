@@ -6,8 +6,8 @@ import br.edu.ufcg.lsd.oursim.events.fd.ActiveEntityUpEvent;
 
 public class WorkerUpEvent extends ActiveEntityUpEvent {
 
-	public WorkerUpEvent(Long time, String data) {
-		super(time, Event.DEF_PRIORITY, data);
+	public WorkerUpEvent(String data) {
+		super(Event.DEF_PRIORITY, data);
 	}
 
 	@Override

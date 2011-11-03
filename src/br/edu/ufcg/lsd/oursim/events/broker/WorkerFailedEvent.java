@@ -18,8 +18,8 @@ public class WorkerFailedEvent extends AbstractEvent {
 	private final BrokerRequest request;
 	private final String workerId;
 
-	public WorkerFailedEvent(Long time, BrokerRequest request, String workerId) {
-		super(time, Event.DEF_PRIORITY);
+	public WorkerFailedEvent(BrokerRequest request, String workerId) {
+		super(Event.DEF_PRIORITY);
 		this.request = request;
 		this.workerId = workerId;
 	}

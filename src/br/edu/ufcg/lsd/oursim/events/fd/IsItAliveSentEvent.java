@@ -9,8 +9,8 @@ public class IsItAliveSentEvent extends AbstractEvent {
 	private final String interested;
 	private final String monitored;
 
-	public IsItAliveSentEvent(Long time, String interested, String monitored) {
-		super(time, Event.DEF_PRIORITY);
+	public IsItAliveSentEvent(String interested, String monitored) {
+		super(Event.DEF_PRIORITY);
 		this.interested = interested;
 		this.monitored = monitored;
 	}

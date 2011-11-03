@@ -15,9 +15,9 @@ public class RemoteWorkerRecoveryEvent extends AbstractEvent {
 	private final RequestSpec requestSpec;
 	private final String worker;
 
-	public RemoteWorkerRecoveryEvent(Long time, String consumer, 
+	public RemoteWorkerRecoveryEvent(String consumer, 
 			String provider, RequestSpec requestSpec, String worker) {
-		super(time, Event.DEF_PRIORITY);
+		super(Event.DEF_PRIORITY);
 		this.consumer = consumer;
 		this.provider = provider;
 		this.requestSpec = requestSpec;

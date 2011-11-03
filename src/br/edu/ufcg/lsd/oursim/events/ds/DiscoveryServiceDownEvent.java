@@ -6,8 +6,8 @@ import br.edu.ufcg.lsd.oursim.events.fd.ActiveEntityDownEvent;
 
 public class DiscoveryServiceDownEvent extends ActiveEntityDownEvent {
 
-	public DiscoveryServiceDownEvent(Long time, String data) {
-		super(time, Event.DEF_PRIORITY, data);
+	public DiscoveryServiceDownEvent(String data) {
+		super(Event.DEF_PRIORITY, data);
 	}
 
 	@Override

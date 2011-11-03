@@ -17,8 +17,8 @@ public class HereIsExecutionResultEvent extends AbstractEvent {
 	private final Replica replica;
 	private final String brokerId;
 
-	public HereIsExecutionResultEvent(Long time, Replica replica, String brokerId) {
-		super(time, Event.DEF_PRIORITY);
+	public HereIsExecutionResultEvent(Replica replica, String brokerId) {
+		super(Event.DEF_PRIORITY);
 		this.replica = replica;
 		this.brokerId = brokerId;
 	}

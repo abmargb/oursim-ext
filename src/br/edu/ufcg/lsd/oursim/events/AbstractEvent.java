@@ -4,14 +4,13 @@ public abstract class AbstractEvent implements Event {
 
 	private Long time;
 	private Integer priority;
+	private String type;
 	
 	/**
-	 * @param time
 	 * @param priority
 	 * @param type
 	 */
-	public AbstractEvent(Long time, Integer priority) {
-		this.time = time;
+	public AbstractEvent(Integer priority) {
 		this.priority = priority;
 	}
 	
@@ -37,5 +36,13 @@ public abstract class AbstractEvent implements Event {
 			return timeCompare;
 		}
 		return o.getPriority().compareTo(this.getPriority());
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 }

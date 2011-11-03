@@ -31,22 +31,22 @@ public class EventFactory {
 	public Event createEvent(String type, long time, Object... params) {
 		Class<?> eventClass = eventClasses.get(type);
 		
-		Class<?>[] paramsClasses = new Class<?>[params.length + 1];
-		paramsClasses[0] = Long.class;
-		
+		Class<?>[] paramsClasses = new Class<?>[params.length];
 		for (int i = 0; i < params.length; i++) {
-			paramsClasses[i+1] = params[i].getClass();
+			paramsClasses[i] = params[i].getClass();
 		}
 		
-		Object[] initArgs = new Object[params.length + 1];
-		initArgs[0] = time;
-		
+		Object[] initArgs = new Object[params.length];
 		for (int i = 0; i < params.length; i++) {
-			initArgs[i+1] = params[i];
+			initArgs[i] = params[i];
 		}
 		
 		try {
-			return (Event) eventClass.getConstructor(paramsClasses).newInstance(initArgs);
+			Event event = (Event) eventClass.getConstructor(paramsClasses).newInstance(initArgs);
+			event.setType(type);
+			event.setTime(time);
+			
+			return event;
 		} catch (Exception e) {
 			throw new IllegalArgumentException("Event not found for type: [" + type + "] " +
 					"and parameter types: " + Arrays.asList(paramsClasses).toString(), e);

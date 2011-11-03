@@ -9,8 +9,8 @@ import br.edu.ufcg.lsd.oursim.util.LineParser;
 
 public class SetGridEvent extends PrimaryEvent {
 
-	public SetGridEvent(Long time, String data) {
-		super(time, Event.DEF_PRIORITY, data);
+	public SetGridEvent(String data) {
+		super(Event.DEF_PRIORITY, data);
 	}
 
 	@Override

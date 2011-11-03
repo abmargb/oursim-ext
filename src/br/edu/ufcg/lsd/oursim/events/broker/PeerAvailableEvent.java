@@ -9,8 +9,8 @@ public class PeerAvailableEvent extends AbstractEvent {
 
 	private final String brokerId;
 
-	public PeerAvailableEvent(Long time, String brokerId) {
-		super(time, Event.DEF_PRIORITY);
+	public PeerAvailableEvent(String brokerId) {
+		super(Event.DEF_PRIORITY);
 		this.brokerId = brokerId;
 	}
 

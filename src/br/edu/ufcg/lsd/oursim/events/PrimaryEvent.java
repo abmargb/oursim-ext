@@ -5,8 +5,8 @@ public abstract class PrimaryEvent extends AbstractEvent {
 
 	private final String data;
 
-	public PrimaryEvent(Long time, Integer priority, String data) {
-		super(time, priority);
+	public PrimaryEvent(Integer priority, String data) {
+		super(priority);
 		this.data = data;
 	}
 

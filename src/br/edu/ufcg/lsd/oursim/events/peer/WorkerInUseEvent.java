@@ -11,8 +11,8 @@ public class WorkerInUseEvent extends AbstractEvent {
 	private final String workerId;
 	private final RequestSpec requestSpec;
 
-	public WorkerInUseEvent(Long time, RequestSpec requestSpec, String workerId) {
-		super(time, Event.DEF_PRIORITY);
+	public WorkerInUseEvent(RequestSpec requestSpec, String workerId) {
+		super(Event.DEF_PRIORITY);
 		this.requestSpec = requestSpec;
 		this.workerId = workerId;
 	}

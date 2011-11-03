@@ -18,8 +18,8 @@ import br.edu.ufcg.lsd.oursim.util.LineParser;
 
 public class AddJobEvent extends PrimaryEvent {
 
-	public AddJobEvent(Long time, String data) {
-		super(time, Event.DEF_PRIORITY, data);
+	public AddJobEvent(String data) {
+		super(Event.DEF_PRIORITY, data);
 	}
 
 	@Override

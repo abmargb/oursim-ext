@@ -14,8 +14,8 @@ public class FinishRequestEvent extends AbstractEvent {
 	private final RequestSpec requestSpec;
 	private final String peerId;
 
-	public FinishRequestEvent(Long time, String peerId, RequestSpec requestSpec) {
-		super(time, Event.DEF_PRIORITY);
+	public FinishRequestEvent(String peerId, RequestSpec requestSpec) {
+		super(Event.DEF_PRIORITY);
 		this.peerId = peerId;
 		this.requestSpec = requestSpec;
 	}

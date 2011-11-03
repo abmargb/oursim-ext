@@ -8,8 +8,8 @@ import br.edu.ufcg.lsd.oursim.events.fd.MonitorUtil;
 
 public class BrokerUpEvent extends ActiveEntityUpEvent {
 
-	public BrokerUpEvent(Long time, String data) {
-		super(time, Event.DEF_PRIORITY, data);
+	public BrokerUpEvent(String data) {
+		super(Event.DEF_PRIORITY, data);
 	}
 	
 	@Override

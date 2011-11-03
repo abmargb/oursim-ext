@@ -11,8 +11,8 @@ public class RepeatGetWorkerProvidersEvent extends AbstractEvent {
 
 	private final String peerId;
 
-	public RepeatGetWorkerProvidersEvent(Long time, String peerId) {
-		super(time, Event.DEF_PRIORITY);
+	public RepeatGetWorkerProvidersEvent(String peerId) {
+		super(Event.DEF_PRIORITY);
 		this.peerId = peerId;
 	}
 
