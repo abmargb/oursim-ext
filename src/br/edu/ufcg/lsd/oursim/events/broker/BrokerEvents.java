@@ -33,7 +33,7 @@ public class BrokerEvents {
 	public static Map<String, Class<? extends Event>> createEvents() {
 		Map<String, Class<? extends Event>> events = new HashMap<String, Class<? extends Event>>();
 		events.put(ADD_JOB, AddJobEvent.class);
-		events.put(CANCEL_JOB, AddJobEvent.class);
+		events.put(CANCEL_JOB, CancelJobEvent.class);
 		events.put(SET_GRID, SetGridEvent.class);
 		events.put(BROKER_DOWN, BrokerDownEvent.class);
 		events.put(BROKER_UP, BrokerUpEvent.class);

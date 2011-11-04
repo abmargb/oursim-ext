@@ -27,7 +27,7 @@ public class DisposeRemoteWorkerEvent extends AbstractEvent {
 			return;
 		}
 		
-		ourSim.addNetworkEvent(ourSim.createEvent(WorkerEvents.STOP_WORK, 
+		ourSim.addNetworkEvent(ourSim.createEvent(WorkerEvents.STOP_WORKING, 
 				getTime(), workerId));
 		
 		allocation.setConsumer(null);

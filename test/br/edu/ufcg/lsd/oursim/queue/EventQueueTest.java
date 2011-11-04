@@ -68,7 +68,7 @@ public class EventQueueTest {
 		EventQueue queue = new EventQueue(
 				new ListEventProxy(), new EventFactory());
 		
-		BlankEvent ev2 = new BlankEvent(10L);
+		BlankEvent ev2 = new BlankEvent(10L, 0);
 		queue.add(ev2);
 		
 		BlankEvent ev1 = new BlankEvent(10L, 1);

@@ -37,7 +37,8 @@ public class SchedulerHelper {
 	public static boolean isJobEnded(Job job) {
 		return ExecutionState.FINISHED.equals(job.getState()) || 
 				ExecutionState.FAILED.equals(job.getState()) || 
-				ExecutionState.ABORTED.equals(job.getState());
+				ExecutionState.ABORTED.equals(job.getState()) ||
+				ExecutionState.CANCELLED.equals(job.getState());
 	}
 	
 	public static boolean canSchedule(Task task, OurSim ourSim) {
@@ -139,19 +140,25 @@ public class SchedulerHelper {
 		ourSim.addEvent(ourSim.createEvent(FailureDetectionEvents.RELEASE, now, 
 				broker.getId(), worker));
 		
-		ourSim.addNetworkEvent(ourSim.createEvent(PeerEvents.DISPOSE_WORKER, now, 
-				worker, broker.getPeerId()));
+		if (broker.getPeerId() != null) {
+			ourSim.addNetworkEvent(ourSim.createEvent(PeerEvents.DISPOSE_WORKER, now, 
+					worker, broker.getPeerId()));
+		}
 	}
 
 	public static void finishJob(Job job, Broker broker, OurSim ourSim, long time) {
-		Set<String> availableWorkers = new HashSet<String>(
-				job.getAvailableWorkers());
+		Set<String> deallocateWorkers = new HashSet<String>();
+		deallocateWorkers.addAll(job.getAvailableWorkers());
+		deallocateWorkers.addAll(job.getNotRecoveredWorkers());
 		
-		for (String worker : availableWorkers) {
+		for (String worker : deallocateWorkers) {
 			disposeWorker(job, broker, worker, ourSim, time);
 		}
-		ourSim.addNetworkEvent(ourSim.createEvent(PeerEvents.FINISH_REQUEST, time, 
-				broker.getPeerId(), job.getRequest().getSpec()));
+		
+		if (broker.getPeerId() != null) {
+			ourSim.addNetworkEvent(ourSim.createEvent(PeerEvents.FINISH_REQUEST, time, 
+					broker.getPeerId(), job.getRequest().getSpec()));
+		}
 	}
 
 	public static void updateScheduler(OurSim ourSim, Broker broker, long now) {

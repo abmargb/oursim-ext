@@ -35,32 +35,24 @@ public class AcceptanceTest {
 		properties.put(Configuration.PROP_BROKER_SCHEDULER_INTERVAL, "0");
 	}
 	
-	private List<Event> addEvent(EventSpec evSpec, boolean halt) {
+	public List<Event> addEvent(EventSpec evSpec) {
+		return addEvent(evSpec, null);
+	}
+	
+	public List<Event> addEvent(EventSpec evSpec, String haltAfterType) {
 		recorder.startRecording();
+		
+		HaltByEventCondition haltAfter = haltAfter(haltAfterType);
+		
 		eventProxy.add(evSpec);
-
-		if (halt) {
-			eventProxy.add(new EventSpec(HaltEvent.TYPE, evSpec.getTime() + 1));
-		}
-
+		eventProxy.add(new EventSpec(HaltEvent.TYPE, evSpec.getTime() + 1));
 		step();
+		
+		ourSim.removeEventListener(haltAfter);
+		
 		List<Event> secondary = recorder.stopRecording();
-		return secondary.subList(1, secondary.size() - (halt ? 1 : 0));
+		return secondary.subList(1, secondary.size() - 1);
 	}
-	
-	protected List<Event> addEvent(EventSpec evSpec) {
-		return addEvent(evSpec, false);
-	}
-	
-	/**
-	 * Intended for events that generate infinite secondary events.
-	 * @param evSpec
-	 * @return 
-	 */
-	protected List<Event> addEventAndHalt(EventSpec evSpec) {
-		return addEvent(evSpec, true);
-	}
-	
 	
 	protected Broker createBroker(String brokerId) {
 		return (Broker) addActiveEntity(
@@ -103,6 +95,18 @@ public class AcceptanceTest {
 		}
 		
 		ourSim.run();
+	}
+	
+	private HaltByEventCondition haltAfter(String eventType) {
+		
+		if (eventType == null) {
+			return null;
+		}
+		
+		HaltByEventCondition evListener = new HaltByEventCondition(
+				ourSim, eventType);
+		ourSim.addEventListener(evListener);
+		return evListener;
 	}
 	
 }

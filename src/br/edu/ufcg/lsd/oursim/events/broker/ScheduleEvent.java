@@ -20,7 +20,7 @@ public class ScheduleEvent extends AbstractEvent {
 	private String brokerId;
 
 	public ScheduleEvent(String brokerId) {
-		super(Event.HIGHER_PRIORITY);
+		super(Event.LOWER_PRIORITY);
 		this.brokerId = brokerId;
 	}
 
@@ -35,24 +35,19 @@ public class ScheduleEvent extends AbstractEvent {
 	}
 
 	private void clean(Broker broker, Job job, OurSim ourSim) {
-		if (SchedulerHelper.isJobEnded(job)) {
-			job.setRequest(null);
-			return;
-		}
-		
-		
 		if (SchedulerHelper.isJobSatisfied(job, ourSim)) {
 			BrokerRequest request = job.getRequest();
-			if (!request.isPaused()) {
+			if (request != null && !request.isPaused()) {
 				request.setPaused(true);
 				ourSim.addNetworkEvent(ourSim.createEvent(PeerEvents.PAUSE_REQUEST, 
 						getTime(), request.getSpec(), broker.getPeerId()));
 			}
 			
-			Set<String> availableWorkers = new HashSet<String>(
-					job.getAvailableWorkers());
+			Set<String> deallocateWorkers = new HashSet<String>();
+			deallocateWorkers.addAll(job.getAvailableWorkers());
+			deallocateWorkers.addAll(job.getNotRecoveredWorkers());
 			
-			for (String worker : availableWorkers) {
+			for (String worker : deallocateWorkers) {
 				SchedulerHelper.disposeWorker(job, broker, 
 						worker, ourSim, getTime());
 			}

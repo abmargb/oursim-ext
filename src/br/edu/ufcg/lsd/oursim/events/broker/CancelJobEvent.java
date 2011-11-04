@@ -23,7 +23,15 @@ public class CancelJobEvent extends PrimaryEvent {
 		String jobId = lineParser.next();
 		
 		Broker broker = ourSim.getGrid().getObject(brokerId);
+		if (broker == null || !broker.isUp()) {
+			return;
+		}
+		
 		Job job = broker.getJob(Integer.parseInt(jobId));
+		
+		if (job == null) {
+			return;
+		}
 		
 		cancelJob(job, broker, ourSim);
 	}
@@ -59,6 +67,11 @@ public class CancelJobEvent extends PrimaryEvent {
 			replica.setEndTime(getTime());
 			ourSim.getTraceCollector().replicaEnded(
 					getTime(), replica, broker.getId());
+			
+			SchedulerHelper.disposeWorker(replica.getTask().getJob(), broker,
+					replica.getWorker(), ourSim, getTime());
+			
+			replica.setWorker(null);
 		}
 	}
 

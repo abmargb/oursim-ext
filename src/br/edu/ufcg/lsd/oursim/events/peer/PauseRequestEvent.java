@@ -2,6 +2,7 @@ package br.edu.ufcg.lsd.oursim.events.peer;
 
 import br.edu.ufcg.lsd.oursim.OurSim;
 import br.edu.ufcg.lsd.oursim.entities.grid.Peer;
+import br.edu.ufcg.lsd.oursim.entities.request.PeerRequest;
 import br.edu.ufcg.lsd.oursim.entities.request.RequestSpec;
 import br.edu.ufcg.lsd.oursim.events.AbstractEvent;
 import br.edu.ufcg.lsd.oursim.events.Event;
@@ -20,7 +21,11 @@ public class PauseRequestEvent extends AbstractEvent {
 	@Override
 	public void process(OurSim ourSim) {
 		Peer peer = ourSim.getGrid().getObject(peerId);
-		peer.getRequest(requestSpec.getId()).setPaused(true);
+		PeerRequest request = peer.getRequest(requestSpec.getId());
+		
+		if (request != null) {
+			request.setPaused(true);
+		}
 	}
 
 }

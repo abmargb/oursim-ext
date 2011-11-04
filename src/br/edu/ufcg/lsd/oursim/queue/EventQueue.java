@@ -64,5 +64,9 @@ public class EventQueue {
 		
 		iterator.add(event);
 	}
+
+	public void clear() {
+		queue.clear();
+	}
 	
 }

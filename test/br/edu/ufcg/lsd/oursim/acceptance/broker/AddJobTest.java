@@ -89,7 +89,7 @@ public class AddJobTest extends AcceptanceTest {
 		addEvent(new EventSpec(BrokerEvents.BROKER_UP, 0, brokerId));
 		addEvent(new EventSpec(PeerEvents.PEER_UP, 1, peerId));
 		
-		List<Event> secondary = addEventAndHalt(new EventSpec(
+		List<Event> secondary = addEvent(new EventSpec(
 				BrokerEvents.ADD_JOB, 2, brokerId + " " + jsonJob1));
 		
 		Assert.assertTrue(EventRecorderUtils.hasEventOfType(secondary,
@@ -112,7 +112,7 @@ public class AddJobTest extends AcceptanceTest {
 		
 		addEvent(new EventSpec(BrokerEvents.BROKER_UP, 0, brokerId));
 		addEvent(new EventSpec(BrokerEvents.ADD_JOB, 1, brokerId + " " + jsonJob1));
-		List<Event> secondary = addEventAndHalt(new EventSpec(PeerEvents.PEER_UP, 2, peerId));
+		List<Event> secondary = addEvent(new EventSpec(PeerEvents.PEER_UP, 2, peerId));
 		
 		Assert.assertTrue(EventRecorderUtils.hasEventOfType(secondary,
 				PeerEvents.REQUEST_WORKERS));

@@ -20,7 +20,7 @@ public class WorkerEvents {
 	 */
 	public static final String START_WORK = "START_WORK";
 	public static final String WORK_FOR_BROKER = "WORK_FOR_BROKER";
-	public static final String STOP_WORK = "STOP_WORK";
+	public static final String STOP_WORKING = "STOP_WORKING";
 	public static final String WORK_FOR_PEER = "WORK_FOR_PEER";
 	public static final String SEND_HERE_IS_EXECUTION_RESULT = "SEND_HERE_IS_EXECUTION_RESULT";
 	public static final String SET_PEER = "SET_PEER";
@@ -32,7 +32,7 @@ public class WorkerEvents {
 		events.put(WORKER_UP, WorkerUpEvent.class);
 		events.put(START_WORK, StartWorkEvent.class);
 		events.put(WORK_FOR_BROKER, WorkForBrokerEvent.class);
-		events.put(STOP_WORK, StopWorkEvent.class);
+		events.put(STOP_WORKING, StopWorkingEvent.class);
 		events.put(WORK_FOR_PEER, WorkForPeerEvent.class);
 		events.put(SEND_HERE_IS_EXECUTION_RESULT, SendHereIsExecutionEvent.class);
 		events.put(SET_PEER, SetPeerEvent.class);

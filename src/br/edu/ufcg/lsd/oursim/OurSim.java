@@ -67,6 +67,7 @@ public class OurSim {
 	}
 	
 	public void run() {
+		this.running = true;
 		while (queue.hasNext() && running) {
 			Event ev = queue.poll();
 			ev.process(this);
@@ -105,5 +106,12 @@ public class OurSim {
 	
 	public void halt() {
 		this.running = false;
+		this.queue.clear();
+	}
+
+	public void removeEventListener(EventListener eventListener) {
+		if (eventListener != null) {
+			eventListeners.remove(eventListener);
+		}
 	}
 }

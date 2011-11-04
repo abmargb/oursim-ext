@@ -5,11 +5,11 @@ import br.edu.ufcg.lsd.oursim.entities.grid.Worker;
 import br.edu.ufcg.lsd.oursim.events.AbstractEvent;
 import br.edu.ufcg.lsd.oursim.events.Event;
 
-public class StopWorkEvent extends AbstractEvent {
+public class StopWorkingEvent extends AbstractEvent {
 
 	private final String workerId;
 
-	public StopWorkEvent(String workerId) {
+	public StopWorkingEvent(String workerId) {
 		super(Event.DEF_PRIORITY);
 		this.workerId = workerId;
 	}

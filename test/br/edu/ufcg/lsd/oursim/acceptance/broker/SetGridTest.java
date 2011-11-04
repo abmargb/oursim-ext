@@ -66,4 +66,31 @@ public class SetGridTest extends AcceptanceTest {
 		Assert.assertFalse(peer.getBrokersIds().contains(brokerId));
 	}
 	
+	@Test
+	public void testSetGridToSamePeer() {
+		String brokerId = "broker1";
+		String peerId = "peer1";
+		String workerId = "worker1";
+		
+		Peer peer = createPeer(peerId);
+		Broker broker = createBroker(brokerId);
+		createWorker(workerId);
+		peer.addWorker(workerId);
+		
+		addEvent(new EventSpec(BrokerEvents.BROKER_UP, 0, brokerId));
+		addEvent(new EventSpec(PeerEvents.PEER_UP, 1, peerId));
+		addEvent(new EventSpec(WorkerEvents.WORKER_UP, 2, workerId));
+		addEvent(new EventSpec(BrokerEvents.SET_GRID, 3, brokerId + " " + peerId));
+		
+		String jsonJob1 = "{id:1 , tasks:[{duration:1000}]}";
+		
+		addEvent(new EventSpec(
+				BrokerEvents.ADD_JOB, 4, brokerId + " " + jsonJob1));
+		
+		addEvent(new EventSpec(BrokerEvents.SET_GRID, 5, brokerId + " " + peerId));
+		
+		Assert.assertNotNull(broker.getMonitor(peerId));
+		Assert.assertTrue(peer.getBrokersIds().contains(brokerId));
+	}
+	
 }
