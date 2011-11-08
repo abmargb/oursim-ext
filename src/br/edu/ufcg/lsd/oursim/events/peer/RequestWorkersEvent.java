@@ -27,6 +27,10 @@ public class RequestWorkersEvent extends AbstractEvent {
 		this.repetition = repetition;
 	}
 
+	public RequestSpec getRequestSpec() {
+		return requestSpec;
+	}
+	
 	@Override
 	public void process(OurSim ourSim) {
 		Peer peer = ourSim.getGrid().getObject(peerId);

@@ -1,10 +1,8 @@
 package br.edu.ufcg.lsd.oursim.events.broker;
 
-import java.util.List;
-
 import br.edu.ufcg.lsd.oursim.OurSim;
 import br.edu.ufcg.lsd.oursim.entities.grid.Broker;
-import br.edu.ufcg.lsd.oursim.entities.job.Job;
+import br.edu.ufcg.lsd.oursim.entities.grid.Peer;
 import br.edu.ufcg.lsd.oursim.entities.request.BrokerRequest;
 import br.edu.ufcg.lsd.oursim.entities.request.RequestSpec;
 import br.edu.ufcg.lsd.oursim.events.AbstractEvent;
@@ -26,11 +24,16 @@ public class HereIsWorkerEvent extends AbstractEvent {
 	public void process(OurSim ourSim) {
 		
 		Broker broker = ourSim.getGrid().getObject(requestSpec.getBrokerId());
+		Peer peer = ourSim.getGrid().getObject(broker.getPeerId());
 		BrokerRequest request = broker.getRequest(requestSpec.getId());
 		
-		if (!hasJobRunning(broker)) {
+		if (peer == null || !peer.isUp()) {
+			return;
+		}
+		
+		if (request == null) {
 			SchedulerHelper.disposeWorker(
-					request.getJob(), broker, workerId, ourSim, getTime());
+					null, broker, workerId, ourSim, getTime());
 			return;
 		}
 		
@@ -38,16 +41,4 @@ public class HereIsWorkerEvent extends AbstractEvent {
 		MonitorUtil.registerMonitored(ourSim, getTime(), 
 				broker.getId(), workerId);
 	}
-
-	private boolean hasJobRunning(Broker broker) {
-		List<Job> jobs = broker.getJobs();
-		for (Job job : jobs) {
-			if (!SchedulerHelper.isJobEnded(job)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-
 }

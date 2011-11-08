@@ -51,7 +51,7 @@ public class AcceptanceTest {
 		ourSim.removeEventListener(haltAfter);
 		
 		List<Event> secondary = recorder.stopRecording();
-		return secondary.subList(1, secondary.size() - 1);
+		return secondary.subList(1, secondary.size() - (haltAfterType != null ? 0 : 1));
 	}
 	
 	protected Broker createBroker(String brokerId) {
@@ -81,6 +81,10 @@ public class AcceptanceTest {
 		entity.setId(entityId);
 		grid.addObject(entity);
 		return entity;
+	}
+	
+	protected void setProperty(String property, String value) {
+		properties.put(property, value);
 	}
 	
 	private void step() {

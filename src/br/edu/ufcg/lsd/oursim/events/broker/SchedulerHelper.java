@@ -135,7 +135,10 @@ public class SchedulerHelper {
 	}
 
 	public static void disposeWorker(Job job, Broker broker, String worker, OurSim ourSim, long now) {
-		job.removeWorker(worker);
+		
+		if (job != null) {
+			job.removeWorker(worker);
+		}
 		
 		ourSim.addEvent(ourSim.createEvent(FailureDetectionEvents.RELEASE, now, 
 				broker.getId(), worker));

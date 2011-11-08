@@ -22,18 +22,23 @@ public class WorkerAvailableEvent extends AbstractEvent {
 	@Override
 	public void process(OurSim ourSim) {
 		Broker broker = ourSim.getGrid().getObject(brokerId);
-		workerIsAvailable(broker);
-		SchedulerHelper.updateScheduler(ourSim, broker, getTime());
+		boolean madeAvailable = workerIsAvailable(broker);
+		
+		if (madeAvailable) {
+			SchedulerHelper.updateScheduler(ourSim, broker, getTime());
+		}
+		
 	}
 
-	private void workerIsAvailable(Broker broker) {
+	private boolean workerIsAvailable(Broker broker) {
 		List<Job> jobs = broker.getJobs();
 		for (Job job : jobs) {
 			if (job.getNotRecoveredWorkers().contains(workerId)) {
 				job.workerIsAvailable(workerId);
-				break;
+				return true;
 			}
 		}
+		return false;
 	}
 
 }

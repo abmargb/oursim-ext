@@ -25,6 +25,10 @@ public class FinishRequestEvent extends AbstractEvent {
 		Peer peer = ourSim.getGrid().getObject(peerId);
 		PeerRequest request = peer.removeRequest(requestSpec.getId());
 		
+		if (request == null) {
+			return;
+		}
+		
 		for (String workerId : request.getAllocatedWorkers()) {
 			WorkerDistributionHelper.redistributeWorker(getTime(), peer, workerId, ourSim);
 		}

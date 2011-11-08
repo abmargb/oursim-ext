@@ -60,7 +60,8 @@ public class SetGridTest extends AcceptanceTest {
 		
 		String peerId2 = "peer2";
 		createPeer(peerId2);
-		addEvent(new EventSpec(BrokerEvents.SET_GRID, 5, brokerId + " " + peerId2));
+		addEvent(new EventSpec(PeerEvents.PEER_UP, 5, peerId2));
+		addEvent(new EventSpec(BrokerEvents.SET_GRID, 6, brokerId + " " + peerId2));
 		
 		Assert.assertNull(broker.getMonitor(peerId));
 		Assert.assertFalse(peer.getBrokersIds().contains(brokerId));

@@ -9,7 +9,7 @@ import br.edu.ufcg.lsd.oursim.events.Event;
 
 public class EventRecorderUtils {
 
-	public static boolean hasEventOfType(List<Event> events, String type) {
+	public static boolean hasEvent(List<Event> events, String type) {
 		for (Event event : events) {
 			if (type.equals(event.getType())) {
 				return true;
@@ -28,6 +28,17 @@ public class EventRecorderUtils {
 		}
 		
 		return Collections.indexOfSubList(actualTypes, expectedTypes) >= 0;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T extends Event> T getEvent(List<Event> events, String type) {
+		
+		for (Event event : events) {
+			if (type.equals(event.getType())) {
+				return (T) event;
+			}
+		}
+		return null;
 	}
 	
 }

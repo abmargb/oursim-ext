@@ -138,7 +138,7 @@ public class CancelJobTest extends AcceptanceTest {
 		List<Event> secondary = addEvent(new EventSpec(
 				BrokerEvents.CANCEL_JOB, 3, brokerId + " " + jobId));
 		
-		Assert.assertTrue(EventRecorderUtils.hasEventOfType(secondary,
+		Assert.assertTrue(EventRecorderUtils.hasEvent(secondary,
 				PeerEvents.FINISH_REQUEST));
 		Assert.assertEquals(ExecutionState.CANCELLED, 
 				broker.getJob(jobId).getState());
@@ -235,6 +235,34 @@ public class CancelJobTest extends AcceptanceTest {
 		
 		Assert.assertTrue(EventRecorderUtils.hasEventSequence(secondary,
 				PeerEvents.DISPOSE_WORKER, PeerEvents.FINISH_REQUEST));
+		
+		Assert.assertEquals(ExecutionState.CANCELLED, broker.getJob(jobId).getState());
+	}
+	
+	@Test
+	public void testCancelJobAfterJobFinished() {
+		int jobId = 1;
+		String brokerId = "broker1";
+		String peerId = "peer1";
+		String workerId = "worker1";
+		
+		Broker broker = createBroker(brokerId);
+		Peer peer = createPeer(peerId);
+		broker.setPeerId(peerId);
+		createWorker(workerId);
+		peer.addWorker(workerId);
+		
+		String jsonJob = "{id:1 , tasks:[{duration:0}]}";
+		
+		addEvent(new EventSpec(BrokerEvents.BROKER_UP, 0, brokerId));
+		addEvent(new EventSpec(PeerEvents.PEER_UP, 1, peerId));
+		addEvent(new EventSpec(WorkerEvents.WORKER_UP, 2, workerId));
+		addEvent(new EventSpec(BrokerEvents.ADD_JOB, 3, brokerId + " " + jsonJob));
+		
+		Assert.assertEquals(ExecutionState.FINISHED, broker.getJob(jobId).getState());
+		
+		addEvent(new EventSpec(
+				BrokerEvents.CANCEL_JOB, 4, brokerId + " " + jobId));
 		
 		Assert.assertEquals(ExecutionState.CANCELLED, broker.getJob(jobId).getState());
 	}
