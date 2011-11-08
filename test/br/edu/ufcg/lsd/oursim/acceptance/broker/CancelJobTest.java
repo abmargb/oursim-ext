@@ -266,5 +266,6 @@ public class CancelJobTest extends AcceptanceTest {
 		
 		Assert.assertEquals(ExecutionState.CANCELLED, broker.getJob(jobId).getState());
 	}
+	
 }
 

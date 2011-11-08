@@ -127,9 +127,10 @@ public class SchedulerHelper {
 			}
 		}
 		
-		int maxReplicas = ourSim.getIntProperty(Configuration.PROP_BROKER_MAX_REPLICAS);;
+		int maxReplicas = ourSim.getIntProperty(Configuration.PROP_BROKER_MAX_REPLICAS);
+		int maxSimultaneousReplicas = ourSim.getIntProperty(Configuration.PROP_BROKER_MAX_SIMULTANEOUS_REPLICAS);
 		
-		return running < maxReplicas
+		return task.getReplicas().size() < maxReplicas && running < maxSimultaneousReplicas
 			&& (ExecutionState.RUNNING.equals(task.getState()) || ExecutionState.UNSTARTED.equals(task.getState()));
 		
 	}

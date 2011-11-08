@@ -20,6 +20,10 @@ import br.edu.ufcg.lsd.oursim.events.worker.StartWorkEvent;
 import br.edu.ufcg.lsd.oursim.events.worker.WorkerEvents;
 import br.edu.ufcg.lsd.oursim.util.Configuration;
 
+/**
+ * Req 314
+ *
+ */
 public class HereIsExecutionResultTest extends AcceptanceTest {
 
 	@Test
