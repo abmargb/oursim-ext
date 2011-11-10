@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.Properties;
 
-import br.edu.ufcg.lsd.oursim.factories.DefaultGridFactory;
+import br.edu.ufcg.lsd.oursim.factories.FileGridFactory;
 import br.edu.ufcg.lsd.oursim.network.BlankNetwork;
 import br.edu.ufcg.lsd.oursim.queue.FileEventProxy;
 import br.edu.ufcg.lsd.oursim.trace.DefaultTraceCollector;
@@ -24,7 +24,7 @@ public class Main {
 		
 		OurSim ourSim = new OurSim(
 				new FileEventProxy(new FileInputStream("resources/event-example.conf")), 
-				new DefaultGridFactory(properties, new FileInputStream("resources/grid-example.conf")).createGrid(),
+				new FileGridFactory(properties, new FileInputStream("resources/grid-example.conf")).createGrid(),
 				properties,
 				new BlankNetwork(),
 				new DefaultTraceCollector(new FileOutputStream("trace.out")));
