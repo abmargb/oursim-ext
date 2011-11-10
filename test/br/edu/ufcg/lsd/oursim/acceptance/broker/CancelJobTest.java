@@ -167,7 +167,7 @@ public class CancelJobTest extends AcceptanceTest {
 		addEvent(new EventSpec(BrokerEvents.ADD_JOB, 3, brokerId + " " + jsonJob), 
 				BrokerEvents.HERE_IS_WORKER);
 		
-		List<Event> secondary = addEvent(new EventSpec(
+		List<Event> secondary = addEventAndReturn(new EventSpec(
 				BrokerEvents.CANCEL_JOB, 4, brokerId + " " + jobId));
 		
 		Assert.assertTrue(EventRecorderUtils.hasEventSequence(secondary,
@@ -199,7 +199,7 @@ public class CancelJobTest extends AcceptanceTest {
 		addEvent(new EventSpec(BrokerEvents.ADD_JOB, 3, brokerId + " " + jsonJob), 
 				BrokerEvents.WORKER_AVAILABLE);
 		
-		List<Event> secondary = addEvent(new EventSpec(
+		List<Event> secondary = addEventAndReturn(new EventSpec(
 				BrokerEvents.CANCEL_JOB, 4, brokerId + " " + jobId));
 		
 		Assert.assertTrue(EventRecorderUtils.hasEventSequence(secondary,
@@ -230,7 +230,7 @@ public class CancelJobTest extends AcceptanceTest {
 		addEvent(new EventSpec(BrokerEvents.ADD_JOB, 3, brokerId + " " + jsonJob), 
 				BrokerEvents.SCHEDULE);
 		
-		List<Event> secondary = addEvent(new EventSpec(
+		List<Event> secondary = addEventAndReturn(new EventSpec(
 				BrokerEvents.CANCEL_JOB, 4, brokerId + " " + jobId));
 		
 		Assert.assertTrue(EventRecorderUtils.hasEventSequence(secondary,

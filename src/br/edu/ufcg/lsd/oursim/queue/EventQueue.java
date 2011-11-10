@@ -36,6 +36,10 @@ public class EventQueue {
 		return queue.removeFirst();
 	}
 	
+	public List<Event> getEvents() {
+		return queue;
+	}
+	
 	private Event head() {
 		return queue.getFirst();
 	}

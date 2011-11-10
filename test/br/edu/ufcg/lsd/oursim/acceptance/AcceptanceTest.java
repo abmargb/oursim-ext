@@ -15,6 +15,7 @@ import br.edu.ufcg.lsd.oursim.events.Event;
 import br.edu.ufcg.lsd.oursim.events.EventSpec;
 import br.edu.ufcg.lsd.oursim.events.global.HaltEvent;
 import br.edu.ufcg.lsd.oursim.network.BlankNetwork;
+import br.edu.ufcg.lsd.oursim.queue.EventQueue;
 import br.edu.ufcg.lsd.oursim.util.Configuration;
 
 public class AcceptanceTest {
@@ -37,6 +38,18 @@ public class AcceptanceTest {
 	
 	public List<Event> addEvent(EventSpec evSpec) {
 		return addEvent(evSpec, null);
+	}
+	
+	public List<Event> addEventAndReturn(EventSpec evSpec) {
+		HaltByEventCondition haltAfter = haltAfter(evSpec.getType());
+		
+		eventProxy.add(evSpec);
+		eventProxy.add(new EventSpec(HaltEvent.TYPE, evSpec.getTime() + 1));
+		step();
+		
+		ourSim.removeEventListener(haltAfter);
+		
+		return ourSim.getQueue().getEvents();
 	}
 	
 	public List<Event> addEvent(EventSpec evSpec, String haltAfterType) {
