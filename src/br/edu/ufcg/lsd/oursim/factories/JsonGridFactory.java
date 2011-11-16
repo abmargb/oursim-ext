@@ -21,7 +21,7 @@ import br.edu.ufcg.lsd.oursim.fd.FailureDetectorFactory;
 import br.edu.ufcg.lsd.oursim.util.Configuration;
 import br.edu.ufcg.lsd.oursim.util.JSONUtils;
 
-public class FileGridFactory implements GridFactory {
+public class JsonGridFactory implements GridFactory {
 
 	private InputStream inputStream;
 	private final Properties properties;
@@ -30,7 +30,7 @@ public class FileGridFactory implements GridFactory {
 	/**
 	 * @param inputStream
 	 */
-	public FileGridFactory(Properties properties, InputStream inputStream) {
+	public JsonGridFactory(Properties properties, InputStream inputStream) {
 		this.properties = properties;
 		this.inputStream = inputStream;
 	}

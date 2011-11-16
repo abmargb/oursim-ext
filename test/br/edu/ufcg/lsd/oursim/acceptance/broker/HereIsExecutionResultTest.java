@@ -16,7 +16,6 @@ import br.edu.ufcg.lsd.oursim.events.Event;
 import br.edu.ufcg.lsd.oursim.events.EventSpec;
 import br.edu.ufcg.lsd.oursim.events.broker.BrokerEvents;
 import br.edu.ufcg.lsd.oursim.events.peer.PeerEvents;
-import br.edu.ufcg.lsd.oursim.events.worker.StartWorkEvent;
 import br.edu.ufcg.lsd.oursim.events.worker.WorkerEvents;
 import br.edu.ufcg.lsd.oursim.util.Configuration;
 
@@ -44,13 +43,11 @@ public class HereIsExecutionResultTest extends AcceptanceTest {
 		addEvent(new EventSpec(BrokerEvents.BROKER_UP, 0, brokerId));
 		addEvent(new EventSpec(PeerEvents.PEER_UP, 1, peerId));
 		addEvent(new EventSpec(WorkerEvents.WORKER_UP, 2, workerId));
-		List<Event> secondary = addEvent(new EventSpec(BrokerEvents.ADD_JOB, 3, brokerId + " " + jsonJob), 
+		addEvent(new EventSpec(BrokerEvents.ADD_JOB, 3, brokerId + " " + jsonJob), 
 				WorkerEvents.START_WORK);
 		
-		StartWorkEvent startWorkEvent = EventRecorderUtils.getEvent(
-				secondary, WorkerEvents.START_WORK);
-		Replica replica = startWorkEvent.getReplica();
-
+		Replica replica = broker.getJob(1).getTasks().get(0).getReplicas().get(0);
+		
 		addEvent(new EventSpec(
 				BrokerEvents.CANCEL_JOB, 4, brokerId + " " + jobId));
 		addEvent(new EventSpec(
@@ -77,14 +74,12 @@ public class HereIsExecutionResultTest extends AcceptanceTest {
 		addEvent(new EventSpec(BrokerEvents.BROKER_UP, 0, brokerId));
 		addEvent(new EventSpec(PeerEvents.PEER_UP, 1, peerId));
 		addEvent(new EventSpec(WorkerEvents.WORKER_UP, 2, workerId));
-		List<Event> secondary = addEvent(new EventSpec(BrokerEvents.ADD_JOB, 3, brokerId + " " + jsonJob), 
+		addEvent(new EventSpec(BrokerEvents.ADD_JOB, 3, brokerId + " " + jsonJob), 
 				WorkerEvents.START_WORK);
 		
-		StartWorkEvent startWorkEvent = EventRecorderUtils.getEvent(
-				secondary, WorkerEvents.START_WORK);
-		Replica replica = startWorkEvent.getReplica();
+		Replica replica = broker.getJob(1).getTasks().get(0).getReplicas().get(0);
 
-		secondary = addEvent(new EventSpec(
+		List<Event> secondary = addEvent(new EventSpec(
 				BrokerEvents.HERE_IS_EXECUTION_RESULT, 5, replica, brokerId));
 		
 		Assert.assertTrue(EventRecorderUtils.hasEvent(secondary, WorkerEvents.START_WORK));
@@ -115,17 +110,14 @@ public class HereIsExecutionResultTest extends AcceptanceTest {
 		addEvent(new EventSpec(PeerEvents.PEER_UP, 1, peerId));
 		addEvent(new EventSpec(WorkerEvents.WORKER_UP, 2, workerId));
 		addEvent(new EventSpec(WorkerEvents.WORKER_UP, 2, workerId2));
-		List<Event> secondary = addEvent(new EventSpec(BrokerEvents.ADD_JOB, 3, brokerId + " " + jsonJob), 
+		addEvent(new EventSpec(BrokerEvents.ADD_JOB, 3, brokerId + " " + jsonJob), 
 				WorkerEvents.START_WORK);
 		
-		StartWorkEvent startWorkEvent = EventRecorderUtils.getEvent(
-				secondary, WorkerEvents.START_WORK);
-		Replica replica = startWorkEvent.getReplica();
+		List<Replica> replicas = broker.getJob(1).getTasks().get(0).getReplicas();
+		Replica replica = replicas.get(0);
 
-		secondary = addEvent(new EventSpec(
+		addEvent(new EventSpec(
 				BrokerEvents.HERE_IS_EXECUTION_RESULT, 5, replica, brokerId));
-		
-		List<Replica> replicas = replica.getTask().getReplicas();
 		
 		int aborted = 0;
 		for (Replica siblingReplica : replicas) {

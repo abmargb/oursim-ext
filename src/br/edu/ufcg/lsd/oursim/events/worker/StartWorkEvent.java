@@ -20,10 +20,6 @@ public class StartWorkEvent extends AbstractEvent {
 		this.brokerId = brokerId;
 	}
 
-	public Replica getReplica() {
-		return replica;
-	}
-	
 	@Override
 	public void process(OurSim ourSim) {
 		Worker worker = ourSim.getGrid().getObject(workerId);

@@ -65,7 +65,7 @@ public class PeerEvents {
 		events.put(REPEAT_GET_WORKER_PROVIDERS, RepeatGetWorkerProvidersEvent.class);
 		events.put(REMOTE_REQUEST_WORKERS, RemoteRequestWorkersEvent.class);
 		events.put(WORKER_DONATED, WorkerDonatedEvent.class);
-		events.put(REMOTE_HERE_IS_WORKER, RemoteHereIsWorkerEvent.class);
+		events.put(REMOTE_HERE_IS_WORKER, HereIsRemoteWorkerEvent.class);
 		events.put(REMOTE_WORKER_AVAILABLE, RemoteWorkerAvailableEvent.class);
 		events.put(REMOTE_WORKER_FAILED, RemoteWorkerFailedEvent.class);
 		events.put(DISPOSE_REMOTE_WORKER, DisposeRemoteWorkerEvent.class);

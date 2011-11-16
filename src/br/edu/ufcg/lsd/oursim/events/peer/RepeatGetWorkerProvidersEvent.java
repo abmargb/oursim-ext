@@ -23,14 +23,19 @@ public class RepeatGetWorkerProvidersEvent extends AbstractEvent {
 		
 		Peer peer = ourSim.getGrid().getObject(peerId);
 		
-		ourSim.addNetworkEvent(ourSim.createEvent(
-				DiscoveryServiceEvents.GET_WORKER_PROVIDERS, 
-				getTime(), peerId, peer.getDiscoveryServiceId()));
+		if (peer.getMonitor(dsId).isUp()) {
+			
+			ourSim.addNetworkEvent(ourSim.createEvent(
+					DiscoveryServiceEvents.GET_WORKER_PROVIDERS, 
+					getTime(), peerId, peer.getDiscoveryServiceId()));
+			
+			ourSim.addEvent(ourSim.createEvent(
+					PeerEvents.REPEAT_GET_WORKER_PROVIDERS, 
+					getTime() + ourSim.getLongProperty(Configuration.PROP_GET_PROVIDERS_REPETITION_INTERVAL), 
+					peerId, dsId));
+			
+		}
 		
-		ourSim.addEvent(ourSim.createEvent(
-				PeerEvents.REPEAT_GET_WORKER_PROVIDERS, 
-				getTime() + ourSim.getLongProperty(Configuration.PROP_GET_PROVIDERS_REPETITION_INTERVAL), 
-				peerId, dsId));
 	}
 
 }

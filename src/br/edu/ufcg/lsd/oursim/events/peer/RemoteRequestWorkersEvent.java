@@ -50,7 +50,7 @@ public class RemoteRequestWorkersEvent extends AbstractEvent {
 		peer.setWorkerState(allocation.getWorker(), WorkerState.IN_USE);
 		
 		ourSim.addNetworkEvent(ourSim.createEvent(WorkerEvents.WORK_FOR_PEER, 
-				getTime(), consumer, provider, requestSpec, allocation.getWorker()));
+				getTime(), consumer, provider, allocation.getWorker()));
 		
 	}
 

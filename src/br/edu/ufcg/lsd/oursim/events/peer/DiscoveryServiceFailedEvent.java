@@ -12,7 +12,6 @@ public class DiscoveryServiceFailedEvent extends AbstractEvent {
 
 	@Override
 	public void process(OurSim ourSim) {
-		System.out.println("DS failed at " + getTime());
 	}
 
 }

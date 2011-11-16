@@ -45,6 +45,11 @@
 
 	<target name="compile-test">
 		<mkdir dir="${test.classes.dir}" />
+		
+		<copy todir="${test.classes.dir}">
+		    <fileset dir="test" includes="**/*.conf" />
+		</copy>
+		
 		<javac srcdir="test" destdir="${test.classes.dir}" debug="on">
 			<classpath refid="classpath.test"/>
 		</javac>

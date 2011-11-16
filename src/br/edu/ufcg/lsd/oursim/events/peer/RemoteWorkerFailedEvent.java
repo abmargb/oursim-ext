@@ -24,19 +24,21 @@ public class RemoteWorkerFailedEvent extends AbstractEvent {
 		Peer peer = ourSim.getGrid().getObject(consumer);
 		
 		Allocation allocation = peer.getAllocation(worker);
+		String provider = null;
 		
-		if (allocation == null) {
-			return;
+		if (allocation != null) {
+			PeerRequest request = allocation.getRequest();
+			if (request != null) {
+				request.removeAllocatedWorker(worker);
+			}
+			peer.removeAllocation(worker);
+			provider = allocation.getProvider();
+		} else {
+			provider = peer.removeNotRecoveredRemoteWorker(worker);
 		}
 		
-		PeerRequest request = allocation.getRequest();
-		if (request != null) {
-			request.removeAllocatedWorker(worker);
-		}
-		
-		peer.removeAllocation(worker);
 		ourSim.addNetworkEvent(ourSim.createEvent(PeerEvents.DISPOSE_REMOTE_WORKER, 
-				getTime(), allocation.getProvider(), worker));
+				getTime(), provider, worker));
 		
 		ourSim.addEvent(ourSim.createEvent(FailureDetectionEvents.RELEASE, getTime(), 
 				peer.getId(), worker));

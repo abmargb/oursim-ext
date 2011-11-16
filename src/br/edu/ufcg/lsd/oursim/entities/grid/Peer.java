@@ -16,11 +16,11 @@ import br.edu.ufcg.lsd.oursim.events.peer.WorkerState;
 
 public class Peer extends ActiveEntity {
 
-	private Map<String, WorkerState> workersStates = new HashMap<String, WorkerState>();
+	private Map<String, WorkerState> workersStates = new LinkedHashMap<String, WorkerState>();
 	private Set<String> brokersIds = new HashSet<String>();
 	private Map<Long, PeerRequest> requests = new LinkedHashMap<Long, PeerRequest>();
 	
-	private Map<String, Allocation> allocations = new HashMap<String, Allocation>();
+	private LinkedHashMap<String, Allocation> allocations = new LinkedHashMap<String, Allocation>();
 	private Map<String, Double> balances = new HashMap<String, Double>();
 	
 	private String dsId;

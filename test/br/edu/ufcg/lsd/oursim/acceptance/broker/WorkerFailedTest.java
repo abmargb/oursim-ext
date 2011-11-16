@@ -16,7 +16,6 @@ import br.edu.ufcg.lsd.oursim.events.Event;
 import br.edu.ufcg.lsd.oursim.events.EventSpec;
 import br.edu.ufcg.lsd.oursim.events.broker.BrokerEvents;
 import br.edu.ufcg.lsd.oursim.events.peer.PeerEvents;
-import br.edu.ufcg.lsd.oursim.events.worker.StartWorkEvent;
 import br.edu.ufcg.lsd.oursim.events.worker.WorkerEvents;
 import br.edu.ufcg.lsd.oursim.util.Configuration;
 
@@ -97,15 +96,12 @@ public class WorkerFailedTest extends AcceptanceTest {
 		addEvent(new EventSpec(BrokerEvents.BROKER_UP, 0, brokerId));
 		addEvent(new EventSpec(PeerEvents.PEER_UP, 1, peerId));
 		addEvent(new EventSpec(WorkerEvents.WORKER_UP, 2, workerId));
-		
-		List<Event> secondary = addEvent(new EventSpec(BrokerEvents.ADD_JOB, 3, brokerId + " " + jsonJob), 
+		addEvent(new EventSpec(BrokerEvents.ADD_JOB, 3, brokerId + " " + jsonJob), 
 				WorkerEvents.START_WORK);
 		
-		StartWorkEvent startWorkEvent = EventRecorderUtils.getEvent(
-				secondary, WorkerEvents.START_WORK);
-		Replica replica = startWorkEvent.getReplica();
+		Replica replica = broker.getJob(1).getTasks().get(0).getReplicas().get(0);
 		
-		secondary = addEvent(new EventSpec(WorkerEvents.WORKER_DOWN, 3, workerId));
+		List<Event> secondary = addEvent(new EventSpec(WorkerEvents.WORKER_DOWN, 3, workerId));
 		
 		Assert.assertTrue(EventRecorderUtils.hasEvent(secondary, BrokerEvents.WORKER_FAILED));
 		Assert.assertEquals(ExecutionState.FAILED, replica.getState());
@@ -133,14 +129,12 @@ public class WorkerFailedTest extends AcceptanceTest {
 		addEvent(new EventSpec(PeerEvents.PEER_UP, 1, peerId));
 		addEvent(new EventSpec(WorkerEvents.WORKER_UP, 2, workerId));
 		
-		List<Event> secondary = addEvent(new EventSpec(BrokerEvents.ADD_JOB, 3, brokerId + " " + jsonJob), 
+		addEvent(new EventSpec(BrokerEvents.ADD_JOB, 3, brokerId + " " + jsonJob), 
 				WorkerEvents.START_WORK);
 		
-		StartWorkEvent startWorkEvent = EventRecorderUtils.getEvent(
-				secondary, WorkerEvents.START_WORK);
-		Replica replica = startWorkEvent.getReplica();
+		Replica replica = broker.getJob(1).getTasks().get(0).getReplicas().get(0);
 		
-		secondary = addEvent(new EventSpec(WorkerEvents.WORKER_DOWN, 3, workerId));
+		List<Event> secondary = addEvent(new EventSpec(WorkerEvents.WORKER_DOWN, 3, workerId));
 		
 		Assert.assertTrue(EventRecorderUtils.hasEvent(secondary, BrokerEvents.WORKER_FAILED));
 		Assert.assertEquals(ExecutionState.FAILED, replica.getState());
@@ -153,7 +147,7 @@ public class WorkerFailedTest extends AcceptanceTest {
 		String brokerId = "broker1";
 		String peerId = "peer1";
 		String workerId = "worker1";
-		String workerId2 = "worker12";
+		String workerId2 = "worker2";
 		
 		setProperty(Configuration.PROP_BROKER_MAX_FAILS, "1");
 		
@@ -173,20 +167,17 @@ public class WorkerFailedTest extends AcceptanceTest {
 		addEvent(new EventSpec(WorkerEvents.WORKER_UP, 2, workerId));
 		addEvent(new EventSpec(WorkerEvents.WORKER_UP, 2, workerId2));
 		
-		List<Event> secondary = addEvent(new EventSpec(BrokerEvents.ADD_JOB, 3, brokerId + " " + jsonJob), 
+		addEvent(new EventSpec(BrokerEvents.ADD_JOB, 3, brokerId + " " + jsonJob), 
 				WorkerEvents.START_WORK);
 		
-		StartWorkEvent startWorkEvent = EventRecorderUtils.getEvent(
-				secondary, WorkerEvents.START_WORK);
-		Replica replica = startWorkEvent.getReplica();
+		Replica replicaTaskTwo = broker.getJob(1).getTasks().get(1).getReplicas().get(0);
 		
-		secondary = addEvent(new EventSpec(WorkerEvents.WORKER_DOWN, 4, workerId));
+		addEventAndReturn(new EventSpec(BrokerEvents.WORKER_FAILED, 4, brokerId, workerId));
 		
-		Assert.assertTrue(EventRecorderUtils.hasEvent(secondary, BrokerEvents.WORKER_FAILED));
-		Assert.assertEquals(ExecutionState.FAILED, replica.getState());
-		Assert.assertEquals(ExecutionState.FAILED, replica.getTask().getState());
+		Assert.assertEquals(ExecutionState.FAILED, replicaTaskTwo.getState());
+		Assert.assertEquals(ExecutionState.FAILED, replicaTaskTwo.getTask().getState());
 		
-		addEvent(new EventSpec(WorkerEvents.WORKER_DOWN, 5, workerId2));
+		addEventAndReturn(new EventSpec(BrokerEvents.WORKER_FAILED, 5, brokerId, workerId2));
 		
 	}
 	
@@ -216,20 +207,17 @@ public class WorkerFailedTest extends AcceptanceTest {
 		addEvent(new EventSpec(WorkerEvents.WORKER_UP, 2, workerId));
 		addEvent(new EventSpec(WorkerEvents.WORKER_UP, 2, workerId2));
 		
-		List<Event> secondary = addEvent(new EventSpec(BrokerEvents.ADD_JOB, 3, brokerId + " " + jsonJob), 
+		addEvent(new EventSpec(BrokerEvents.ADD_JOB, 3, brokerId + " " + jsonJob), 
 				WorkerEvents.START_WORK);
 		
-		StartWorkEvent startWorkEvent = EventRecorderUtils.getEvent(
-				secondary, WorkerEvents.START_WORK);
-		Replica replica = startWorkEvent.getReplica();
+		Replica replica = broker.getJob(1).getTasks().get(0).getReplicas().get(1);
 		
-		secondary = addEvent(new EventSpec(WorkerEvents.WORKER_DOWN, 4, workerId));
+		addEventAndReturn(new EventSpec(BrokerEvents.WORKER_FAILED, 4, brokerId, workerId));
 		
-		Assert.assertTrue(EventRecorderUtils.hasEvent(secondary, BrokerEvents.WORKER_FAILED));
 		Assert.assertEquals(ExecutionState.FAILED, replica.getState());
 		Assert.assertEquals(ExecutionState.FAILED, replica.getTask().getState());
 		
-		addEvent(new EventSpec(WorkerEvents.WORKER_DOWN, 5, workerId2));
+		addEventAndReturn(new EventSpec(BrokerEvents.WORKER_FAILED, 5, brokerId, workerId2));
 		
 	}
 	
@@ -250,15 +238,12 @@ public class WorkerFailedTest extends AcceptanceTest {
 		addEvent(new EventSpec(BrokerEvents.BROKER_UP, 0, brokerId));
 		addEvent(new EventSpec(PeerEvents.PEER_UP, 1, peerId));
 		addEvent(new EventSpec(WorkerEvents.WORKER_UP, 2, workerId));
-		
-		List<Event> secondary = addEvent(new EventSpec(BrokerEvents.ADD_JOB, 3, brokerId + " " + jsonJob), 
+		addEvent(new EventSpec(BrokerEvents.ADD_JOB, 3, brokerId + " " + jsonJob), 
 				WorkerEvents.START_WORK);
 		
-		StartWorkEvent startWorkEvent = EventRecorderUtils.getEvent(
-				secondary, WorkerEvents.START_WORK);
-		Replica replica = startWorkEvent.getReplica();
+		Replica replica = broker.getJob(1).getTasks().get(0).getReplicas().get(0);
 		
-		secondary = addEvent(new EventSpec(WorkerEvents.WORKER_DOWN, 3, workerId));
+		List<Event> secondary = addEvent(new EventSpec(WorkerEvents.WORKER_DOWN, 3, workerId));
 		
 		Assert.assertTrue(EventRecorderUtils.hasEvent(secondary, BrokerEvents.WORKER_FAILED));
 		Assert.assertEquals(ExecutionState.FAILED, replica.getState());

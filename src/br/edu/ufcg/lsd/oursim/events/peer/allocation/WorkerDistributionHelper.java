@@ -21,6 +21,7 @@ public class WorkerDistributionHelper {
 		}
 		
 		PeerRequest request = workerAllocation.getRequest();
+		request.removeAllocatedWorker(workerId);
 		
 		peer.setWorkerState(workerId, WorkerState.IDLE);
 		workerAllocation.setRequest(null);

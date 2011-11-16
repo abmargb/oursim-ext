@@ -125,4 +125,152 @@ public class RequestWorkersTest extends AcceptanceTest {
 		
 	}
 	
+	@Test
+	public void testRequestLocalReallocation() {
+		String broker1Id = "broker1";
+		String broker2Id = "broker2";
+		String broker3Id = "broker3";
+		String broker4Id = "broker4";
+		
+		String worker1Id = "worker1";
+		String worker2Id = "worker2";
+		String worker3Id = "worker3";
+		
+		String peerId = "peer1";
+		
+		Peer peer = createPeer(peerId);
+		
+		Broker broker1 = createBroker(broker1Id);
+		broker1.setPeerId(peerId);
+		Broker broker2 = createBroker(broker2Id);
+		broker2.setPeerId(peerId);
+		Broker broker3 = createBroker(broker3Id);
+		broker3.setPeerId(peerId);
+		Broker broker4 = createBroker(broker4Id);
+		broker4.setPeerId(peerId);
+		
+		createWorker(worker1Id);
+		peer.addWorker(worker1Id);
+		createWorker(worker2Id);
+		peer.addWorker(worker2Id);
+		createWorker(worker3Id);
+		peer.addWorker(worker3Id);
+		
+		addEvent(new EventSpec(BrokerEvents.BROKER_UP, 0, broker1Id));
+		addEvent(new EventSpec(BrokerEvents.BROKER_UP, 0, broker2Id));
+		addEvent(new EventSpec(BrokerEvents.BROKER_UP, 0, broker3Id));
+		addEvent(new EventSpec(BrokerEvents.BROKER_UP, 0, broker4Id));
+		
+		addEvent(new EventSpec(WorkerEvents.WORKER_UP, 1, worker1Id));
+		addEvent(new EventSpec(WorkerEvents.WORKER_UP, 1, worker2Id));
+		addEvent(new EventSpec(WorkerEvents.WORKER_UP, 1, worker3Id));
+		
+		addEvent(new EventSpec(PeerEvents.PEER_UP, 2, peerId));
+		
+		RequestSpec requestSpec = new RequestSpec();
+		requestSpec.setId(0L);
+		requestSpec.setBrokerId(broker1Id);
+		requestSpec.setRequiredWorkers(3);
+		
+		addEventAndReturn(
+				new EventSpec(PeerEvents.REQUEST_WORKERS, 3, peerId, requestSpec, false));
+		
+		Assert.assertEquals(broker1Id, peer.getAllocation(worker1Id).getConsumer());
+		Assert.assertEquals(broker1Id, peer.getAllocation(worker2Id).getConsumer());
+		Assert.assertEquals(broker1Id, peer.getAllocation(worker3Id).getConsumer());
+		
+		RequestSpec requestSpec2 = new RequestSpec();
+		requestSpec2.setId(1L);
+		requestSpec2.setBrokerId(broker2Id);
+		requestSpec2.setRequiredWorkers(2);
+		
+		addEventAndReturn(
+				new EventSpec(PeerEvents.REQUEST_WORKERS, 4, peerId, requestSpec2, false));
+		
+		Assert.assertEquals(broker2Id, peer.getAllocation(worker1Id).getConsumer());
+		Assert.assertEquals(broker1Id, peer.getAllocation(worker2Id).getConsumer());
+		Assert.assertEquals(broker1Id, peer.getAllocation(worker3Id).getConsumer());
+		
+		RequestSpec requestSpec3 = new RequestSpec();
+		requestSpec3.setId(2L);
+		requestSpec3.setBrokerId(broker3Id);
+		requestSpec3.setRequiredWorkers(1);
+		
+		addEventAndReturn(
+				new EventSpec(PeerEvents.REQUEST_WORKERS, 5, peerId, requestSpec3, false));
+		
+		Assert.assertEquals(broker2Id, peer.getAllocation(worker1Id).getConsumer());
+		Assert.assertEquals(broker3Id, peer.getAllocation(worker2Id).getConsumer());
+		Assert.assertEquals(broker1Id, peer.getAllocation(worker3Id).getConsumer());
+		
+		RequestSpec requestSpec4 = new RequestSpec();
+		requestSpec4.setId(3L);
+		requestSpec4.setBrokerId(broker4Id);
+		requestSpec4.setRequiredWorkers(1);
+		
+		addEventAndReturn(
+				new EventSpec(PeerEvents.REQUEST_WORKERS, 6, peerId, requestSpec4, false));
+		
+		Assert.assertEquals(broker2Id, peer.getAllocation(worker1Id).getConsumer());
+		Assert.assertEquals(broker3Id, peer.getAllocation(worker2Id).getConsumer());
+		Assert.assertEquals(broker1Id, peer.getAllocation(worker3Id).getConsumer());
+		
+	}
+	
+	@Test
+	public void testLocalAndRemoteReallocation() {
+		String broker1Id = "broker1";
+		
+		String worker1Id = "worker1";
+		String worker2Id = "worker2";
+		String worker3Id = "worker3";
+		
+		String peerId = "peer1";
+		String peerId2 = "peer2";
+		
+		Peer peer = createPeer(peerId);
+		createPeer(peerId2);
+		
+		Broker broker1 = createBroker(broker1Id);
+		broker1.setPeerId(peerId);
+		
+		createWorker(worker1Id);
+		peer.addWorker(worker1Id);
+		createWorker(worker2Id);
+		peer.addWorker(worker2Id);
+		createWorker(worker3Id);
+		peer.addWorker(worker3Id);
+		
+		addEvent(new EventSpec(BrokerEvents.BROKER_UP, 0, broker1Id));
+		
+		addEvent(new EventSpec(WorkerEvents.WORKER_UP, 1, worker1Id));
+		addEvent(new EventSpec(WorkerEvents.WORKER_UP, 1, worker2Id));
+		addEvent(new EventSpec(WorkerEvents.WORKER_UP, 1, worker3Id));
+		
+		addEvent(new EventSpec(PeerEvents.PEER_UP, 2, peerId));
+		
+		RequestSpec requestSpec = new RequestSpec();
+		requestSpec.setId(0L);
+		requestSpec.setRequiredWorkers(2);
+		
+		addEventAndReturn(
+				new EventSpec(PeerEvents.REMOTE_REQUEST_WORKERS, 3, peerId2, peerId, requestSpec));
+		
+		Assert.assertEquals(peerId2, peer.getAllocation(worker1Id).getConsumer());
+		Assert.assertEquals(peerId2, peer.getAllocation(worker2Id).getConsumer());
+		Assert.assertEquals(null, peer.getAllocation(worker3Id).getConsumer());
+		
+		RequestSpec requestSpec2 = new RequestSpec();
+		requestSpec2.setId(1L);
+		requestSpec2.setBrokerId(broker1Id);
+		requestSpec2.setRequiredWorkers(2);
+		
+		addEventAndReturn(
+				new EventSpec(PeerEvents.REQUEST_WORKERS, 4, peerId, requestSpec2, false));
+		
+		Assert.assertEquals(broker1Id, peer.getAllocation(worker1Id).getConsumer());
+		Assert.assertEquals(peerId2, peer.getAllocation(worker2Id).getConsumer());
+		Assert.assertEquals(broker1Id, peer.getAllocation(worker3Id).getConsumer());
+		
+	}
 }
