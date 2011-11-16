@@ -70,8 +70,13 @@
 	</target>
 
 	<target name="clover-setup">
-		<delete dir=".clover"/>
-	    <clover-setup/>
+		<delete dir=".clover" />
+	    <clover-setup>
+	    	<fileset defaultexcludes="false" dir=".">
+	    		<exclude name="src/br/edu/ufcg/lsd/oursim/Main.java"/>
+	    		<exclude name="target/classes/br/edu/ufcg/lsd/oursim/Main.class"/>
+	    	</fileset>
+	    </clover-setup>
 	</target>
 	
 	<target name="clover-report" depends="clean, clover-setup, test">

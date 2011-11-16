@@ -6,7 +6,6 @@ import java.io.OutputStream;
 import br.edu.ufcg.lsd.oursim.entities.job.Job;
 import br.edu.ufcg.lsd.oursim.entities.job.Replica;
 import br.edu.ufcg.lsd.oursim.entities.job.Task;
-import br.edu.ufcg.lsd.oursim.entities.request.BrokerRequest;
 
 public class DefaultTraceCollector implements TraceCollector {
 
@@ -18,7 +17,6 @@ public class DefaultTraceCollector implements TraceCollector {
 	
 	@Override
 	public void replicaEnded(long time, Replica replica, String brokerId) {
-		BrokerRequest request = replica.getTask().getJob().getRequest();
 		String message = createTrace("REPLICA_ENDED", time,  
 				replica.getState(), 
 				replica.getEndTime() - replica.getCreationTime(),

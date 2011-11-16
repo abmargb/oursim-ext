@@ -18,7 +18,17 @@ public class FileEventProxy implements EventProxy {
 	 */
 	public FileEventProxy(InputStream inputStream) {
 		this.scanner = new Scanner(inputStream);
+		parseNextEvent();
+	}
+
+	private boolean parseNextEvent() {
+		if (!scanner.hasNextLine()) {
+			this.nextEvent = null;
+			return false;
+		}
+		
 		this.nextEvent = parseEvent(scanner.nextLine());
+		return true;
 	}
 
 	@Override
@@ -35,10 +45,7 @@ public class FileEventProxy implements EventProxy {
 		
 		for (int i = 0; i < pageSize; i++) {
 			eventPage.add(nextEvent);
-			if (scanner.hasNextLine()) {
-				nextEvent = parseEvent(scanner.nextLine());
-			} else {
-				nextEvent = null;
+			if (!parseNextEvent()) {
 				break;
 			}
 		}
