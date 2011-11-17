@@ -54,7 +54,7 @@ public class PeerRequest {
 	}
 
 	public Set<String> getAllocatedWorkers() {
-		return allocatedWorkers;
+		return new HashSet<String>(allocatedWorkers);
 	}
 
 	public void removeAllocatedWorker(String workerId) {
