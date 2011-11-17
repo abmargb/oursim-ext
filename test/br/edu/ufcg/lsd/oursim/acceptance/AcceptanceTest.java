@@ -15,7 +15,6 @@ import br.edu.ufcg.lsd.oursim.events.Event;
 import br.edu.ufcg.lsd.oursim.events.EventSpec;
 import br.edu.ufcg.lsd.oursim.events.global.HaltEvent;
 import br.edu.ufcg.lsd.oursim.network.BlankNetwork;
-import br.edu.ufcg.lsd.oursim.queue.EventQueue;
 import br.edu.ufcg.lsd.oursim.util.Configuration;
 
 public class AcceptanceTest {
@@ -47,9 +46,9 @@ public class AcceptanceTest {
 		eventProxy.add(new EventSpec(HaltEvent.TYPE, evSpec.getTime() + 1));
 		step();
 		
-		ourSim.removeEventListener(haltAfter);
+		getSim().removeEventListener(haltAfter);
 		
-		return ourSim.getQueue().getEvents();
+		return getSim().getQueue().getEvents();
 	}
 	
 	public List<Event> addEvent(EventSpec evSpec, String haltAfterType) {
@@ -61,7 +60,7 @@ public class AcceptanceTest {
 		eventProxy.add(new EventSpec(HaltEvent.TYPE, evSpec.getTime() + 1));
 		step();
 		
-		ourSim.removeEventListener(haltAfter);
+		getSim().removeEventListener(haltAfter);
 		
 		List<Event> secondary = recorder.stopRecording();
 		return secondary.subList(1, secondary.size() - (haltAfterType != null ? 0 : 1));
@@ -101,6 +100,10 @@ public class AcceptanceTest {
 	}
 	
 	private void step() {
+		getSim().run();
+	}
+
+	private OurSim getSim() {
 		if (ourSim == null) {
 			this.ourSim = new OurSim(
 					eventProxy, 
@@ -110,8 +113,7 @@ public class AcceptanceTest {
 					new TestTraceCollector());
 			this.ourSim.addEventListener(recorder);
 		}
-		
-		ourSim.run();
+		return this.ourSim;
 	}
 	
 	private HaltByEventCondition haltAfter(String eventType) {
@@ -121,8 +123,8 @@ public class AcceptanceTest {
 		}
 		
 		HaltByEventCondition evListener = new HaltByEventCondition(
-				ourSim, eventType);
-		ourSim.addEventListener(evListener);
+				getSim(), eventType);
+		getSim().addEventListener(evListener);
 		return evListener;
 	}
 	

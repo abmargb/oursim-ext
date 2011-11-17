@@ -1,5 +1,7 @@
 package br.edu.ufcg.lsd.oursim.factories;
 
+import java.util.Properties;
+
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -38,4 +40,67 @@ public class JsonGridFactoryTest {
 		Assert.assertEquals("ds", peerA.getDiscoveryServiceId());
 	}
 	
+	@Test(expected=IllegalArgumentException.class)
+	public void testBadGrid() {
+		JsonGridFactory factory = new JsonGridFactory(
+				Configuration.createDefaults(), 
+				getClass().getResourceAsStream("grid-bad.conf"));
+		
+		factory.createGrid();
+		
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testBadPeer() {
+		JsonGridFactory factory = new JsonGridFactory(
+				Configuration.createDefaults(), 
+				getClass().getResourceAsStream("grid-badpeer.conf"));
+		
+		factory.createGrid();
+	}
+
+	@Test(expected=IllegalArgumentException.class)
+	public void testBadWorker() {
+		JsonGridFactory factory = new JsonGridFactory(
+				Configuration.createDefaults(), 
+				getClass().getResourceAsStream("grid-badworker.conf"));
+		
+		factory.createGrid();
+		
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testBadBroker() {
+		JsonGridFactory factory = new JsonGridFactory(
+				Configuration.createDefaults(), 
+				getClass().getResourceAsStream("grid-badbroker.conf"));
+		
+		factory.createGrid();
+		
+	}
+	
+	@Test
+	public void testNoDetector() {
+		Properties properties = Configuration.createDefaults();
+		properties.setProperty(Configuration.PROP_USE_FAILURE_DETECTOR, Boolean.FALSE.toString());
+		
+		JsonGridFactory factory = new JsonGridFactory(
+				properties, 
+				getClass().getResourceAsStream("grid-example.conf"));
+		
+		factory.createGrid();
+	}
+	
+	@Test
+	public void testFailureDetectorOptParser() {
+		Properties properties = Configuration.createDefaults();
+		properties.setProperty(Configuration.PROP_FAILURE_DETECTOR_NAME, "chen");
+		properties.setProperty("FD_chen_alpha", "15000");
+		
+		JsonGridFactory factory = new JsonGridFactory(
+				properties, 
+				getClass().getResourceAsStream("grid-example.conf"));
+		
+		factory.createGrid();
+	}
 }

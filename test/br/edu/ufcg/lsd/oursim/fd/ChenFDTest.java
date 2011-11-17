@@ -152,4 +152,11 @@ public class ChenFDTest {
         Assert.assertTrue(fD.isFailed("id", 250));
     }
 
+    @Test
+    public void testUpdatePingSample() {
+    	fD.registerMonitored("id", 0, 100, 50);
+    	fD.updatePingSample("id", 50, 50, 2);
+    	
+    	Assert.assertEquals(75, fD.getTimeout("id").longValue());
+    }
 }

@@ -104,4 +104,11 @@ public class SlicedHeartbeatFDTest {
         Assert.assertTrue(fD.isFailed("id", 210));
     }
 
+    @Test
+    public void testUpdatePingSample() {
+    	fD.registerMonitored("id", 0, 100, 50);
+    	fD.updatePingSample("id", 50, 50, 2);
+    	
+    	Assert.assertEquals(100, fD.getTimeout("id").longValue());
+    }
 }

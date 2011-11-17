@@ -98,5 +98,13 @@ public class FixedHeartbeatFDTest {
         Assert.assertFalse(fD.isFailed("id", 120));
         Assert.assertEquals(30, fD.getIdleTime("id", 120).longValue());
     }
+    
+    @Test
+    public void testUpdatePingSample() {
+    	fD.registerMonitored("id", 0, 100, 50);
+    	fD.updatePingSample("id", 50, 50, 2);
+    	
+    	Assert.assertEquals(100, fD.getTimeout("id").longValue());
+    }
 
 }
