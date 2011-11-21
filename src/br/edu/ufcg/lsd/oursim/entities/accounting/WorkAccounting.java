@@ -4,7 +4,7 @@ public class WorkAccounting {
 
 	private final String workerId;
 	private final String remotePeerId;
-	private long initCPUtime;
+	private Long initCPUtime;
 	private long cpuTime;
 	
 	/**
@@ -25,11 +25,11 @@ public class WorkAccounting {
 		return remotePeerId;
 	}
 
-	public void setInitCPUtime(long initCPUtime) {
+	public void setInitCPUtime(Long initCPUtime) {
 		this.initCPUtime = initCPUtime;
 	}
 	
-	public long getInitCPUtime() {
+	public Long getInitCPUtime() {
 		return initCPUtime;
 	}
 

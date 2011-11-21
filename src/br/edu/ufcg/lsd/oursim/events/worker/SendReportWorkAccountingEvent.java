@@ -28,7 +28,7 @@ public class SendReportWorkAccountingEvent extends AbstractEvent {
 
 		if (currentWorkAccounting != null) {
 			
-			if (currentWorkAccounting.getInitCPUtime() > 0) {
+			if (currentWorkAccounting.getInitCPUtime() != null) {
 				currentWorkAccounting.setCPUTime(
 						getTime() - currentWorkAccounting.getInitCPUtime());
 			}
@@ -47,22 +47,22 @@ public class SendReportWorkAccountingEvent extends AbstractEvent {
 		
 		List<WorkAccounting> workAccountings = new LinkedList<WorkAccounting>(
 				worker.getWorkAccountings());
-		if (workAccountings.isEmpty()) {
-			return;
+		if (!workAccountings.isEmpty()) {
+			
+			ourSim.addNetworkEvent(ourSim.createEvent(
+					PeerEvents.REPORT_WORK_ACCOUNTING, 
+					getTime(), worker.getPeer(), 
+					workAccountings));
+			
+			worker.clearWorkAccountings();
 		}
 
-		ourSim.addNetworkEvent(ourSim.createEvent(
-				PeerEvents.REPORT_WORK_ACCOUNTING, 
-				getTime(), worker.getPeer(), 
-				workAccountings));
-		
 		ourSim.addEvent(ourSim.createEvent(
 				WorkerEvents.SEND_REPORT_WORK_ACCOUNTING, 
 				getTime() + ourSim.getLongProperty(
 						Configuration.PROP_REPORT_WORK_ACCOUNTING_REPETITION_INTERVAL), 
 						workerId));
 		
-		worker.clearWorkAccountings();
 	}
 
 }
