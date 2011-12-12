@@ -5,6 +5,7 @@ import br.edu.ufcg.lsd.oursim.entities.allocation.Allocation;
 import br.edu.ufcg.lsd.oursim.entities.grid.Peer;
 import br.edu.ufcg.lsd.oursim.events.AbstractEvent;
 import br.edu.ufcg.lsd.oursim.events.Event;
+import br.edu.ufcg.lsd.oursim.events.peer.allocation.WorkerDistributionHelper;
 
 public class WorkerIdleEvent extends AbstractEvent {
 
@@ -20,8 +21,9 @@ public class WorkerIdleEvent extends AbstractEvent {
 	@Override
 	public void process(OurSim ourSim) {
 		Peer peer = ourSim.getGrid().getObject(peerId);
-		peer.setWorkerState(workerId, WorkerState.IDLE);
 		peer.addAllocation(new Allocation(workerId, peerId));
+		
+		WorkerDistributionHelper.redistributeIdleWorker(getTime(), peer, workerId, ourSim);
 	}
 
 }

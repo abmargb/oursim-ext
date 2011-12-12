@@ -27,9 +27,10 @@ public class WorkForBrokerEvent extends AbstractEvent {
 		CleanWorkerHelper.cleanWorker(getTime(), worker, false, ourSim);
 
 		worker.setConsumer(consumer);
+		String peerId = worker.getPeer();
 		
 		ourSim.addNetworkEvent(ourSim.createEvent(PeerEvents.WORKER_IN_USE, 
-				getTime(), requestSpec, workerId));	
+				getTime(), requestSpec, workerId, peerId));	
 		
 		if (worker.getRemotePeer() != null) {
 			WorkAccounting accounting = new WorkAccounting(worker.getId(), 

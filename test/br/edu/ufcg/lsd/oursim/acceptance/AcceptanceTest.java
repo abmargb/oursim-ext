@@ -3,7 +3,6 @@ package br.edu.ufcg.lsd.oursim.acceptance;
 import java.util.List;
 import java.util.Properties;
 
-import br.edu.ufcg.lsd.oursim.ListEventProxy;
 import br.edu.ufcg.lsd.oursim.OurSim;
 import br.edu.ufcg.lsd.oursim.entities.ActiveEntity;
 import br.edu.ufcg.lsd.oursim.entities.grid.Broker;
@@ -15,6 +14,7 @@ import br.edu.ufcg.lsd.oursim.events.Event;
 import br.edu.ufcg.lsd.oursim.events.EventSpec;
 import br.edu.ufcg.lsd.oursim.events.global.HaltEvent;
 import br.edu.ufcg.lsd.oursim.network.BlankNetwork;
+import br.edu.ufcg.lsd.oursim.queue.ListEventProxy;
 import br.edu.ufcg.lsd.oursim.util.Configuration;
 
 public class AcceptanceTest {

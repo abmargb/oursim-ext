@@ -1,14 +1,13 @@
-package br.edu.ufcg.lsd.oursim;
+package br.edu.ufcg.lsd.oursim.queue;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import br.edu.ufcg.lsd.oursim.events.EventSpec;
-import br.edu.ufcg.lsd.oursim.queue.EventProxy;
 
 public class ListEventProxy implements EventProxy {
 
-	LinkedList<EventSpec> events = new LinkedList<EventSpec>();
+	private LinkedList<EventSpec> events = new LinkedList<EventSpec>();
 	
 	@Override
 	public List<EventSpec> nextEventPage(int pageSize) {

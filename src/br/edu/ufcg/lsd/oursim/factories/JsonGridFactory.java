@@ -1,8 +1,6 @@
 package br.edu.ufcg.lsd.oursim.factories;
 
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
@@ -16,16 +14,13 @@ import br.edu.ufcg.lsd.oursim.entities.grid.DiscoveryService;
 import br.edu.ufcg.lsd.oursim.entities.grid.Grid;
 import br.edu.ufcg.lsd.oursim.entities.grid.Peer;
 import br.edu.ufcg.lsd.oursim.entities.grid.Worker;
-import br.edu.ufcg.lsd.oursim.fd.FailureDetector;
-import br.edu.ufcg.lsd.oursim.fd.FailureDetectorFactory;
-import br.edu.ufcg.lsd.oursim.util.Configuration;
+import br.edu.ufcg.lsd.oursim.fd.FailureDetectorOptInjector;
 import br.edu.ufcg.lsd.oursim.util.JSONUtils;
 
 public class JsonGridFactory implements GridFactory {
 
 	private InputStream inputStream;
 	private final Properties properties;
-	private final FailureDetectorFactory fdFactory = new FailureDetectorFactory();
 	
 	/**
 	 * @param inputStream
@@ -74,55 +69,9 @@ public class JsonGridFactory implements GridFactory {
 			}
 		}
 		
-		configureFailureDetectors(grid);
+		new FailureDetectorOptInjector().inject(grid, properties);
 		
 		return grid;
-	}
-
-	private void configureFailureDetectors(Grid grid) {
-		Long timeout = Long.parseLong(properties.getProperty(
-				Configuration.PROP_FAILURE_DETECTOR_TIMEOUT));
-		
-		Long pingInterval = Long.parseLong(properties.getProperty(
-				Configuration.PROP_FAILURE_DETECTOR_PING_INTERVAL));
-		
-		for (ActiveEntity entity : grid.getAllObjects()) {
-			entity.setFailureDetector(createFd());
-			entity.setTimeout(timeout);
-			entity.setPingInterval(pingInterval);
-		}
-	}
-
-	private FailureDetector createFd() {
-		Boolean useFd = Boolean.parseBoolean(properties.getProperty(
-				Configuration.PROP_USE_FAILURE_DETECTOR));
-		
-		if (!useFd) {
-			return null;
-		}
-		
-		String fdName = properties.getProperty(
-				Configuration.PROP_FAILURE_DETECTOR_NAME);
-		try {
-			return fdFactory.createFd(fdName, null, 
-					getFdProperties(fdName));
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	private Map<String, String> getFdProperties(String fdName) {
-		Map<String, String> fdProperties = new HashMap<String, String>();
-		String fdPrefix = "FD_" + fdName + "_";
-		
-		for (Object key : properties.keySet()) {
-			String strKey = (String)key;
-			if (strKey.startsWith(fdPrefix)) {
-				String fdKey = strKey.substring(fdPrefix.length());
-				fdProperties.put(fdKey, properties.getProperty(strKey));
-			}
-		}
-		return fdProperties;
 	}
 
 	private ActiveEntity createBroker(JSONObject brokerJson) {

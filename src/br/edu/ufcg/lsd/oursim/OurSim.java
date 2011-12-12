@@ -58,7 +58,8 @@ public class OurSim {
 	}
 	
 	public void addNetworkEvent(Event event) {
-		event.setTime(event.getTime() + network.generateDelay());
+		long delayedTime = event.getTime() + network.generateDelay();
+		event.setTime(delayedTime);
 		queue.add(event);
 	}
 	

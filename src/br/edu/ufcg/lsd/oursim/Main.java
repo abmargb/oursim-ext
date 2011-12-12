@@ -20,7 +20,7 @@ public class Main {
 		Properties properties = Configuration.createConfiguration(new Properties());
 		properties.put(Configuration.PROP_BROKER_MAX_REPLICAS, "1");
 		properties.put(Configuration.PROP_USE_FAILURE_DETECTOR, Boolean.FALSE.toString());
-		properties.put(Configuration.PROP_BROKER_SCHEDULER_INTERVAL, "0");
+		properties.put(Configuration.PROP_BROKER_SCHEDULER_INTERVAL, "10");
 		
 		OurSim ourSim = new OurSim(
 				new FileEventProxy(new FileInputStream("resources/event-example.conf")), 

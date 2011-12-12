@@ -29,6 +29,7 @@ public class BrokerEvents {
 	public static final String SCHEDULE = "SCHEDULE";
 	public static final String WORKER_FAILED = "WORKER_FAILED_FOR_BROKER";
 	public static final String WORKER_AVAILABLE = "WORKER_AVAILABLE_FOR_BROKER";
+	public static final String WORKER_PREEMPTED = "WORKER_PREEMPTED";
 	
 	public static Map<String, Class<? extends Event>> createEvents() {
 		Map<String, Class<? extends Event>> events = new HashMap<String, Class<? extends Event>>();
@@ -45,6 +46,7 @@ public class BrokerEvents {
 		events.put(SCHEDULE, ScheduleEvent.class);
 		events.put(WORKER_FAILED, WorkerFailedEvent.class);
 		events.put(WORKER_AVAILABLE, WorkerAvailableEvent.class);
+		events.put(WORKER_PREEMPTED, WorkerPreemptedEvent.class);
 		
 		return events;
 	}

@@ -3,7 +3,6 @@ package br.edu.ufcg.lsd.oursim.queue;
 import org.junit.Assert;
 import org.junit.Test;
 
-import br.edu.ufcg.lsd.oursim.ListEventProxy;
 import br.edu.ufcg.lsd.oursim.factories.EventFactory;
 
 public class EventQueueTest {

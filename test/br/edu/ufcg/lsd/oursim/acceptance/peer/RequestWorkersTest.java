@@ -273,4 +273,65 @@ public class RequestWorkersTest extends AcceptanceTest {
 		Assert.assertEquals(broker1Id, peer.getAllocation(worker3Id).getConsumer());
 		
 	}
+	
+	@Test
+	public void testLocalAndRemoteRedistributionConsideringNof() {
+		
+		//Create two user accounts
+		String broker1Id = "broker1";
+		String broker2Id = "broker2";
+		
+		String peerId = "peer1";
+		String peerId2 = "peer2";
+		
+		String worker1Id = "worker1";
+		String worker2Id = "worker2";
+		String worker3Id = "worker3";
+		
+		Peer peer = createPeer(peerId);
+		createPeer(peerId2);
+		
+		Broker broker1 = createBroker(broker1Id);
+		broker1.setPeerId(peerId);
+		
+		createWorker(worker1Id);
+		peer.addWorker(worker1Id);
+		createWorker(worker2Id);
+		peer.addWorker(worker2Id);
+		createWorker(worker3Id);
+		peer.addWorker(worker3Id);
+		
+		addEvent(new EventSpec(BrokerEvents.BROKER_UP, 0, broker1Id));
+		addEvent(new EventSpec(BrokerEvents.BROKER_UP, 0, broker2Id));
+		
+		addEvent(new EventSpec(WorkerEvents.WORKER_UP, 1, worker1Id));
+		addEvent(new EventSpec(WorkerEvents.WORKER_UP, 1, worker2Id));
+		addEvent(new EventSpec(WorkerEvents.WORKER_UP, 1, worker3Id));
+		
+		addEvent(new EventSpec(PeerEvents.PEER_UP, 2, peerId));
+		
+		RequestSpec requestSpec = new RequestSpec();
+		requestSpec.setId(0L);
+		requestSpec.setRequiredWorkers(2);
+		
+		addEventAndReturn(
+				new EventSpec(PeerEvents.REMOTE_REQUEST_WORKERS, 3, peerId2, peerId, requestSpec));
+		
+		Assert.assertEquals(peerId2, peer.getAllocation(worker1Id).getConsumer());
+		Assert.assertEquals(peerId2, peer.getAllocation(worker2Id).getConsumer());
+		Assert.assertEquals(null, peer.getAllocation(worker3Id).getConsumer());
+		
+		RequestSpec requestSpec2 = new RequestSpec();
+		requestSpec2.setId(1L);
+		requestSpec2.setBrokerId(broker1Id);
+		requestSpec2.setRequiredWorkers(2);
+		
+		addEventAndReturn(
+				new EventSpec(PeerEvents.REQUEST_WORKERS, 4, peerId, requestSpec2, false));
+		
+		Assert.assertEquals(broker1Id, peer.getAllocation(worker1Id).getConsumer());
+		Assert.assertEquals(peerId2, peer.getAllocation(worker2Id).getConsumer());
+		Assert.assertEquals(broker1Id, peer.getAllocation(worker3Id).getConsumer());
+		
+	}
 }

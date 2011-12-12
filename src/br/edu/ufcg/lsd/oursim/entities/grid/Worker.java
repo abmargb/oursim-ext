@@ -8,7 +8,7 @@ import br.edu.ufcg.lsd.oursim.entities.accounting.WorkAccounting;
 
 public class Worker extends ActiveEntity {
 
-	private double cpu;
+	private double cpu = 1.;
 	private String peer;
 	private String consumer;
 	private String remotePeer;

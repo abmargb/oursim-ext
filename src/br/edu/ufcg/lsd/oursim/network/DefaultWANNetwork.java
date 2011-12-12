@@ -19,6 +19,13 @@ public class DefaultWANNetwork implements Network {
 		this(AVG_DELAY);
 	}
 	
+	/**
+	 * @param seed A six seed package
+	 */
+	public static void setSeed(int[] seed) {
+		MRG31k3p.setPackageSeed(seed);
+	}
+	
 	@Override
 	public Long generateDelay() {
 		return (long) random.nextDouble();

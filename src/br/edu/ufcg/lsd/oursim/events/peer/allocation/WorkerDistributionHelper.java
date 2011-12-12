@@ -21,7 +21,9 @@ public class WorkerDistributionHelper {
 		}
 		
 		PeerRequest request = workerAllocation.getRequest();
-		request.removeAllocatedWorker(workerId);
+		if (request != null) {
+			request.removeAllocatedWorker(workerId);
+		}
 		
 		peer.setWorkerState(workerId, WorkerState.IDLE);
 		workerAllocation.setRequest(null);
@@ -34,17 +36,25 @@ public class WorkerDistributionHelper {
 			redistributeRemoteWorker(time, peer, workerId, ourSim);
 		}
 		
-		if (request != null) {
 			
-			request.removeAllocatedWorker(workerId);
-			
-			if (!request.isPaused() && request.getNeededWorkers() > 0) {
-				Event requestWorkersEvent = ourSim.createEvent(PeerEvents.REQUEST_WORKERS, 
-						time + ourSim.getLongProperty(
-								Configuration.PROP_REQUEST_REPETITION_INTERVAL), 
-								peer.getId(), request.getSpec(), true);
-				ourSim.addEvent(requestWorkersEvent);
-			}
+		if (request != null && !request.isPaused() && request.getNeededWorkers() > 0) {
+			Event requestWorkersEvent = ourSim
+					.createEvent(
+							PeerEvents.REQUEST_WORKERS,
+							time
+									+ ourSim.getLongProperty(Configuration.PROP_REQUEST_REPETITION_INTERVAL),
+							peer.getId(), request.getSpec(), true);
+			ourSim.addEvent(requestWorkersEvent);
+		}
+		
+	}
+	
+	public static void redistributeIdleWorker(long time, Peer peer, String workerId, OurSim ourSim) {
+		
+		PeerRequest suitableRequestForWorker = AllocationHelper.getDownBalancedRequest(peer);
+		if (suitableRequestForWorker != null) {
+			allocateRequestToIdleWorker(time, peer, workerId,
+					suitableRequestForWorker, ourSim);
 		}
 		
 	}

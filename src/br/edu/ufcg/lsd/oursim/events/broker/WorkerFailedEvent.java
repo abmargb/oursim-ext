@@ -38,6 +38,7 @@ public class WorkerFailedEvent extends AbstractEvent {
 		if (request.getJob().getInUseWorkers().contains(workerId)) {
 			replicaFailed(broker, getReplica(request), ourSim);
 		}
+		
 		SchedulerHelper.disposeWorker(request.getJob(), broker, 
 				workerId, ourSim, getTime());
 	}
