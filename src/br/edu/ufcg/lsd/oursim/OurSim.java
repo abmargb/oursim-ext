@@ -30,6 +30,7 @@ public class OurSim {
 	private final List<EventListener> eventListeners = new LinkedList<EventListener>();
 	
 	private boolean running = true;
+	private boolean livenessCheckScheduled = false;
 	private final EventFactory eventFactory = new EventFactory();
 	
 	public OurSim(EventProxy eventProxy, Grid grid, 
@@ -119,5 +120,13 @@ public class OurSim {
 	
 	public EventQueue getQueue() {
 		return queue;
+	}
+
+	public boolean isLivenessCheckSchedule() {
+		return livenessCheckScheduled;
+	}
+
+	public void setLivenessCheckSchedule(boolean livenessCheckSchedule) {
+		this.livenessCheckScheduled = livenessCheckSchedule;
 	}
 }

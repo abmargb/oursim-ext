@@ -41,12 +41,11 @@ public class UpdateStatusAvailableEvent extends AbstractEvent {
 						onRecoveryEventType, getTime(), interested, monitored);
 				ourSim.addEvent(callbackAliveEvent);
 			}
-		}
-		
-		
-		if (ourSim.getBooleanProperty(
-				Configuration.PROP_USE_FAILURE_DETECTOR)) {
-			MonitorUtil.checkLiveness(ourSim, getTime(), interested, monitored);
+			
+			if (ourSim.getBooleanProperty(
+					Configuration.PROP_USE_FAILURE_DETECTOR)) {
+				MonitorUtil.checkLiveness(ourSim, getTime(), interestedObj, monitoredObj);
+			}
 		}
 	}
 

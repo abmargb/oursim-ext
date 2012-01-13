@@ -31,11 +31,22 @@ public class MonitorUtil {
 		return monitor;
 	}
 
-	public static void checkLiveness(OurSim ourSim, Long time,
-			String interested, String monitored) {
+	public static void checkLiveness(OurSim ourSim, Long time) {
 
-		ActiveEntity interestedObj = ourSim.getGrid().getObject(interested);
-		ActiveEntity monitoredObj = ourSim.getGrid().getObject(monitored);
+		for (ActiveEntity interestedObj : ourSim.getGrid().getAllObjects()) {
+			for (Monitor monitor : interestedObj.getMonitors()) {
+				ActiveEntity monitoredObj = monitor.getObject();
+				checkLiveness(ourSim, time, interestedObj, monitoredObj);
+			}
+		}
+	}
+
+	public static void checkLiveness(OurSim ourSim, Long time,
+			ActiveEntity interestedObj, ActiveEntity monitoredObj) {
+		
+		String interested = interestedObj.getId();
+		String monitored = monitoredObj.getId();
+		
 		Monitor monitor = interestedObj.getMonitor(monitored);
 		
 		if (interestedObj.isFailed(monitored, time) && monitor.isUp()) {
@@ -48,12 +59,14 @@ public class MonitorUtil {
 						failureEventType, time, interested, monitored);
 				ourSim.addEvent(callbackDownEvent);
 			}
-		} else {
-			Long livenessCheck = ourSim.getLongProperty(
-					Configuration.PROP_LIVENESS_CHECK_INTERVAL);
+		} 
 			
+		if (!ourSim.isLivenessCheckSchedule()) {
+			ourSim.setLivenessCheckSchedule(true);
+			Long tolerance = ourSim.getLongProperty(
+					Configuration.PROP_LIVENESS_CHECK_TOLERANCE);
 			ourSim.addEvent(ourSim.createEvent(FailureDetectionEvents.LIVENESS_CHECK, 
-					time + livenessCheck, interested, monitored));
+					time + tolerance));
 		}
 		
 	}

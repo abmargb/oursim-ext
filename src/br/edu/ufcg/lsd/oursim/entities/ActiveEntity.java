@@ -1,7 +1,9 @@
 package br.edu.ufcg.lsd.oursim.entities;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import br.edu.ufcg.lsd.oursim.fd.FailureDetector;
 import br.edu.ufcg.lsd.oursim.fd.MessageType;
@@ -70,13 +72,17 @@ public class ActiveEntity extends Entity {
 		return monitors.get(id);
 	}
 	
+	public Set<Monitor> getMonitors() {
+		return new HashSet<Monitor>(monitors.values());
+	}
+	
 	public void isItAliveSent(String monitored, Long time) {
 		if (fd != null) {
 			fd.messageSent(monitored, time, MessageType.PING);
 		}
 	}
 	
-	public long getTimeToNextPing(String monitored, Long time) {
+	public Long getTimeToNextPing(String monitored, Long time) {
 		return fd.getTimeToNextPing(monitored, time);
 	}
 
@@ -109,5 +115,19 @@ public class ActiveEntity extends Entity {
 	
 	public void setTimeout(long timeout) {
 		this.timeout = timeout;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof ActiveEntity)) {
+			return false;
+		}
+		ActiveEntity otherEntity = (ActiveEntity) obj;
+		return id.equals(otherEntity.getId());
+	}
+	
+	@Override
+	public int hashCode() {
+		return id.hashCode();
 	}
 }

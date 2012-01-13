@@ -33,11 +33,12 @@ public class HereIsWorkerEvent extends AbstractEvent {
 		
 		if (request == null) {
 			SchedulerHelper.disposeWorker(
-					null, broker, workerId, ourSim, getTime());
+					null, requestSpec.getId(), broker, workerId, ourSim, getTime());
 			return;
 		}
 		
 		request.getJob().workerIsNotRecovered(workerId);
+		
 		MonitorUtil.registerMonitored(ourSim, getTime(), 
 				broker.getId(), workerId);
 	}

@@ -46,6 +46,11 @@ public class RequestWorkersEvent extends AbstractEvent {
 			return;
 		}
 		
+		if (request.isCancelled()) {
+			request.setCancelled(false);
+			return;
+		}
+		
 		List<Allocation> allocables = AllocationHelper.getAllocationsForLocalRequest(peer, request);
 		
 		for (Allocation allocable : allocables) {
@@ -55,6 +60,7 @@ public class RequestWorkersEvent extends AbstractEvent {
 		if (request.getNeededWorkers() > 0) {
 			forwardRequestToCommunity(peer, request, ourSim);
 			
+			request.setCancelled(false);
 			Event requestWorkersEvent = ourSim.createEvent(PeerEvents.REQUEST_WORKERS, 
 					getTime() + ourSim.getLongProperty(
 							Configuration.PROP_REQUEST_REPETITION_INTERVAL), 
@@ -84,6 +90,7 @@ public class RequestWorkersEvent extends AbstractEvent {
 			loserRequest.removeAllocatedWorker(allocable.getWorker());
 			
 			if (!loserRequest.isPaused() && loserRequest.getNeededWorkers() > 0) {
+				loserRequest.setCancelled(false);
 				Event requestWorkersEvent = ourSim.createEvent(PeerEvents.REQUEST_WORKERS, 
 						getTime() + ourSim.getLongProperty(
 								Configuration.PROP_REQUEST_REPETITION_INTERVAL), 
@@ -102,7 +109,7 @@ public class RequestWorkersEvent extends AbstractEvent {
 		request.addAllocatedWorker(allocable.getWorker());
 		
 		ourSim.addNetworkEvent(ourSim.createEvent(WorkerEvents.WORK_FOR_BROKER, 
-				getTime(), consumer, request.getSpec(), allocable.getWorker()));
+				getTime(), consumer, peer.getId(), request.getSpec(), allocable.getWorker()));
 	}
 
 

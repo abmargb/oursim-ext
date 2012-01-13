@@ -30,6 +30,7 @@ public class ResumeRequestEvent extends AbstractEvent {
 		request.setPaused(false);
 		
 		if (request.getNeededWorkers() > 0) {
+			request.setCancelled(false);
 			Event requestWorkersEvent = ourSim.createEvent(PeerEvents.REQUEST_WORKERS, 
 					getTime() + ourSim.getLongProperty(
 							Configuration.PROP_REQUEST_REPETITION_INTERVAL), 

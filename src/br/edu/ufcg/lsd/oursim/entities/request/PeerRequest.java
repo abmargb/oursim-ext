@@ -12,6 +12,7 @@ import java.util.Set;
 public class PeerRequest {
 
 	private boolean paused;
+	private boolean cancelled;
 	private final RequestSpec spec;
 	private final Set<String> allocatedWorkers = new HashSet<String>();
 	private final String consumer;
@@ -61,5 +62,12 @@ public class PeerRequest {
 		this.allocatedWorkers.remove(workerId);
 	}
 
+	public void setCancelled(boolean cancelled) {
+		this.cancelled = cancelled;
+	}
 
+	public boolean isCancelled() {
+		return cancelled;
+	}
+	
 }

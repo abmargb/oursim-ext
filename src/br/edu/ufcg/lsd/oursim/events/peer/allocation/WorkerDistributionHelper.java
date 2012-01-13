@@ -25,12 +25,12 @@ public class WorkerDistributionHelper {
 			request.removeAllocatedWorker(workerId);
 		}
 		
-		peer.setWorkerState(workerId, WorkerState.IDLE);
 		workerAllocation.setRequest(null);
 		workerAllocation.setConsumer(null);
 		workerAllocation.setLastAssign(time);
 		
 		if (workerAllocation.isWorkerLocal()) {
+			peer.setWorkerState(workerId, WorkerState.IDLE);
 			redistributeLocalWorker(time, peer, workerId, ourSim);
 		} else {
 			redistributeRemoteWorker(time, peer, workerId, ourSim);
@@ -38,6 +38,7 @@ public class WorkerDistributionHelper {
 		
 			
 		if (request != null && !request.isPaused() && request.getNeededWorkers() > 0) {
+			request.setCancelled(false);
 			Event requestWorkersEvent = ourSim
 					.createEvent(
 							PeerEvents.REQUEST_WORKERS,
@@ -86,7 +87,7 @@ public class WorkerDistributionHelper {
 		request.addAllocatedWorker(allocation.getWorker());
 		
 		ourSim.addNetworkEvent(ourSim.createEvent(WorkerEvents.WORK_FOR_BROKER, 
-				time, request.getConsumer(), request.getSpec(), workerId));
+				time, request.getConsumer(), peer.getId(), request.getSpec(), workerId));
 		
 		if (request.isPaused() || request.getNeededWorkers() <= 0) {
 			request.setPaused(true);
@@ -101,7 +102,7 @@ public class WorkerDistributionHelper {
 		if (allocation == null || AllocationHelper.getNeededRequests(peer).isEmpty()) {
 			peer.removeAllocation(worker);
 			ourSim.addNetworkEvent(ourSim.createEvent(PeerEvents.DISPOSE_REMOTE_WORKER, 
-					time, allocation.getProvider(), worker));
+					time, allocation.getProvider(), peer.getId(), worker));
 			
 			return;
 		}
@@ -116,10 +117,10 @@ public class WorkerDistributionHelper {
 		request.addAllocatedWorker(allocation.getWorker());
 		
 		ourSim.addNetworkEvent(ourSim.createEvent(WorkerEvents.WORK_FOR_BROKER, 
-				time, request.getConsumer(), request.getSpec(), allocation.getWorker()));
+				time, request.getConsumer(), peer.getId(), request.getSpec(), allocation.getWorker()));
 		
-		if (request.isPaused() || request.getNeededWorkers() <= 0) {
-			request.setPaused(true);
+		if (request.getNeededWorkers() <= 0) {
+			request.setCancelled(true);
 		}
 	}
 	

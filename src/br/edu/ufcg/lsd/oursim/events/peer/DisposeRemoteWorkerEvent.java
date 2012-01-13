@@ -11,10 +11,12 @@ public class DisposeRemoteWorkerEvent extends AbstractEvent {
 
 	private final String workerId;
 	private final String provider;
+	private final String consumer;
 
-	public DisposeRemoteWorkerEvent(String provider, String workerId) {
+	public DisposeRemoteWorkerEvent(String provider, String consumer, String workerId) {
 		super(Event.DEF_PRIORITY);
 		this.provider = provider;
+		this.consumer = consumer;
 		this.workerId = workerId;
 	}
 
@@ -23,7 +25,7 @@ public class DisposeRemoteWorkerEvent extends AbstractEvent {
 		Peer peer = ourSim.getGrid().getObject(provider);
 		Allocation allocation = peer.getAllocation(workerId);
 		
-		if (allocation == null) {
+		if (allocation == null || !consumer.equals(allocation.getConsumer())) {
 			return;
 		}
 		

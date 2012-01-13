@@ -68,7 +68,8 @@ public class CancelJobEvent extends PrimaryEvent {
 			ourSim.getTraceCollector().replicaEnded(
 					getTime(), replica, broker.getId());
 			
-			SchedulerHelper.disposeWorker(replica.getTask().getJob(), broker,
+			Job job = replica.getTask().getJob();
+			SchedulerHelper.disposeWorker(job, job.getRequest().getSpec().getId(), broker,
 					replica.getWorker(), ourSim, getTime());
 			
 			replica.setWorker(null);

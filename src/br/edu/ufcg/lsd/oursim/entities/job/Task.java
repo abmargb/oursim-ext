@@ -15,6 +15,12 @@ public class Task extends ExecutableEntity {
 		this.duration = duration;
 	}
 
+	@Override
+	public void setState(ExecutionState state) {
+		super.setState(state);
+		job.updateTaskState(this);
+	}
+	
 	public long getDuration() {
 		return duration;
 	}

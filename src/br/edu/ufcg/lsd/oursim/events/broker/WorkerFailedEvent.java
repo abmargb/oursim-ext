@@ -35,30 +35,30 @@ public class WorkerFailedEvent extends AbstractEvent {
 			return;
 		}
 		
-		if (request.getJob().getInUseWorkers().contains(workerId)) {
-			replicaFailed(broker, getReplica(request), ourSim);
+		if (request.getJob().hasWorker(workerId)) {
+			replicaFailed(broker, getReplica(request), request, ourSim);
 		}
 		
-		SchedulerHelper.disposeWorker(request.getJob(), broker, 
+		SchedulerHelper.disposeWorker(request.getJob(), request.getSpec().getId(), broker, 
 				workerId, ourSim, getTime());
 	}
 
-	private void replicaFailed(Broker broker, Replica replica, OurSim ourSim) {
+	private void replicaFailed(Broker broker, Replica replica, BrokerRequest request, OurSim ourSim) {
 		
-		Job job = replica.getTask().getJob();
+		Job job = request.getJob();
 		
 		boolean wasJobEnded = SchedulerHelper.isJobEnded(job);
 		
-		replica.setState(ExecutionState.FAILED);
-		replica.setEndTime(getTime());
-		ourSim.getTraceCollector().replicaEnded(getTime(), replica, broker.getId());
-		
-		updateTaskState(broker.getId(), replica.getTask(), ourSim);
-		updateJobState(broker.getId(), replica, ourSim);
-		
-		replica.setWorker(null);
-		
-		BrokerRequest request = replica.getTask().getJob().getRequest();
+		if (replica != null) {
+			replica.setState(ExecutionState.FAILED);
+			replica.setEndTime(getTime());
+			ourSim.getTraceCollector().replicaEnded(getTime(), replica, broker.getId());
+			
+			updateTaskState(broker.getId(), replica.getTask(), ourSim);
+			updateJobState(broker.getId(), replica, ourSim);
+			
+			replica.setWorker(null);
+		}
 		
 		if (!wasJobEnded) {
 			boolean jobEnded = ExecutionState.FAILED.equals(job.getState());
@@ -72,10 +72,13 @@ public class WorkerFailedEvent extends AbstractEvent {
 			SchedulerHelper.updateScheduler(ourSim, broker, getTime());
 		}
 		
-		ourSim.addNetworkEvent(ourSim.createEvent(PeerEvents.REPORT_REPLICA_ACCOUNTING, 
-				getTime(), new ReplicaAccounting(request.getSpec().getId(), 
-						workerId, broker.getId(), getTime() - replica.getCreationTime(), 
-						replica.getState()), broker.getPeerId()));
+		if (replica != null) {
+			ourSim.addNetworkEvent(ourSim.createEvent(PeerEvents.REPORT_REPLICA_ACCOUNTING, 
+					getTime(), new ReplicaAccounting(request.getSpec().getId(), 
+							workerId, broker.getId(), getTime() - replica.getCreationTime(), 
+							replica.getState()), broker.getPeerId()));
+		}
+		
 	}
 
 	private void updateJobState(String brokerId, Replica replica, OurSim ourSim) {

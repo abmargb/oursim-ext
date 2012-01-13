@@ -11,6 +11,12 @@ public class Replica extends ExecutableEntity {
 		this.workerId = workerId;
 	}
 
+	@Override
+	public void setState(ExecutionState state) {
+		super.setState(state);
+		task.getJob().updateReplicaState(this);
+	}
+	
 	public String getWorker() {
 		return workerId;
 	}

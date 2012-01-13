@@ -48,7 +48,7 @@ public class ScheduleEvent extends AbstractEvent {
 			deallocateWorkers.addAll(job.getNotRecoveredWorkers());
 			
 			for (String worker : deallocateWorkers) {
-				SchedulerHelper.disposeWorker(job, broker, 
+				SchedulerHelper.disposeWorker(job, request.getSpec().getId(), broker, 
 						worker, ourSim, getTime());
 			}
 		}

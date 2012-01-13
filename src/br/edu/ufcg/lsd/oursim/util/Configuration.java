@@ -4,11 +4,15 @@ import java.util.Properties;
 
 public class Configuration {
 
-	public static final String PROP_LIVENESS_CHECK_INTERVAL = "LIVENESS_CHECK_INTERVAL";
-	public static final String DEF_LIVENESS_CHECK_INTERVAL = "1000";
+	public static final String PROP_LIVENESS_CHECK_TOLERANCE = "LIVENESS_CHECK_TOLERANCE";
+	public static final String DEF_LIVENESS_CHECK_TOLERANCE = "30000";
 	
 	public static final String PROP_USE_FAILURE_DETECTOR = "USE_FAILURE_DETECTOR";
 	public static final String DEF_USE_FAILURE_DETECTOR = Boolean.TRUE.toString();
+	
+	// Less time, more memory
+	public static final String PROP_USE_SPEED_HACK = "USE_SPEED_HACK";
+	public static final String DEF_USE_SPEED_HACK = Boolean.FALSE.toString();
 	
 	public static final String PROP_BROKER_MAX_FAILS = "BROKER_MAX_FAILS";
 	public static final String DEF_BROKER_MAX_FAILS = "3";
@@ -23,7 +27,7 @@ public class Configuration {
 	public static final String DEF_BROKER_SCHEDULER_INTERVAL = "10000";
 	
 	public static final String PROP_REQUEST_REPETITION_INTERVAL = "REQUEST_REPETITION_INTERVAL";
-	public static final String DEF_REQUEST_REPETITION_INTERVAL = "30000";
+	public static final String DEF_REQUEST_REPETITION_INTERVAL = "120000";
 	
 	public static final String PROP_GET_PROVIDERS_REPETITION_INTERVAL = "GET_PROVIDERS_REPETITION_INTERVAL";
 	public static final String DEF_GET_PROVIDERS_REPETITION_INTERVAL = "60000";
@@ -35,14 +39,14 @@ public class Configuration {
 	public static final String DEF_FAILURE_DETECTOR_NAME = "fixed";
 	
 	public static final String PROP_FAILURE_DETECTOR_TIMEOUT = "FD_TIMEOUT";
-	public static final String DEF_FAILURE_DETECTOR_TIMEOUT = "30000";
+	public static final String DEF_FAILURE_DETECTOR_TIMEOUT = "300000";
 	
 	public static final String PROP_FAILURE_DETECTOR_PING_INTERVAL = "FD_PING_INTERVAL";
-	public static final String DEF_FAILURE_DETECTOR_PING_INTERVAL = "10000";
+	public static final String DEF_FAILURE_DETECTOR_PING_INTERVAL = "60000";
 	
 	public static Properties createDefaults() {
 		Properties properties = new Properties();
-		properties.put(PROP_LIVENESS_CHECK_INTERVAL, DEF_LIVENESS_CHECK_INTERVAL);
+		properties.put(PROP_LIVENESS_CHECK_TOLERANCE, DEF_LIVENESS_CHECK_TOLERANCE);
 		properties.put(PROP_USE_FAILURE_DETECTOR, DEF_USE_FAILURE_DETECTOR);
 		properties.put(PROP_BROKER_MAX_FAILS, DEF_BROKER_MAX_FAILS);
 		properties.put(PROP_BROKER_MAX_REPLICAS, DEF_BROKER_MAX_REPLICAS);

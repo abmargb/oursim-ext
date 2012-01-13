@@ -7,6 +7,7 @@ import br.edu.ufcg.lsd.oursim.entities.request.PeerRequest;
 import br.edu.ufcg.lsd.oursim.events.AbstractEvent;
 import br.edu.ufcg.lsd.oursim.events.Event;
 import br.edu.ufcg.lsd.oursim.events.fd.FailureDetectionEvents;
+import br.edu.ufcg.lsd.oursim.util.Configuration;
 
 public class RemoteWorkerFailedEvent extends AbstractEvent {
 
@@ -30,6 +31,7 @@ public class RemoteWorkerFailedEvent extends AbstractEvent {
 			PeerRequest request = allocation.getRequest();
 			if (request != null) {
 				request.removeAllocatedWorker(worker);
+				scheduleRequest(ourSim, peer, request);
 			}
 			peer.removeAllocation(worker);
 			provider = allocation.getProvider();
@@ -37,11 +39,26 @@ public class RemoteWorkerFailedEvent extends AbstractEvent {
 			provider = peer.removeNotRecoveredRemoteWorker(worker);
 		}
 		
-		ourSim.addNetworkEvent(ourSim.createEvent(PeerEvents.DISPOSE_REMOTE_WORKER, 
-				getTime(), provider, worker));
+		if (provider != null) {
+			ourSim.addNetworkEvent(ourSim.createEvent(PeerEvents.DISPOSE_REMOTE_WORKER, 
+					getTime(), provider, consumer, worker));
+		}
 		
 		ourSim.addEvent(ourSim.createEvent(FailureDetectionEvents.RELEASE, getTime(), 
 				peer.getId(), worker));
+	}
+
+	private void scheduleRequest(OurSim ourSim, Peer peer, PeerRequest request) {
+		if (!request.isPaused() && request.getNeededWorkers() > 0) {
+			request.setCancelled(false);
+			Event requestWorkersEvent = ourSim
+					.createEvent(
+							PeerEvents.REQUEST_WORKERS,
+							getTime()
+									+ ourSim.getLongProperty(Configuration.PROP_REQUEST_REPETITION_INTERVAL),
+							peer.getId(), request.getSpec(), true);
+			ourSim.addEvent(requestWorkersEvent);
+		}
 	}
 
 }

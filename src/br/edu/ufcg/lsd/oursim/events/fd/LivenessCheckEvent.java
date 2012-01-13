@@ -6,18 +6,13 @@ import br.edu.ufcg.lsd.oursim.events.Event;
 
 public class LivenessCheckEvent extends AbstractEvent {
 
-	private final String interested;
-	private final String monitored;
-
-	public LivenessCheckEvent(String interested, String monitored) {
+	public LivenessCheckEvent() {
 		super(Event.DEF_PRIORITY);
-		this.interested = interested;
-		this.monitored = monitored;
 	}
 
 	@Override
 	public void process(OurSim ourSim) {
-		MonitorUtil.checkLiveness(ourSim, getTime(), interested, monitored);
+		MonitorUtil.checkLiveness(ourSim, getTime());
 	}
 
 }

@@ -11,6 +11,7 @@ import br.edu.ufcg.lsd.oursim.entities.request.BrokerRequest;
 import br.edu.ufcg.lsd.oursim.events.AbstractEvent;
 import br.edu.ufcg.lsd.oursim.events.Event;
 import br.edu.ufcg.lsd.oursim.events.peer.PeerEvents;
+import br.edu.ufcg.lsd.oursim.util.Configuration;
 
 public class HereIsExecutionResultEvent extends AbstractEvent {
 
@@ -25,7 +26,10 @@ public class HereIsExecutionResultEvent extends AbstractEvent {
 
 	@Override
 	public void process(OurSim ourSim) {
+		Broker broker = ourSim.getGrid().getObject(brokerId);
+		
 		if (replica.getWorker() == null) {
+			SchedulerHelper.updateScheduler(ourSim, broker, getTime());
 			return;
 		}
 		
@@ -59,13 +63,27 @@ public class HereIsExecutionResultEvent extends AbstractEvent {
 	}
 
 	private void updateJobState(Job job, OurSim ourSim) {
+		
+		
+		Boolean useSpeedHack = ourSim.getBooleanProperty(Configuration.PROP_USE_SPEED_HACK);
+		
 		boolean finished = true;
-		for (Task task : job.getTasks()) {
-			if (!ExecutionState.FINISHED.equals(task.getState())) {
-				finished = false;
-				break;
+		
+		if (!useSpeedHack) {
+			
+			for (Task task : job.getTasks()) {
+				if (!ExecutionState.FINISHED.equals(task.getState())) {
+					finished = false;
+					break;
+				}
 			}
+			
+		} else {
+			
+			finished = job.getFinishedTasks().size() == job.getTasks().size();
+			
 		}
+		
 		if (finished) {
 			job.setState(ExecutionState.FINISHED);
 			job.setEndTime(getTime());
@@ -86,8 +104,8 @@ public class HereIsExecutionResultEvent extends AbstractEvent {
 		Broker broker = ourSim.getGrid().getObject(brokerId);
 		
 		if (SchedulerHelper.isJobSatisfied(job, ourSim)) {
-			SchedulerHelper.disposeWorker(job, broker, worker, 
-					ourSim, getTime());
+			SchedulerHelper.disposeWorker(job, job.getRequest().getSpec().getId(), 
+					broker, worker, ourSim, getTime());
 		}
 		
 		if (ExecutionState.FINISHED.equals(job.getState())) {

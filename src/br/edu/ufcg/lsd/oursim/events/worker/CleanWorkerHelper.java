@@ -22,7 +22,9 @@ public class CleanWorkerHelper {
 		
 		WorkAccounting workAccounting = worker.getCurrentWorkAccounting();
 		if (worker.getRemotePeer() != null && workAccounting != null) {
-			workAccounting.setCPUTime(time - workAccounting.getInitCPUtime());
+			if (workAccounting.getInitCPUtime() != null) {
+				workAccounting.setCPUTime(time - workAccounting.getInitCPUtime());
+			}
 			worker.addWorkAccounting(workAccounting);
 			worker.setCurrentWorkAccounting(null);
 		}

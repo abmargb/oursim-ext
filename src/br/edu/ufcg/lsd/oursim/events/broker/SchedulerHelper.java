@@ -52,27 +52,40 @@ public class SchedulerHelper {
 		}
 		
 		if (task.getState().equals(ExecutionState.RUNNING)
-				&& hasUnallocatedTasks(task.getJob())) {
+				&& hasUnallocatedTasks(task.getJob(), ourSim)) {
 			return false;
 		}
 
 		return verifyRunningReplica(task, ourSim);
 	}
 	
-	private static boolean hasUnallocatedTasks(Job job) {
-		for (Task task : job.getTasks()) {
-			if (task.getState().equals(ExecutionState.UNSTARTED)
-					|| (!task.getState().equals(ExecutionState.FINISHED) && !hasRunningReplica(task))) {
-				return true;
+	private static boolean hasUnallocatedTasks(Job job, OurSim ourSim) {
+		
+		Boolean useSpeedHack = ourSim.getBooleanProperty(Configuration.PROP_USE_SPEED_HACK);
+		
+		if (!useSpeedHack) {
+			
+			for (Task task : job.getTasks()) {
+				if (task.getState().equals(ExecutionState.UNSTARTED)
+						|| (!task.getState().equals(ExecutionState.FINISHED) && !hasRunningReplica(task))) {
+					return true;
+				}
 			}
+			
+			return false;
+			
+		} else {
+			
+			return job.getUnallocatedTasks().size() > 0;
 		}
-		return false;
+		
 	}
 
 	private static boolean hasRunningReplica(Task task) {
 		
 		for (Replica replica : task.getReplicas()) {
-			if (ExecutionState.RUNNING.equals(replica.getState())) {
+			if (ExecutionState.RUNNING.equals(replica.getState())
+					|| ExecutionState.UNSTARTED.equals(replica.getState())) {
 				return true;
 			}
 		}
@@ -135,7 +148,7 @@ public class SchedulerHelper {
 		
 	}
 
-	public static void disposeWorker(Job job, Broker broker, String worker, OurSim ourSim, long now) {
+	public static void disposeWorker(Job job, long requestId, Broker broker, String worker, OurSim ourSim, long now) {
 		
 		if (job != null) {
 			job.removeWorker(worker);
@@ -146,7 +159,7 @@ public class SchedulerHelper {
 		
 		if (broker.getPeerId() != null) {
 			ourSim.addNetworkEvent(ourSim.createEvent(PeerEvents.DISPOSE_WORKER, now, 
-					worker, broker.getPeerId()));
+					worker, requestId, broker.getPeerId()));
 		}
 	}
 
@@ -156,7 +169,8 @@ public class SchedulerHelper {
 		deallocateWorkers.addAll(job.getNotRecoveredWorkers());
 		
 		for (String worker : deallocateWorkers) {
-			disposeWorker(job, broker, worker, ourSim, time);
+			disposeWorker(job, job.getRequest().getSpec().getId(), 
+					broker, worker, ourSim, time);
 		}
 		
 		if (broker.getPeerId() != null) {

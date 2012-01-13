@@ -34,10 +34,13 @@ public class SendHereIsExecutionEvent extends AbstractEvent {
 		
 		WorkAccounting workAccounting = worker.getCurrentWorkAccounting();
 		if (worker.getRemotePeer() != null && workAccounting != null) {
+			if (workAccounting.getInitCPUtime() != null) {
 				workAccounting.setCPUTime(getTime() - workAccounting.getInitCPUtime());
-				worker.addWorkAccounting(workAccounting);
-				worker.setCurrentWorkAccounting(null);
+			}
+			worker.addWorkAccounting(workAccounting);
+			worker.setCurrentWorkAccounting(null);
 		}
+		
 	}
 
 }

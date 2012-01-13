@@ -32,6 +32,20 @@
 	
 	<taskdef resource="cloverlib.xml" classpath="${clover.jar}"/>
 
+	<target name="jdepend">
+		<java classname="jdepend.textui.JDepend">
+			
+			<arg value="-components"/>
+			<arg value="br.edu.ufcg.lsd.oursim,br.edu.ufcg.lsd.oursim.entities,br.edu.ufcg.lsd.oursim.entities.accounting,br.edu.ufcg.lsd.oursim.entities.allocation,br.edu.ufcg.lsd.oursim.entities.grid,br.edu.ufcg.lsd.oursim.entities.job,br.edu.ufcg.lsd.oursim.entities.request,br.edu.ufcg.lsd.oursim.events,br.edu.ufcg.lsd.oursim.events.broker,br.edu.ufcg.lsd.oursim.events.ds,br.edu.ufcg.lsd.oursim.events.fd,br.edu.ufcg.lsd.oursim.events.global,br.edu.ufcg.lsd.oursim.events.peer,br.edu.ufcg.lsd.oursim.events.worker,br.edu.ufcg.lsd.oursim.factories,br.edu.ufcg.lsd.oursim.fd,br.edu.ufcg.lsd.oursim.network,br.edu.ufcg.lsd.oursim.queue,br.edu.ufcg.lsd.oursim.trace"/>
+			
+			<arg value="-file"/>
+			<arg value="report.txt"/>
+			
+			<arg value="bin"/>
+			<classpath refid="classpath.build"/>
+		</java>
+	</target>
+	
 	<target name="clean">
 		<delete dir="${target.dir}"/>
 	</target>
