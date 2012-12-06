@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="lib/commons-io-2.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/commons-math-2.2.jar"/>
 	<classpathentry kind="lib" path="lib/ssj.jar"/>
+	<classpathentry kind="lib" path="lib/jdepend-2.9.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
