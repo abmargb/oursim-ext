@@ -28,6 +28,10 @@ public class HereIsExecutionResultEvent extends AbstractEvent {
 	public void process(OurSim ourSim) {
 		Broker broker = ourSim.getGrid().getObject(brokerId);
 		
+		if (!broker.isUp()) {
+			return;
+		}
+		
 		if (replica.getWorker() == null) {
 			SchedulerHelper.updateScheduler(ourSim, broker, getTime());
 			return;

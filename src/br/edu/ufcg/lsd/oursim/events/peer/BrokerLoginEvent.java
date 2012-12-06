@@ -20,6 +20,9 @@ public class BrokerLoginEvent extends AbstractEvent {
 	public void process(OurSim ourSim) {
 		Broker broker = ourSim.getGrid().getObject(brokerId);
 		Peer peer = ourSim.getGrid().getObject(broker.getPeerId());
+		if (!peer.isUp()) {
+			return;
+		}
 		
 		peer.addBroker(brokerId);
 		

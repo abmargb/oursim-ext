@@ -21,6 +21,10 @@ public class ReportReplicaAccountingEvent extends AbstractEvent {
 	@Override
 	public void process(OurSim ourSim) {
 		Peer peer = ourSim.getGrid().getObject(peerId);
+		if (!peer.isUp()) {
+			return;
+		}
+		
 		Allocation allocation = peer.getAllocation(replicaAccounting.getWorkerId());
 		
 		if (allocation == null) {

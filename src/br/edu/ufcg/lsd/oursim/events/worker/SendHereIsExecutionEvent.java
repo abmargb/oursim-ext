@@ -25,6 +25,10 @@ public class SendHereIsExecutionEvent extends AbstractEvent {
 	public void process(OurSim ourSim) {
 		Worker worker = ourSim.getGrid().getObject(workerId);
 		
+		if (!worker.isUp()) {
+			return;
+		}
+		
 		if (worker.getConsumer() == null) {
 			return;
 		}

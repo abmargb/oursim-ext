@@ -23,6 +23,10 @@ public class FinishRequestEvent extends AbstractEvent {
 	@Override
 	public void process(OurSim ourSim) {
 		Peer peer = ourSim.getGrid().getObject(peerId);
+		if (!peer.isUp()) {
+			return;
+		}
+		
 		PeerRequest request = peer.removeRequest(requestSpec.getId());
 		
 		if (request == null) {

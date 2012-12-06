@@ -22,6 +22,11 @@ public class WorkerAvailableEvent extends AbstractEvent {
 	@Override
 	public void process(OurSim ourSim) {
 		Broker broker = ourSim.getGrid().getObject(brokerId);
+		
+		if (!broker.isUp()) {
+			return;
+		}
+		
 		boolean madeAvailable = workerIsAvailable(broker);
 		
 		if (madeAvailable) {

@@ -29,6 +29,9 @@ public class WorkerFailedEvent extends AbstractEvent {
 	@Override
 	public void process(OurSim ourSim) {
 		Broker broker = ourSim.getGrid().getObject(brokerId);
+		if (!broker.isUp()) {
+			return;
+		}
 		
 		BrokerRequest request = getRequest(broker, workerId);
 		if (request == null) {
@@ -125,6 +128,7 @@ public class WorkerFailedEvent extends AbstractEvent {
 	}
 	
 	private BrokerRequest getRequest(Broker broker, String workerId) {
+
 		List<Job> jobs = broker.getJobs();
 		for (Job job : jobs) {
 			if (job.hasWorker(workerId)) {

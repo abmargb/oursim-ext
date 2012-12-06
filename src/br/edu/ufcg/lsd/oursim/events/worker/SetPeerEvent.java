@@ -21,6 +21,11 @@ public class SetPeerEvent extends AbstractEvent {
 	@Override
 	public void process(OurSim ourSim) {
 		Worker worker = ourSim.getGrid().getObject(workerId);
+		
+		if (!worker.isUp()) {
+			return;
+		}
+		
 		worker.setPeer(peerId);
 		
 		ourSim.addNetworkEvent(ourSim.createEvent(PeerEvents.WORKER_IDLE, 

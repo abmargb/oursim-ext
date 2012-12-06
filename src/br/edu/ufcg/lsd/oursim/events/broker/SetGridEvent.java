@@ -21,6 +21,11 @@ public class SetGridEvent extends PrimaryEvent {
 		String peerId = lineParser.next();
 		
 		Broker broker = ourSim.getGrid().getObject(brokerId);
+		
+		if (!broker.isUp()) {
+			return;
+		}
+		
 		String oldPeerId = broker.getPeerId();
 		
 		if (oldPeerId != null) {

@@ -29,6 +29,9 @@ public class RemoteRequestWorkersEvent extends AbstractEvent {
 	public void process(OurSim ourSim) {
 	
 		Peer peer = ourSim.getGrid().getObject(provider);
+		if (!peer.isUp()) {
+			return;
+		}
 		
 		List<Allocation> allocations = AllocationHelper.getAllocationsForRemoteRequest(
 				peer, requestSpec, consumer);
@@ -36,6 +39,7 @@ public class RemoteRequestWorkersEvent extends AbstractEvent {
 		for (Allocation allocation : allocations) {
 			dispatchAllocation(peer, allocation, ourSim);
 		}
+		
 	}
 
 	private void dispatchAllocation(Peer peer, Allocation allocation,

@@ -28,6 +28,10 @@ public class WorkForBrokerEvent extends AbstractEvent {
 	public void process(OurSim ourSim) {
 		Worker worker = ourSim.getGrid().getObject(workerId);
 		
+		if (!worker.isUp()) {
+			return;
+		}
+		
 		boolean consumerIsMasterPeer = consumerPeerId.equals(worker.getPeer());
 		
 		if (consumerIsMasterPeer) {

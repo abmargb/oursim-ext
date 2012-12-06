@@ -21,6 +21,10 @@ public class LocalWorkerFailedEvent extends AbstractEvent {
 	@Override
 	public void process(OurSim ourSim) {
 		Peer peer = ourSim.getGrid().getObject(peerId);
+		if (!peer.isUp()) {
+			return;
+		}
+		
 		peer.setWorkerState(workerId, WorkerState.UNAVAILABLE);
 		
 		Allocation allocation = peer.removeAllocation(workerId);

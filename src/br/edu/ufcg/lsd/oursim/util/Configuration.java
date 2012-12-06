@@ -4,8 +4,8 @@ import java.util.Properties;
 
 public class Configuration {
 
-	public static final String PROP_LIVENESS_CHECK_TOLERANCE = "LIVENESS_CHECK_TOLERANCE";
-	public static final String DEF_LIVENESS_CHECK_TOLERANCE = "30000";
+	public static final String PROP_LIVENESS_CHECK_INTERVAL = "LIVENESS_CHECK_TOLERANCE";
+	public static final String DEF_LIVENESS_CHECK_INTERVAL = "30000";
 	
 	public static final String PROP_USE_FAILURE_DETECTOR = "USE_FAILURE_DETECTOR";
 	public static final String DEF_USE_FAILURE_DETECTOR = Boolean.TRUE.toString();
@@ -46,7 +46,7 @@ public class Configuration {
 	
 	public static Properties createDefaults() {
 		Properties properties = new Properties();
-		properties.put(PROP_LIVENESS_CHECK_TOLERANCE, DEF_LIVENESS_CHECK_TOLERANCE);
+		properties.put(PROP_LIVENESS_CHECK_INTERVAL, DEF_LIVENESS_CHECK_INTERVAL);
 		properties.put(PROP_USE_FAILURE_DETECTOR, DEF_USE_FAILURE_DETECTOR);
 		properties.put(PROP_BROKER_MAX_FAILS, DEF_BROKER_MAX_FAILS);
 		properties.put(PROP_BROKER_MAX_REPLICAS, DEF_BROKER_MAX_REPLICAS);
@@ -58,6 +58,7 @@ public class Configuration {
 		properties.put(PROP_FAILURE_DETECTOR_NAME, DEF_FAILURE_DETECTOR_NAME);
 		properties.put(PROP_FAILURE_DETECTOR_TIMEOUT, DEF_FAILURE_DETECTOR_TIMEOUT);
 		properties.put(PROP_FAILURE_DETECTOR_PING_INTERVAL, DEF_FAILURE_DETECTOR_PING_INTERVAL);
+		properties.put(PROP_USE_SPEED_HACK, DEF_USE_SPEED_HACK);
 		
 		return properties;
 	}

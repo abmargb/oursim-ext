@@ -19,6 +19,10 @@ public class WorkerFailedEvent extends AbstractEvent {
 	@Override
 	public void process(OurSim ourSim) {
 		Peer peer = ourSim.getGrid().getObject(peerId);
+		if (!peer.isUp()) {
+			return;
+		}
+		
 		boolean isLocal = peer.getWorkersIds().contains(workerId);
 		
 		Event event = null;

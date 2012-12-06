@@ -22,6 +22,9 @@ public class RepeatGetWorkerProvidersEvent extends AbstractEvent {
 	public void process(OurSim ourSim) {
 		
 		Peer peer = ourSim.getGrid().getObject(peerId);
+		if (!peer.isUp()) {
+			return;
+		}
 		
 		if (peer.getMonitor(dsId).isUp()) {
 			

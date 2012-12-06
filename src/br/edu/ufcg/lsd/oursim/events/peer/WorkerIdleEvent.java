@@ -21,6 +21,10 @@ public class WorkerIdleEvent extends AbstractEvent {
 	@Override
 	public void process(OurSim ourSim) {
 		Peer peer = ourSim.getGrid().getObject(peerId);
+		if (!peer.isUp()) {
+			return;
+		}
+		
 		peer.addAllocation(new Allocation(workerId, peerId));
 		
 		WorkerDistributionHelper.redistributeIdleWorker(getTime(), peer, workerId, ourSim);

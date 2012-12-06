@@ -27,6 +27,9 @@ public class EventFactory {
 		eventClasses.put(HaltEvent.TYPE, HaltEvent.class);
 	}
 	
+	public void addEventClass(String type, Class<?> eventClass) {
+		eventClasses.put(type, eventClass);
+	}
 	
 	public Event createEvent(String type, long time, Object... params) {
 		Class<?> eventClass = eventClasses.get(type);

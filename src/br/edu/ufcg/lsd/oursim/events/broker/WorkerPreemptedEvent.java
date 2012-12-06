@@ -1,6 +1,7 @@
 package br.edu.ufcg.lsd.oursim.events.broker;
 
 import br.edu.ufcg.lsd.oursim.OurSim;
+import br.edu.ufcg.lsd.oursim.entities.grid.Broker;
 import br.edu.ufcg.lsd.oursim.events.AbstractEvent;
 import br.edu.ufcg.lsd.oursim.events.Event;
 
@@ -17,6 +18,11 @@ public class WorkerPreemptedEvent extends AbstractEvent {
 
 	@Override
 	public void process(OurSim ourSim) {
+		Broker broker = ourSim.getGrid().getObject(brokerId);
+		if (!broker.isUp()) {
+			return;
+		}
+		
 		Event event = ourSim.createEvent(BrokerEvents.WORKER_FAILED, 
 				getTime(), brokerId, workerId);
 	

@@ -17,6 +17,7 @@ public class BrokerAvailableEvent extends AbstractEvent {
 
 	@Override
 	public void process(OurSim ourSim) {
+		
 	}
 
 }

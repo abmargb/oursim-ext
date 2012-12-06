@@ -1,6 +1,7 @@
 package br.edu.ufcg.lsd.oursim.events.peer;
 
 import br.edu.ufcg.lsd.oursim.OurSim;
+import br.edu.ufcg.lsd.oursim.entities.grid.Peer;
 import br.edu.ufcg.lsd.oursim.events.AbstractEvent;
 import br.edu.ufcg.lsd.oursim.events.Event;
 import br.edu.ufcg.lsd.oursim.events.worker.WorkerEvents;
@@ -18,6 +19,12 @@ public class LocalWorkerAvailableEvent extends AbstractEvent {
 
 	@Override
 	public void process(OurSim ourSim) {
+		
+		Peer peer = ourSim.getGrid().getObject(peerId);
+		if (!peer.isUp()) {
+			return;
+		}
+		
 		Event setPeerEvent = ourSim.createEvent(
 				WorkerEvents.SET_PEER, getTime(), workerId, peerId);
 		

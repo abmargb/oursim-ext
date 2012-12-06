@@ -23,6 +23,10 @@ public class HereIsRemoteWorkerEvent extends AbstractEvent {
 	@Override
 	public void process(OurSim ourSim) {
 		Peer peer = ourSim.getGrid().getObject(consumer);
+		if (!peer.isUp()) {
+			return;
+		}
+		
 		peer.addNotRecoveredRemoteWorker(worker, provider);
 		
 		MonitorUtil.registerMonitored(ourSim, getTime(), consumer, worker);

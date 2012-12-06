@@ -22,6 +22,11 @@ public class WorkForPeerEvent extends AbstractEvent {
 	@Override
 	public void process(OurSim ourSim) {
 		Worker worker = ourSim.getGrid().getObject(workerId);
+		
+		if (!worker.isUp()) {
+			return;
+		}
+		
 		CleanWorkerHelper.cleanWorker(getTime(), worker, true, ourSim);
 
 		worker.setRemotePeer(consumerPeer);

@@ -24,6 +24,11 @@ public class HereIsWorkerEvent extends AbstractEvent {
 	public void process(OurSim ourSim) {
 		
 		Broker broker = ourSim.getGrid().getObject(requestSpec.getBrokerId());
+		
+		if (!broker.isUp()) {
+			return;
+		}
+		
 		Peer peer = ourSim.getGrid().getObject(broker.getPeerId());
 		BrokerRequest request = broker.getRequest(requestSpec.getId());
 		

@@ -1,5 +1,7 @@
 package br.edu.ufcg.lsd.oursim.queue;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -34,6 +36,10 @@ public class ListEventProxy implements EventProxy {
 	@Override
 	public boolean hasNextEvent() {
 		return !events.isEmpty();
+	}
+	
+	public void sort(Comparator<EventSpec> comparator) {
+		Collections.sort(events, comparator);
 	}
 
 }

@@ -20,6 +20,11 @@ public class PeerFailedEvent extends AbstractEvent {
 	@Override
 	public void process(OurSim ourSim) {
 		Broker broker = ourSim.getGrid().getObject(brokerId);
+		
+		if (!broker.isUp()) {
+			return;
+		}
+		
 		List<BrokerRequest> requests = broker.getRequests();
 		for (BrokerRequest request : requests) {
 			broker.removeRequest(request.getSpec().getId());

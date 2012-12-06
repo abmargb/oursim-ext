@@ -23,6 +23,10 @@ public class DisposeRemoteWorkerEvent extends AbstractEvent {
 	@Override
 	public void process(OurSim ourSim) {
 		Peer peer = ourSim.getGrid().getObject(provider);
+		if (!peer.isUp()) {
+			return;
+		}
+		
 		Allocation allocation = peer.getAllocation(workerId);
 		
 		if (allocation == null || !consumer.equals(allocation.getConsumer())) {

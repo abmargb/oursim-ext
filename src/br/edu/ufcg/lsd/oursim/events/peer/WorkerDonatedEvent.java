@@ -1,6 +1,7 @@
 package br.edu.ufcg.lsd.oursim.events.peer;
 
 import br.edu.ufcg.lsd.oursim.OurSim;
+import br.edu.ufcg.lsd.oursim.entities.grid.Peer;
 import br.edu.ufcg.lsd.oursim.events.AbstractEvent;
 import br.edu.ufcg.lsd.oursim.events.Event;
 
@@ -19,6 +20,12 @@ public class WorkerDonatedEvent extends AbstractEvent {
 
 	@Override
 	public void process(OurSim ourSim) {
+		
+		Peer peer = ourSim.getGrid().getObject(provider);
+		if (!peer.isUp()) {
+			return;
+		}
+		
 		ourSim.addNetworkEvent(ourSim.createEvent(PeerEvents.REMOTE_HERE_IS_WORKER, getTime(), 
 				consumerId, provider, workerId));
 	}

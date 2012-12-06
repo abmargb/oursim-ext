@@ -33,6 +33,8 @@ public class MonitorUtil {
 
 	public static void checkLiveness(OurSim ourSim, Long time) {
 
+		ourSim.setLivenessCheckSchedule(false);
+		
 		for (ActiveEntity interestedObj : ourSim.getGrid().getAllObjects()) {
 			for (Monitor monitor : interestedObj.getMonitors()) {
 				ActiveEntity monitoredObj = monitor.getObject();
@@ -61,14 +63,18 @@ public class MonitorUtil {
 			}
 		} 
 			
+		scheduleLivenessCheck(ourSim, time);
+		
+	}
+
+	public static void scheduleLivenessCheck(OurSim ourSim, Long time) {
 		if (!ourSim.isLivenessCheckSchedule()) {
 			ourSim.setLivenessCheckSchedule(true);
 			Long tolerance = ourSim.getLongProperty(
-					Configuration.PROP_LIVENESS_CHECK_TOLERANCE);
+					Configuration.PROP_LIVENESS_CHECK_INTERVAL);
 			ourSim.addEvent(ourSim.createEvent(FailureDetectionEvents.LIVENESS_CHECK, 
 					time + tolerance));
 		}
-		
 	}
 
 	public static void sendIsItAlive(OurSim ourSim, Long time,

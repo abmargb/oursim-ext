@@ -27,6 +27,10 @@ public class ScheduleEvent extends AbstractEvent {
 	@Override
 	public void process(OurSim ourSim) {
 		Broker broker = ourSim.getGrid().getObject(brokerId);
+		if (!broker.isUp()) {
+			return;
+		}
+		
 		for (Job job : broker.getJobs()) {
 			schedule(broker, job, ourSim);
 			execute(job, ourSim);

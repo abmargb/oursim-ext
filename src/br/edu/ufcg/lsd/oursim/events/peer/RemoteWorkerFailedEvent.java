@@ -22,7 +22,11 @@ public class RemoteWorkerFailedEvent extends AbstractEvent {
 
 	@Override
 	public void process(OurSim ourSim) {
+		
 		Peer peer = ourSim.getGrid().getObject(consumer);
+		if (!peer.isUp()) {
+			return;
+		}
 		
 		Allocation allocation = peer.getAllocation(worker);
 		String provider = null;

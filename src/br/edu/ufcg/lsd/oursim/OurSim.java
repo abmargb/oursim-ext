@@ -42,6 +42,10 @@ public class OurSim {
 		this.grid = grid;
 	}
 	
+	public EventFactory getEventFactory() {
+		return eventFactory;
+	}
+	
 	public void addEventListener(EventListener evListener) {
 		eventListeners.add(evListener);
 	}

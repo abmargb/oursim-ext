@@ -22,6 +22,10 @@ public class GetWorkerProvidersEvent extends AbstractEvent {
 	@Override
 	public void process(OurSim ourSim) {
 		DiscoveryService discoveryService = ourSim.getGrid().getObject(dsId);
+		if (!discoveryService.isUp()) {
+			return;
+		}
+		
 		boolean modified = discoveryService.addPeer(peerId);
 		
 		Set<String> allPeers = discoveryService.getPeers();

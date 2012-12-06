@@ -22,6 +22,9 @@ public class HereAreWorkerProvidersEvent extends AbstractEvent {
 	@Override
 	public void process(OurSim ourSim) {
 		Peer peer = ourSim.getGrid().getObject(peerId);
+		if (!peer.isUp()) {
+			return;
+		}
 		peer.setWorkerProviders(providers);
 	}
 

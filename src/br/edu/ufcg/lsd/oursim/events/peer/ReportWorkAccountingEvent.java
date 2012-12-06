@@ -23,7 +23,11 @@ public class ReportWorkAccountingEvent extends AbstractEvent {
 
 	@Override
 	public void process(OurSim ourSim) {
+		
 		Peer peer = ourSim.getGrid().getObject(peerId);
+		if (!peer.isUp()) {
+			return;
+		}
 		
 		for (WorkAccounting workAccounting : workAccountings) {
 			AccountingHelper.commitWorkerAccounting(peer, workAccounting);

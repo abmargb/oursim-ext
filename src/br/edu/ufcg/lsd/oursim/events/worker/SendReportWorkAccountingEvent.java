@@ -24,6 +24,10 @@ public class SendReportWorkAccountingEvent extends AbstractEvent {
 	public void process(OurSim ourSim) {
 		Worker worker = ourSim.getGrid().getObject(workerId);
 		
+		if (!worker.isUp()) {
+			return;
+		}
+		
 		WorkAccounting currentWorkAccounting = worker.getCurrentWorkAccounting();
 
 		if (currentWorkAccounting != null) {

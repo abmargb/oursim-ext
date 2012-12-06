@@ -44,7 +44,7 @@ public class UpdateStatusAvailableEvent extends AbstractEvent {
 			
 			if (ourSim.getBooleanProperty(
 					Configuration.PROP_USE_FAILURE_DETECTOR)) {
-				MonitorUtil.checkLiveness(ourSim, getTime(), interestedObj, monitoredObj);
+				MonitorUtil.scheduleLivenessCheck(ourSim, getTime());
 			}
 		}
 	}

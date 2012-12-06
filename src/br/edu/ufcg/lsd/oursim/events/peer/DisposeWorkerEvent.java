@@ -23,9 +23,14 @@ public class DisposeWorkerEvent extends AbstractEvent {
 	@Override
 	public void process(OurSim ourSim) {
 		Peer peer = ourSim.getGrid().getObject(peerId);
+		if (!peer.isUp()) {
+			return;
+		}
+		
 		Allocation workerAllocation = peer.getAllocation(workerId);
 		
 		if (workerAllocation == null || workerAllocation.getConsumer() == null
+				|| workerAllocation.getRequest() == null
 				|| requestId != workerAllocation.getRequest().getSpec().getId()) {
 			return;
 		}

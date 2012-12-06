@@ -24,6 +24,10 @@ public class StartWorkEvent extends AbstractEvent {
 	public void process(OurSim ourSim) {
 		Worker worker = ourSim.getGrid().getObject(workerId);
 		
+		if (!worker.isUp()) {
+			return;
+		}
+		
 		WorkAccounting workAccounting = worker.getCurrentWorkAccounting();
 		if (workAccounting != null) {
 			workAccounting.setInitCPUtime(getTime());

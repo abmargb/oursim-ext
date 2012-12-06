@@ -20,7 +20,12 @@ public class RemoteWorkerAvailableEvent extends AbstractEvent {
 
 	@Override
 	public void process(OurSim ourSim) {
+		
 		Peer peer = ourSim.getGrid().getObject(consumer);
+		if (!peer.isUp()) {
+			return;
+		}
+		
 		String provider = peer.removeNotRecoveredRemoteWorker(worker);
 		
 		if (provider == null) {
