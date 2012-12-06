@@ -13,7 +13,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import br.edu.ufcg.lsd.oursim.OurSim;
-import br.edu.ufcg.lsd.oursim.entities.ActiveEntity;
 import br.edu.ufcg.lsd.oursim.entities.grid.Broker;
 import br.edu.ufcg.lsd.oursim.entities.grid.DiscoveryService;
 import br.edu.ufcg.lsd.oursim.entities.grid.Grid;
@@ -36,6 +35,7 @@ import br.edu.ufcg.lsd.oursim.util.Configuration;
 
 public class ScalabilityScenarioGenerator {
 
+	private static final String BROKER_ID = "brokerA";
 	private static final int REPLICATION = 1;
 	static int TASKS_DURATION = 10000; 
 	static double LOCALHOST_DELAY = 5.;
@@ -64,6 +64,7 @@ public class ScalabilityScenarioGenerator {
 		properties.put(Configuration.PROP_USE_FAILURE_DETECTOR, Boolean.TRUE.toString());
 		properties.put(Configuration.PROP_BROKER_SCHEDULER_INTERVAL, "10000");
 		properties.put(Configuration.PROP_FAILURE_DETECTOR_NAME, "fixed");
+		properties.put(Configuration.PROP_USE_SPEED_HACK, Boolean.TRUE.toString());
 		
 		for (int siteIdx = 0; siteIdx < SITES.length; siteIdx++) {
 			run(properties, SITES[siteIdx]);
@@ -117,7 +118,7 @@ public class ScalabilityScenarioGenerator {
 		Peer peerA = peers.iterator().next();
 		
 		Broker brokerA = new Broker();
-		brokerA.setId("brokerA");
+		brokerA.setId(BROKER_ID);
 		brokerA.setPeerId(peerA.getId());
 		grid.addObject(brokerA);
 		
@@ -170,7 +171,7 @@ public class ScalabilityScenarioGenerator {
 		ourSim.run();
 		long time = System.currentTimeMillis() - begin;
 		
-		System.out.println(time);
+		System.out.println("Simulation time: " + time);
 		IOUtils.write(String.valueOf(time), new FileOutputStream(timeFile));
 	}
 	 
@@ -189,39 +190,37 @@ public class ScalabilityScenarioGenerator {
 			
 			msgs++;
 			
-			if (msgs % 1000 == 0) {
+			if (msgs % 100000 == 0) {
 				System.out.println(msgs);
+			}
+			
+			if (!lastEvent.getType().equals(BrokerEvents.HERE_IS_EXECUTION_RESULT)) {
+				return false;
 			}
 			
 			boolean halt = true;
 			
 			List<Job> finishedJobsList = new LinkedList<Job>();
-			
-			for (ActiveEntity entity : ourSim.getGrid().getAllObjects()) {
-				
-				if (entity instanceof Broker) {
-					Broker broker = (Broker) entity;
-					
-					List<Job> jobs = broker.getJobs();
-					int currentlyFinished = 0;
-					
-					for (Job job : jobs) {
-						if (job.getState().equals(ExecutionState.FINISHED)) {
-							currentlyFinished++;
-							finishedJobsList.add(job);
-						}
-					}
-					
-					halt &= currentlyFinished >= finishedJobs;
+			Broker broker = ourSim.getGrid().getObject(BROKER_ID);
+
+			List<Job> jobs = broker.getJobs();
+			int currentlyFinished = 0;
+
+			for (Job job : jobs) {
+				if (job.getState().equals(ExecutionState.FINISHED)) {
+					currentlyFinished++;
+					finishedJobsList.add(job);
 				}
 			}
-			
+
+			halt &= currentlyFinished >= finishedJobs;
+
 			if (halt) {
 				for (Job job : finishedJobsList) {
 					System.out.println(job.getEndTime());
 				}
 			}
-			
+
 			return halt;
 		}
 		
